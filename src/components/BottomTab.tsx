@@ -1,22 +1,22 @@
-import { Box, Image, Flex, HStack, Button } from "@chakra-ui/react";
-import { FaHeadphones } from "react-icons/fa";
+import { Box, Flex, HStack, Button } from "@chakra-ui/react";
+import { AiOutlinePlusSquare } from "react-icons/ai";
 import { useNavbar } from "../hooks/useNavbar";
 
-export default function Header() {
+export default function BottomTab() {
   const { rootProps } = useNavbar();
   return (
     <Box
       as="nav"
       role="navigation"
       position="sticky"
-      top="0"
+      bottom="0"
       zIndex="docked"
       bg="bg-accent"
       {...rootProps}
     >
       <Flex
         bg="black"
-        borderBottom="1px solid #ffffff"
+        borderTop="1px solid #ffffff"
         w="100%"
         display="flex"
         justifyContent="center"
@@ -25,16 +25,11 @@ export default function Header() {
           maxW="1024px"
           w="100%"
           alignItems="center"
-          justifyContent={"space-between"}
+          justifyContent="center"
           px={{ base: "10px", md: "0px" }}
           py="10px"
         >
-          <Image
-            id="logo"
-            w="120px"
-            src="https://files.djfan.app/images/djfan-beta.png"
-          />
-          <HStack gap="15px">
+          <HStack gap="15px" justifyContent="center" alignItems="center">
             <Button
               ml={{ base: "0px", md: "10px" }}
               display="flex"
@@ -48,15 +43,14 @@ export default function Header() {
               }}
               border="none"
               fontWeight="600"
-              // onClick={() => {
-              //   window.open("https://creators.djfan.app", "_self");
-              // }}
+              onClick={() => {
+                window.open("https://creators.djfan.app", "_self");
+              }}
               height="35px"
             >
-              <Box fontSize="14px">
-                <FaHeadphones />
+              <Box fontSize="32px">
+                <AiOutlinePlusSquare />
               </Box>
-              My Profile
             </Button>
           </HStack>
         </Flex>
