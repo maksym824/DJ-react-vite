@@ -2,6 +2,7 @@ import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { FaImages, FaMusic, FaVideo } from "react-icons/fa";
 import { MdOutlineEditCalendar } from "react-icons/md";
 import { TbShoppingCartPlus, TbNews } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 const CTAButtons = [
   {
@@ -13,6 +14,7 @@ const CTAButtons = [
     id: 2,
     name: "Video Post",
     icon: <FaVideo />,
+    link: "/create/video",
   },
   {
     id: 3,
@@ -37,6 +39,7 @@ const CTAButtons = [
 ];
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <Box bg="black" height="100%">
       <Box textAlign="center" py={6}>
@@ -55,6 +58,11 @@ const HomePage = () => {
             p={3}
             _hover={{
               cursor: "pointer",
+            }}
+            onClick={() => {
+              if (button.link) {
+                navigate(button.link);
+              }
             }}
           >
             <Box fontSize={"40px"}>{button.icon}</Box>

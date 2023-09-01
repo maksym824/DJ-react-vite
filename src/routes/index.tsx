@@ -3,6 +3,8 @@ import MainLayout from "../layouts/MainLayout";
 import ErrorPage from "../pages/ErrorPage";
 import PrivateRoutes from "./PrivateRoutes";
 import HomePage from "../pages/HomePage";
+import VideoPost from "../pages/createPost/VideoPost";
+import HomeLayoutWithBottomTab from "../layouts/HomeLayoutWithBottomTab";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +18,20 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <HomePage />,
+            element: (
+              <HomeLayoutWithBottomTab>
+                <HomePage />
+              </HomeLayoutWithBottomTab>
+            ),
+          },
+          {
+            path: "/create",
+            children: [
+              {
+                path: "/create/video",
+                element: <VideoPost />,
+              },
+            ],
           },
         ],
       },
