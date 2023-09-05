@@ -9,6 +9,11 @@ export enum TypeOfVideo {
   UPLOAD = 0,
 }
 
+export enum TypeOfImagePost {
+  SINGLE = 1,
+  MULTIPLE = 2,
+}
+
 export enum PostType {
   "image" = "image",
   "video" = "video",
