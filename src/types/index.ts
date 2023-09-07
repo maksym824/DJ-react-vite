@@ -1,0 +1,64 @@
+export enum AccessLevelType {
+  EVERYONE = 1,
+  GOLD = 2,
+  VIP = 3,
+}
+
+export enum TypeOfVideo {
+  EMBED = 1,
+  UPLOAD = 0,
+}
+
+export enum TypeOfImagePost {
+  SINGLE = 1,
+  MULTIPLE = 2,
+}
+
+export enum PostType {
+  "image" = "image",
+  "video" = "video",
+  "audio" = "audio",
+  "text" = "text",
+}
+
+export type Country = {
+  country_code: string;
+  country: string;
+};
+
+export type User = {
+  about_me: string;
+  bank_account_name: string;
+  bank_account_number: string;
+  bookings: string;
+  country: string;
+  cover_photo: string;
+  cover_photo_cache: string;
+  created_at: string;
+  display_name: string;
+  email: string;
+  facebook: string;
+  first_name: string;
+  genre: string;
+  instagram: string;
+  last_name: string;
+  location: string;
+  management: string;
+  mixcloud: string;
+  music_genre: string;
+  partner_id: string;
+  profile_picture: string;
+  profile_picture_cache: string;
+  profile_url: string;
+  roles: string;
+  soundcloud: string;
+  spotify: string;
+  tiktok: string;
+  title: string;
+  twitter: string;
+  user_id: number;
+  user_key: string;
+  username: string;
+  website: string;
+  youtube: string;
+};

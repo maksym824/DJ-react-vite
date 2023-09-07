@@ -1,69 +1,84 @@
-import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
-import { FaImages, FaMusic, FaVideo } from "react-icons/fa";
-import { MdOutlineEditCalendar } from "react-icons/md";
-import { TbShoppingCartPlus, TbNews } from "react-icons/tb";
-
-const CTAButtons = [
+import { Box, Flex, Link, Text, Center } from "@chakra-ui/react";
+import Header from "../components/Header";
+const boxes = [
   {
-    id: 1,
-    name: "Image Post",
-    icon: <FaImages />,
+    text: "Create Post",
+    imageUrl: "https://media.djfan.app/images/create.jpg",
+    linkUrl: "/create",
   },
   {
-    id: 2,
-    name: "Video Post",
-    icon: <FaVideo />,
+    text: "Create Product",
+    imageUrl: "https://media.djfan.app/images/product.jpg",
+    // linkUrl: "/product",
   },
   {
-    id: 3,
-    name: "Audio Post",
-    icon: <FaMusic />,
+    text: "Earnings",
+    imageUrl: "https://media.djfan.app/images/earnings.jpg",
+    // linkUrl: "/earnings",
   },
   {
-    id: 4,
-    name: "Tour Date",
-    icon: <MdOutlineEditCalendar />,
+    text: "My Fans",
+    imageUrl: "https://media.djfan.app/images/fans.jpg",
+    // linkUrl: "/fans",
   },
   {
-    id: 5,
-    name: "New Product",
-    icon: <TbShoppingCartPlus />,
+    text: "Settings",
+    imageUrl: "https://media.djfan.app/images/settings.jpg",
+    linkUrl: "/settings",
   },
   {
-    id: 6,
-    name: "Text Post",
-    icon: <TbNews />,
+    text: "Invitations",
+    imageUrl: "https://media.djfan.app/images/invitations.jpg",
+    // linkUrl: "/invitations",
   },
 ];
-
-const HomePage = () => {
+export default function Index() {
   return (
-    <Box bg="black" height="100%">
-      <Box textAlign="center" py={6}>
-        <Text color="white" fontWeight="bold" fontSize={"24px"}>
-          Create a new post
-        </Text>
-      </Box>
-      <SimpleGrid columns={2} px={6} gap={6}>
-        {CTAButtons.map((button) => (
-          <Flex
-            key={button.id}
-            bg="white"
-            borderRadius="5px"
-            alignItems={"center"}
-            flexDirection={"column"}
-            p={3}
-            _hover={{
-              cursor: "pointer",
-            }}
-          >
-            <Box fontSize={"40px"}>{button.icon}</Box>
-            <Text mt={3}>{button.name}</Text>
+    <Flex
+      w="100%"
+      h="100%"
+      minH="100vh"
+      flexDirection="column"
+      bg="#ececec"
+      pb="50px"
+    >
+      <Header />
+      <Flex w="100%" justifyContent="center">
+        <Flex
+          flexDirection="column"
+          gap="35px"
+          w="100%"
+          maxW="1000px"
+          pt="25px"
+          px="15px"
+        >
+          <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
+            {boxes.map((box, index) => (
+              <Link
+                key={index}
+                href={box?.linkUrl ?? "/"}
+                w={{ base: "100%", md: "30%" }}
+              >
+                <Box
+                  w={{ base: "100%", md: "100%" }}
+                  h="150px"
+                  bgImage={`linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${box.imageUrl})`}
+                  bgPos="center"
+                  bgSize="cover"
+                  borderRadius="10px"
+                  position="relative"
+                >
+                  <Center h="100%">
+                    <Text fontSize="24px" color="white" fontWeight="600">
+                      {box.text}
+                    </Text>
+                  </Center>
+                </Box>
+              </Link>
+            ))}
           </Flex>
-        ))}
-      </SimpleGrid>
-    </Box>
+        </Flex>
+      </Flex>
+    </Flex>
   );
-};
-
-export default HomePage;
+}
