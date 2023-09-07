@@ -14,11 +14,11 @@ import ProfileImages from "./ProfileImages";
 import { useEffect, useState } from "react";
 import getCountryList from "~/services/settings/getCountryList";
 import { Country } from "~/types";
-import useUserData from "~/services/settings/userData";
+import { updateUserData, useUserData } from "~/services/settings/userData";
 
 export default function ProfileSettings() {
   const [countries, setCountries] = useState<Country[]>([]);
-  const { data } = useUserData();
+  const { data, refetch } = useUserData();
 
   const [displayName, setDisplayName] = useState<string>(
     data?.display_name ?? ""
@@ -58,6 +58,28 @@ export default function ProfileSettings() {
     setCoverPhoto(data?.cover_photo ?? "");
     setProfilePicture(data?.profile_picture ?? "");
   }, [data]);
+
+  const handleUpdateProfile = async () => {
+    const payload = {
+      display_name: displayName,
+      title,
+      music_genre: musicGenre,
+      location,
+      country,
+      bookings: bookingsContact,
+      management: managementContact,
+      about_me: aboutMe,
+    };
+
+    try {
+      const res = await updateUserData(payload);
+      if (res.data?.result?.result) {
+        await refetch();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Stack p="20px" bg="#fff" mt="20px" borderRadius="10px">
@@ -155,6 +177,7 @@ export default function ProfileSettings() {
         fontSize="18px"
         _hover={{ background: "#111" }}
         height="45px"
+        onClick={handleUpdateProfile}
       >
         UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
       </Button>

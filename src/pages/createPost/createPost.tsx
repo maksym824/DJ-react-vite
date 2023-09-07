@@ -9,6 +9,7 @@ const CTAButtons = [
     id: 1,
     name: "Image Post",
     icon: <FaImages />,
+    link: "/create/image",
   },
   {
     id: 2,
@@ -20,6 +21,7 @@ const CTAButtons = [
     id: 3,
     name: "Audio Post",
     icon: <FaMusic />,
+    link: "/create/audio",
   },
   {
     id: 4,
@@ -35,6 +37,7 @@ const CTAButtons = [
     id: 6,
     name: "Text Post",
     icon: <TbNews />,
+    link: "/create/text",
   },
 ];
 

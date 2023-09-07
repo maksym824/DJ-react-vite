@@ -19,5 +19,8 @@ const useUserData = () => {
   });
 };
 
-export { getUserData };
-export default useUserData;
+const updateUserData = (data: Partial<User>) => {
+  return apiClient.post("/dj/me/details", data);
+};
+
+export { getUserData, useUserData, updateUserData };
