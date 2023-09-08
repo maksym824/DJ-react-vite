@@ -24,7 +24,7 @@ export default function ProfileSettings() {
     data?.display_name ?? ""
   );
   const [title, setTitle] = useState<string>("");
-  const [musicGenre, setMusicGenre] = useState<string>("");
+  const [genre, setGenre] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [bookingsContact, setBookingsContact] = useState<string>("");
@@ -49,7 +49,7 @@ export default function ProfileSettings() {
   useEffect(() => {
     setDisplayName(data?.display_name ?? "");
     setTitle(data?.title ?? "");
-    setMusicGenre(data?.music_genre ?? "");
+    setGenre(data?.genre ?? "");
     setLocation(data?.location ?? "");
     setCountry(data?.country ?? "");
     setBookingsContact(data?.bookings ?? "");
@@ -63,7 +63,7 @@ export default function ProfileSettings() {
     const payload = {
       display_name: displayName,
       title,
-      music_genre: musicGenre,
+      genre: genre,
       location,
       country,
       bookings: bookingsContact,
@@ -112,8 +112,8 @@ export default function ProfileSettings() {
         <Input
           type="text"
           placeholder="e.g. Techno, Tech House"
-          value={musicGenre}
-          onChange={(e) => setMusicGenre(e.target.value)}
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
         />
       </FormControl>
 
