@@ -14,17 +14,17 @@ import ProfileImages from "./ProfileImages";
 import { useEffect, useState } from "react";
 import getCountryList from "~/services/settings/getCountryList";
 import { Country } from "~/types";
-import useUserData from "~/services/settings/userData";
+import { updateUserData, useUserData } from "~/services/settings/userData";
 
 export default function ProfileSettings() {
   const [countries, setCountries] = useState<Country[]>([]);
-  const { data } = useUserData();
+  const { data, refetch } = useUserData();
 
   const [displayName, setDisplayName] = useState<string>(
     data?.display_name ?? ""
   );
   const [title, setTitle] = useState<string>("");
-  const [musicGenre, setMusicGenre] = useState<string>("");
+  const [genre, setGenre] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [bookingsContact, setBookingsContact] = useState<string>("");
@@ -49,7 +49,7 @@ export default function ProfileSettings() {
   useEffect(() => {
     setDisplayName(data?.display_name ?? "");
     setTitle(data?.title ?? "");
-    setMusicGenre(data?.music_genre ?? "");
+    setGenre(data?.genre ?? "");
     setLocation(data?.location ?? "");
     setCountry(data?.country ?? "");
     setBookingsContact(data?.bookings ?? "");
@@ -58,6 +58,28 @@ export default function ProfileSettings() {
     setCoverPhoto(data?.cover_photo ?? "");
     setProfilePicture(data?.profile_picture ?? "");
   }, [data]);
+
+  const handleUpdateProfile = async () => {
+    const payload = {
+      display_name: displayName,
+      title,
+      genre: genre,
+      location,
+      country,
+      bookings: bookingsContact,
+      management: managementContact,
+      about_me: aboutMe,
+    };
+
+    try {
+      const res = await updateUserData(payload);
+      if (res.data?.result?.result) {
+        await refetch();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Stack p="20px" bg="#fff" mt="20px" borderRadius="10px">
@@ -90,8 +112,8 @@ export default function ProfileSettings() {
         <Input
           type="text"
           placeholder="e.g. Techno, Tech House"
-          value={musicGenre}
-          onChange={(e) => setMusicGenre(e.target.value)}
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
         />
       </FormControl>
 
@@ -155,6 +177,7 @@ export default function ProfileSettings() {
         fontSize="18px"
         _hover={{ background: "#111" }}
         height="45px"
+        onClick={handleUpdateProfile}
       >
         UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
       </Button>

@@ -33,7 +33,6 @@ export type User = {
   bookings: string;
   country: string;
   cover_photo: string;
-  cover_photo_cache: string;
   created_at: string;
   display_name: string;
   email: string;
@@ -45,10 +44,8 @@ export type User = {
   location: string;
   management: string;
   mixcloud: string;
-  music_genre: string;
   partner_id: string;
   profile_picture: string;
-  profile_picture_cache: string;
   profile_url: string;
   roles: string;
   soundcloud: string;
@@ -61,4 +58,14 @@ export type User = {
   username: string;
   website: string;
   youtube: string;
+};
+
+export type UserAccount = {
+  user_id: number;
+  user_key: string;
+  roles: string;
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
 };

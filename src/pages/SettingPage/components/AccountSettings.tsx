@@ -1,39 +1,208 @@
-import { Button, FormControl, FormLabel, Stack, Input } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Stack,
+  Input,
+  Divider,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+} from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
+import {
+  changeEmailAddress,
+  deleteUserAccount,
+  resetPassword,
+  updateUserAccount,
+  useUserAccount,
+} from "~/services/settings/userAccount";
+import { BiEnvelope, BiKey, BiUser } from "react-icons/bi";
 
 export default function AccountSettings() {
+  const { data, refetch } = useUserAccount();
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  // const [newEmail, setNewEmail] = useState<string>("");
+  // const [confirmEmail, setConfirmEmail] = useState<string>("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setFirstName(data?.first_name ?? "");
+    setLastName(data?.last_name ?? "");
+  }, [data]);
+
+  const handleUpdateAccount = async () => {
+    const payload = {
+      first_name: firstName,
+      last_name: lastName,
+    };
+
+    try {
+      const res = await updateUserAccount(payload);
+      if (res.data?.result?.result) {
+        await refetch();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleChangeEmailAddress = async () => {
+    try {
+      await changeEmailAddress();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      await resetPassword();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteAccount = async function () {
+    try {
+      await deleteUserAccount();
+      // if (res.data.result) {
+      //   window.open("https://fan.djfan.app", "_self");
+      // } else {
+      //   console.log("delete account failed! ");
+      // }
+    } catch (e) {
+      return null;
+    }
+  };
+
   return (
-    <Stack p="20px" bg="#fff" mt="20px" borderRadius="10px">
-      <FormControl mb={4}>
-        <FormLabel>First Name</FormLabel>
-        <Input type="text" placeholder=" First Name" />
-      </FormControl>
+    <>
+      <Stack p="20px" bg="#fff" mt="20px" borderRadius="10px">
+        <FormControl mb={4}>
+          <FormLabel>First Name</FormLabel>
+          <Input
+            type="text"
+            placeholder=" First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </FormControl>
 
-      <FormControl mb={4}>
-        <FormLabel>Last Name</FormLabel>
-        <Input type="text" placeholder="Last Name" />
-      </FormControl>
+        <FormControl mb={4}>
+          <FormLabel>Last Name</FormLabel>
+          <Input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </FormControl>
 
-      <FormControl mb={4}>
-        <FormLabel>New Email Address</FormLabel>
-        <Input type="text" placeholder="Enter only username (no link)" />
-      </FormControl>
+        {/* <FormControl mb={4}>
+          <FormLabel>New Email Address</FormLabel>
+          <Input
+            type="text"
+            placeholder="Enter only username (no link)"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+          />
+        </FormControl>
 
-      <FormControl mb={4}>
-        <FormLabel>Confirm Email Address</FormLabel>
-        <Input type="text" placeholder="Enter only username (no link)" />
-      </FormControl>
+        <FormControl mb={4}>
+          <FormLabel>Confirm Email Address</FormLabel>
+          <Input
+            type="text"
+            placeholder="Enter only username (no link)"
+            value={confirmEmail}
+            onChange={(e) => setConfirmEmail(e.target.value)}
+          />
+        </FormControl> */}
 
-      <Button
-        type="submit"
-        background="#300a6e"
-        color="#fff"
-        fontSize="18px"
-        _hover={{ background: "#111" }}
-        height="45px"
+        <Button
+          type="submit"
+          background="#300a6e"
+          color="#fff"
+          fontSize="18px"
+          _hover={{ background: "#111" }}
+          height="45px"
+          onClick={handleUpdateAccount}
+        >
+          UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
+        </Button>
+
+        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+
+        <Button
+          w="100%"
+          colorScheme="pink"
+          bgColor="rgb(191, 40, 241)"
+          color="#fff"
+          onClick={handleChangeEmailAddress}
+        >
+          <BiEnvelope /> Change Email Address
+        </Button>
+        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+
+        <Button
+          w="100%"
+          colorScheme="pink"
+          bgColor="rgb(191, 40, 241)"
+          color="#fff"
+          onClick={handleResetPassword}
+        >
+          <BiKey /> Reset Password
+        </Button>
+
+        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+
+        <Button w="100%" color="#fff" colorScheme="red" onClick={onOpen}>
+          <BiUser /> Delete My Account
+        </Button>
+      </Stack>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
       >
-        UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
-      </Button>
-    </Stack>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete My Account
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete your account? You can't undo this
+              action afterwards. All subscriptions will be cancelled automaticly
+              on deletion.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  deleteAccount();
+                  onClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 }

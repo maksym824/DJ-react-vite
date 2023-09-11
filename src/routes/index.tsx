@@ -7,6 +7,9 @@ import VideoPost from "~/pages/createPost/VideoPost";
 import HomeLayoutWithBottomTab from "~/layouts/HomeLayoutWithBottomTab";
 import CreatePost from "~/pages/createPost/createPost";
 import Settings from "~/pages/SettingPage";
+import ImagePost from "../pages/createPost/ImagePost";
+import TextPost from "../pages/createPost/TextPost";
+import AudioPost from "../pages/createPost/AudioPost";
 
 const router = createBrowserRouter([
   {
