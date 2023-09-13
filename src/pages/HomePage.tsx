@@ -14,7 +14,7 @@ const boxes = [
   {
     text: "Earnings",
     imageUrl: "https://media.djfan.app/images/earnings.jpg",
-    // linkUrl: "/earnings",
+    linkUrl: "/earnings",
   },
   {
     text: "My Fans",

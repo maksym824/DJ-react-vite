@@ -69,3 +69,19 @@ export type UserAccount = {
   username: string;
   email: string;
 };
+
+export type UserStatistics = {
+  followers: number;
+  gold: number;
+  vip: number;
+  monthly_income: number;
+  subscription_last_30_days: number;
+  products_last_30_days: number;
+  total_last_30_days: number;
+  subscription_last_365_days: number;
+  products_last_365_days: number;
+  total_last_365_days: number;
+  subscription_last_all_days: number;
+  products_last_all_days: number;
+  total_last_all_days: number;
+};
