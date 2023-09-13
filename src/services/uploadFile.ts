@@ -37,4 +37,26 @@ const uploadLargeFile = async (
   );
 };
 
-export { uploadFile, uploadLargeFile };
+const uploadChunkFile = async (
+  chunk: Blob,
+  post_token: string,
+  totalChunks: number,
+  currentChunk: number,
+  fileName: string
+) => {
+  if (!post_token) return;
+
+  const formData = new FormData();
+  formData.append("file", chunk);
+
+  await apiClient.post(`/dj/post/${post_token}/upload/large`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "File-Total-Chunks": totalChunks.toString(),
+      "File-Chunk-Number": currentChunk.toString(),
+      "File-Name": fileName,
+    },
+  });
+};
+
+export { uploadFile, uploadLargeFile, uploadChunkFile };
