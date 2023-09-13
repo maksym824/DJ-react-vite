@@ -32,10 +32,10 @@ export default function SubscriberStats({
           justifyContent="center"
           gap="5px"
         >
-          <FaUsers /> Total Members
+          <FaUsers /> Total Fans
         </Text>
         <Heading lineHeight="1em" fontSize="32px">
-          {members}
+          {followers}
         </Heading>
       </Card>
       <Card
@@ -47,10 +47,10 @@ export default function SubscriberStats({
         lineHeight="1em"
       >
         <Text fontSize="18px" fontWeight="600">
-          Total Fans
+          <FaUsers /> Subscribers
         </Text>
         <Heading lineHeight="1em" fontSize="32px">
-          {followers}
+          {members}
         </Heading>
       </Card>
       <Card
@@ -66,7 +66,7 @@ export default function SubscriberStats({
         </Text>
         <HStack align="flex-end" gap="5px" justifyContent="center">
           <Heading lineHeight="1em" fontSize="32px">
-            ${monthlyIncome.toFixed(2)}
+            ${Number(monthlyIncome).toFixed(2)}
           </Heading>
           <Text mb="0px" fontSize="14px" fontWeight="600" color="#9b5de5">
             per month

@@ -38,7 +38,7 @@ export default function EarningsAllTime({
           <FaUsers /> Membership
         </Text>
         <Heading lineHeight="1em" fontSize="32px">
-          ${membership.toFixed(2)}
+          ${Number(membership).toFixed(2)}
         </Heading>
         <Text fontSize="14px">
           membership income <b>(All Time)</b>
@@ -62,7 +62,7 @@ export default function EarningsAllTime({
           <FaCartPlus /> Online Store
         </Text>
         <Heading lineHeight="1em" fontSize="32px">
-          ${product.toFixed(2)}
+          ${Number(product).toFixed(2)}
         </Heading>
         <Text fontSize="14px">
           product sale income <b>(All Time)</b>
@@ -79,7 +79,7 @@ export default function EarningsAllTime({
           Total Income
         </Text>
         <Heading lineHeight="1em" fontSize="32px">
-          ${total.toFixed(2)}
+          ${Number(total).toFixed(2)}
         </Heading>
         <Text fontSize="14px">
           combined income <b>(All Time)</b>
