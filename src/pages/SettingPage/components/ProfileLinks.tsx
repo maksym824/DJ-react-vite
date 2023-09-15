@@ -1,10 +1,18 @@
-import { Button, FormControl, FormLabel, Stack, Input } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Stack,
+  Input,
+  useToast,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { updateUserData, useUserData } from "~/services/settings/userData";
 
 export default function ProfileLinks() {
   const { data, refetch } = useUserData();
+  const toast = useToast();
   const [website, setWebsite] = useState<string>("");
   const [instagram, setInstagram] = useState<string>("");
   const [soundcloud, setSoundcloud] = useState<string>("");
@@ -13,6 +21,7 @@ export default function ProfileLinks() {
   const [tiktok, setTiktok] = useState<string>("");
   const [youtube, setYoutube] = useState<string>("");
   const [spotify, setSpotify] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setWebsite(data?.website ?? "");
@@ -36,14 +45,22 @@ export default function ProfileLinks() {
       youtube,
       spotify,
     };
-
+    setIsLoading(true);
     try {
       const res = await updateUserData(payload);
       if (res.data?.result?.result) {
         await refetch();
+        toast({
+          description: "Successfully saved",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -137,6 +154,7 @@ export default function ProfileLinks() {
         _hover={{ background: "#111" }}
         height="45px"
         onClick={handleUpdateProfile}
+        isLoading={isLoading}
       >
         UPDATE PROFILE LINKS <FaArrowRight style={{ marginLeft: "5px" }} />
       </Button>
