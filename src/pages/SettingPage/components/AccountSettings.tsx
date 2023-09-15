@@ -12,9 +12,12 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Flex,
+  Text,
+  HStack,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
 import {
   changeEmailAddress,
   deleteUserAccount,
@@ -23,20 +26,34 @@ import {
   useUserAccount,
 } from "~/services/settings/userAccount";
 import { BiEnvelope, BiKey, BiUser } from "react-icons/bi";
+import { FaArrowRight, FaStripeS } from "react-icons/fa";
+import updateUserPaypalEmail from "~/services/payouts/updateUserPaypalEmail";
+import { useUserData } from "~/services/settings/userData";
 
 export default function AccountSettings() {
   const { data, refetch } = useUserAccount();
+  const { data: userData } = useUserData();
+  const { paypal } = userData ?? {};
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   // const [newEmail, setNewEmail] = useState<string>("");
   // const [confirmEmail, setConfirmEmail] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const [paypalEmail, setPaypalEmail] = useState("");
+  const [confirmCorrect, setConfirmCorrect] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     setFirstName(data?.first_name ?? "");
     setLastName(data?.last_name ?? "");
   }, [data]);
+
+  useEffect(() => {
+    if (paypal) {
+      setPaypalEmail(paypal);
+    }
+  }, [paypal]);
 
   const handleUpdateAccount = async () => {
     const payload = {
@@ -80,6 +97,17 @@ export default function AccountSettings() {
       // }
     } catch (e) {
       return null;
+    }
+  };
+
+  const handleUpdatePaypal = async () => {
+    setIsUpdating(true);
+    try {
+      await updateUserPaypalEmail(paypalEmail);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -137,6 +165,48 @@ export default function AccountSettings() {
         >
           UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
         </Button>
+        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+        <Flex
+          flexDirection="column"
+          justifyContent="center"
+          gap="15px"
+          mt="15px"
+          height="100%"
+        >
+          <FormControl>
+            <FormLabel>Paypal Email</FormLabel>
+            <Input
+              type="text"
+              placeholder="Enter PayPal Email"
+              value={paypalEmail}
+              onChange={(e) => setPaypalEmail(e.target.value)}
+            />
+          </FormControl>
+          <HStack gap="10px">
+            <Checkbox
+              checked={confirmCorrect}
+              onChange={(e) => setConfirmCorrect(e.target.checked)}
+            />
+            <Text>My email address for payouts is correct</Text>
+          </HStack>
+          <Button
+            leftIcon={<FaStripeS />}
+            _hover={
+              confirmCorrect && !!paypalEmail
+                ? {
+                    bg: "#111111",
+                    color: "#ffffff",
+                    borderColor: "#111111",
+                  }
+                : {}
+            }
+            isDisabled={!confirmCorrect || !paypalEmail}
+            isLoading={isUpdating}
+            onClick={handleUpdatePaypal}
+          >
+            LINK PAYPAL ACCOUNT
+          </Button>
+        </Flex>
 
         <Divider paddingBottom="6px" paddingTop="6px"></Divider>
 
