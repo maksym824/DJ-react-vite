@@ -11,6 +11,7 @@ import ImagePost from "../pages/createPost/ImagePost";
 import TextPost from "../pages/createPost/TextPost";
 import AudioPost from "../pages/createPost/AudioPost";
 import Earnings from "~/pages/Earnings";
+import Payouts from "~/pages/Payouts";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
           {
             path: "/earnings",
             element: <Earnings />,
+          },
+          {
+            path: "/payouts",
+            element: <Payouts />,
           },
         ],
       },

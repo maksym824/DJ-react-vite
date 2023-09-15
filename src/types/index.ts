@@ -58,6 +58,7 @@ export type User = {
   username: string;
   website: string;
   youtube: string;
+  paypal: string;
 };
 
 export type UserAccount = {
@@ -84,4 +85,16 @@ export type UserStatistics = {
   subscription_last_all_days: number;
   products_last_all_days: number;
   total_last_all_days: number;
+};
+
+export type UserPayout = {
+  id: number;
+  user_id: number;
+  amount: string;
+  payout_date: string;
+  payout_code: string;
+  user_key: string;
+  recipient: string;
+  period_start: string;
+  period_end: string;
 };
