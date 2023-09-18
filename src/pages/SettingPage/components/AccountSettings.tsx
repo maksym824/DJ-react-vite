@@ -16,6 +16,7 @@ import {
   Text,
   HStack,
   Checkbox,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -39,10 +40,12 @@ export default function AccountSettings() {
   // const [newEmail, setNewEmail] = useState<string>("");
   // const [confirmEmail, setConfirmEmail] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [paypalEmail, setPaypalEmail] = useState("");
   const [confirmCorrect, setConfirmCorrect] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setFirstName(data?.first_name ?? "");
@@ -60,14 +63,22 @@ export default function AccountSettings() {
       first_name: firstName,
       last_name: lastName,
     };
-
+    setIsLoading(true);
     try {
       const res = await updateUserAccount(payload);
-      if (res.data?.result?.result) {
+      if (res.data?.result) {
         await refetch();
+        toast({
+          description: "Successfully saved",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,6 +115,12 @@ export default function AccountSettings() {
     setIsUpdating(true);
     try {
       await updateUserPaypalEmail(paypalEmail);
+      toast({
+        description: "Successfully saved",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -162,6 +179,7 @@ export default function AccountSettings() {
           _hover={{ background: "#111" }}
           height="45px"
           onClick={handleUpdateAccount}
+          isLoading={isLoading}
         >
           UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
         </Button>

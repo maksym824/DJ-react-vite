@@ -8,6 +8,7 @@ import {
   Input,
   Textarea,
   Divider,
+  useToast,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import ProfileImages from "./ProfileImages";
@@ -19,7 +20,7 @@ import { updateUserData, useUserData } from "~/services/settings/userData";
 export default function ProfileSettings() {
   const [countries, setCountries] = useState<Country[]>([]);
   const { data, refetch } = useUserData();
-
+  const toast = useToast();
   const [displayName, setDisplayName] = useState<string>(
     data?.display_name ?? ""
   );
@@ -32,6 +33,7 @@ export default function ProfileSettings() {
   const [aboutMe, setAboutMe] = useState<string>("");
   const [coverPhoto, setCoverPhoto] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleGetCountries = async () => {
     try {
@@ -70,14 +72,22 @@ export default function ProfileSettings() {
       management: managementContact,
       about_me: aboutMe,
     };
-
+    setIsLoading(true);
     try {
       const res = await updateUserData(payload);
       if (res.data?.result?.result) {
         await refetch();
+        toast({
+          description: "Successfully saved",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -178,6 +188,7 @@ export default function ProfileSettings() {
         _hover={{ background: "#111" }}
         height="45px"
         onClick={handleUpdateProfile}
+        isLoading={isLoading}
       >
         UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
       </Button>
