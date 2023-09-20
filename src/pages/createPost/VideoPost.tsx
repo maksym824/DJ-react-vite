@@ -19,7 +19,7 @@ import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfVideo } from "../../types";
 import setPostDataVideo from "../../services/createVideoPost";
 
-const MAX_FILE_SIZE = 750 * 1024 * 1024; // 750Mb
+const MAX_FILE_SIZE = 1500 * 1024 * 1024; // 1500Mb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 const VideoPost = () => {
@@ -90,7 +90,6 @@ const VideoPost = () => {
     setIsUploading(true);
     if (currentChunk?.current < totalChunks) {
       const chunk = chunks[currentChunk.current];
-
       try {
         await uploadChunkFile(
           chunk,
