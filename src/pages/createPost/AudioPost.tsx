@@ -7,24 +7,23 @@ import {
   Select,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import Header from "../../components/Header";
 import { FaMusic, FaRegEdit, FaReply, FaTrash } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
-import { uploadFile, uploadLargeFile } from "../../services/uploadFile";
+import { uploadChunkFile, uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfVideo } from "../../types";
 import setPostDataVideo from "../../services/createVideoPost";
 
-const MAX_FILE_SIZE = 750 * 1024 * 1024; // 750MB
+const MAX_FILE_SIZE = 750 * 1024 * 1024; // 750Mb
+const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 const AudioPost = () => {
-  const [typeOfVideo, setTypeOfVideo] = useState<TypeOfVideo>(
-    TypeOfVideo.UPLOAD
-  );
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
       accept: {
@@ -32,6 +31,10 @@ const AudioPost = () => {
       },
     });
   const navigate = useNavigate();
+  const toast = useToast();
+  const [typeOfVideo, setTypeOfVideo] = useState<TypeOfVideo>(
+    TypeOfVideo.UPLOAD
+  );
   const [postToken, setPostToken] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -41,6 +44,11 @@ const AudioPost = () => {
   >(undefined);
   const [description, setDescription] = useState<string>("");
   const [locationToEmbed, setLocationToEmbed] = useState<string>("");
+
+  const [chunks, setChunks] = useState<Blob[]>([]);
+  const currentChunk = useRef<number>(0);
+  const [totalChunks, setTotalChunks] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -65,16 +73,64 @@ const AudioPost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acceptedFiles]);
 
+  const splitFileIntoChunks = (file: File) => {
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+    const chunks = [];
+
+    let start = 0;
+    for (let i = 0; i < totalChunks; i++) {
+      const end = Math.min(start + CHUNK_SIZE, file.size);
+      const chunk = file.slice(start, end);
+      chunks.push(chunk);
+      start = end;
+    }
+    setChunks(chunks);
+    setTotalChunks(totalChunks);
+  };
+
+  const uploadChunks = async () => {
+    setIsUploading(true);
+    if (currentChunk?.current < totalChunks) {
+      const chunk = chunks[currentChunk.current];
+
+      try {
+        await uploadChunkFile(
+          chunk,
+          postToken,
+          totalChunks,
+          currentChunk.current + 1,
+          fileToUpload?.name ?? ""
+        );
+        // Chunk uploaded successfully, move to the next chunk
+        currentChunk.current++;
+        setProgress(Math.round((currentChunk.current / totalChunks) * 100));
+        await uploadChunks(); // Recursively upload the next chunk
+      } catch (error) {
+        console.error("Error uploading chunk:", error);
+      }
+    } else {
+      setIsUploading(false);
+      setProgress(0);
+    }
+  };
+
+  useEffect(() => {
+    if (chunks.length && fileToUpload?.name) {
+      uploadChunks();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chunks, fileToUpload]);
+
   const handleUpload = async () => {
     setIsUploading(true);
     try {
       const file = acceptedFiles[0];
       if (file.size > MAX_FILE_SIZE) return;
       setFileToUpload(acceptedFiles[0]);
-      if (file.size <= 100 * 1024 * 1024) {
+      if (file.size <= CHUNK_SIZE) {
         await uploadFile(acceptedFiles[0], postToken, onUploadProgress);
       } else {
-        await uploadLargeFile(acceptedFiles[0], postToken, onUploadProgress);
+        splitFileIntoChunks(file);
       }
     } catch (err) {
       console.log(err);
@@ -84,7 +140,7 @@ const AudioPost = () => {
     }
   };
 
-  const handlePostVideo = async () => {
+  const handlePostAudio = async () => {
     const submittedData: {
       embedded?: number;
       body: string;
@@ -102,12 +158,20 @@ const AudioPost = () => {
       submittedData.embedded = 0;
       submittedData.files = [fileToUpload?.name ?? ""];
     }
+    setIsLoading(true);
     try {
-      const response = await setPostDataVideo(submittedData, postToken);
-      console.log("data", response);
+      await setPostDataVideo(submittedData, postToken);
+      toast({
+        description: "Post created",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       navigate("/");
     } catch (err) {
       console.log("err", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -224,7 +288,12 @@ const AudioPost = () => {
               : locationToEmbed) &&
             description &&
             !isUploading ? (
-              <Button mt="20px" colorScheme="purple" onClick={handlePostVideo}>
+              <Button
+                mt="20px"
+                isLoading={isLoading}
+                colorScheme="purple"
+                onClick={handlePostAudio}
+              >
                 Post
               </Button>
             ) : null}
@@ -262,6 +331,7 @@ const AudioPost = () => {
               border="none"
               fontWeight="600"
               height="35px"
+              onClick={() => navigate("/create")}
             >
               <Flex fontSize="1rem" alignItems="center">
                 <FaReply />
@@ -284,7 +354,7 @@ const AudioPost = () => {
               border="none"
               fontWeight="600"
               height="35px"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/create")}
             >
               <Flex fontSize="1rem" alignItems="center">
                 <FaRegEdit />
