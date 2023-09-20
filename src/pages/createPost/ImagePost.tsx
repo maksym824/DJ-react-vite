@@ -6,6 +6,7 @@ import {
   Select,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import Header from "../../components/Header";
 import { FaImages, FaRegEdit, FaReply, FaTrash } from "react-icons/fa";
@@ -16,7 +17,7 @@ import getPostToken from "../../services/getPostToken";
 import { uploadFile, uploadLargeFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
-import setPostDataVideo from "../../services/createVideoPost";
+import setPostData from "../../services/createVideoPost";
 
 const MAX_FILE_SIZE = 750 * 1024 * 1024; // 750MB
 
@@ -32,6 +33,7 @@ const ImagePost = () => {
       maxFiles: typeOfImagePost === TypeOfImagePost.SINGLE ? 1 : undefined,
     });
   const navigate = useNavigate();
+  const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -40,6 +42,7 @@ const ImagePost = () => {
     AccessLevelType | undefined
   >(undefined);
   const [description, setDescription] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -93,12 +96,20 @@ const ImagePost = () => {
       accesslevel_id: selectedPrivacy!,
       files: fileToUpload?.map((x) => x.name),
     };
+    setIsLoading(true);
     try {
-      const response = await setPostDataVideo(submittedData, postToken);
-      console.log("data", response);
-      // navigate("/");
+      await setPostData(submittedData, postToken);
+      toast({
+        description: "Post created",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate("/create");
     } catch (err) {
       console.log("err", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -218,7 +229,12 @@ const ImagePost = () => {
             fileToUpload?.length &&
             description &&
             !isUploading ? (
-              <Button mt="20px" colorScheme="purple" onClick={handlePostImage}>
+              <Button
+                mt="20px"
+                isLoading={isLoading}
+                colorScheme="purple"
+                onClick={handlePostImage}
+              >
                 Post
               </Button>
             ) : null}
@@ -256,6 +272,7 @@ const ImagePost = () => {
               border="none"
               fontWeight="600"
               height="35px"
+              onClick={() => navigate("/create")}
             >
               <Flex fontSize="1rem" alignItems="center">
                 <FaReply />
@@ -278,7 +295,7 @@ const ImagePost = () => {
               border="none"
               fontWeight="600"
               height="35px"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/create")}
             >
               <Flex fontSize="1rem" alignItems="center">
                 <FaRegEdit />
