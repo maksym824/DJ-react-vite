@@ -7,6 +7,7 @@ import {
   Select,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import Header from "../../components/Header";
 import { FaRegEdit, FaReply, FaTrash, FaVideo } from "react-icons/fa";
@@ -34,6 +35,7 @@ const VideoPost = () => {
       },
     });
   const navigate = useNavigate();
+  const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -47,6 +49,7 @@ const VideoPost = () => {
   const [chunks, setChunks] = useState<Blob[]>([]);
   const currentChunk = useRef<number>(0);
   const [totalChunks, setTotalChunks] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -124,7 +127,7 @@ const VideoPost = () => {
       const file = acceptedFiles[0];
       if (file.size > MAX_FILE_SIZE) return;
       setFileToUpload(acceptedFiles[0]);
-      if (file.size <= 10 * 1024 * 1024) {
+      if (file.size <= CHUNK_SIZE) {
         await uploadFile(acceptedFiles[0], postToken, onUploadProgress);
       } else {
         splitFileIntoChunks(file);
@@ -155,12 +158,20 @@ const VideoPost = () => {
       submittedData.embedded = 0;
       submittedData.files = [fileToUpload?.name ?? ""];
     }
+    setIsLoading(true);
     try {
-      const response = await setPostDataVideo(submittedData, postToken);
-      console.log("data", response);
+      await setPostDataVideo(submittedData, postToken);
+      toast({
+        description: "Post created",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       navigate("/");
     } catch (err) {
       console.log("err", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -277,7 +288,12 @@ const VideoPost = () => {
               : locationToEmbed) &&
             description &&
             !isUploading ? (
-              <Button mt="20px" colorScheme="purple" onClick={handlePostVideo}>
+              <Button
+                isLoading={isLoading}
+                mt="20px"
+                colorScheme="purple"
+                onClick={handlePostVideo}
+              >
                 Post
               </Button>
             ) : null}
@@ -315,6 +331,7 @@ const VideoPost = () => {
               border="none"
               fontWeight="600"
               height="35px"
+              onClick={() => navigate("/create")}
             >
               <Flex fontSize="1rem" alignItems="center">
                 <FaReply />
@@ -337,7 +354,7 @@ const VideoPost = () => {
               border="none"
               fontWeight="600"
               height="35px"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/create")}
             >
               <Flex fontSize="1rem" alignItems="center">
                 <FaRegEdit />

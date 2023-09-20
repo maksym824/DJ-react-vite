@@ -19,7 +19,7 @@ const boxes = [
   {
     text: "My Fans",
     imageUrl: "https://media.djfan.app/images/fans.jpg",
-    // linkUrl: "/fans",
+    linkUrl: "/fans",
   },
   {
     text: "Settings",

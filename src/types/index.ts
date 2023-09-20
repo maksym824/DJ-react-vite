@@ -98,3 +98,16 @@ export type UserPayout = {
   period_start: string;
   period_end: string;
 };
+
+export type Fan = {
+  name: string;
+  username: string;
+  date: string;
+};
+
+export enum FanType {
+  ALL = 0,
+  FOLLOWERS = 1,
+  GOLD = 2,
+  VIP = 3,
+}

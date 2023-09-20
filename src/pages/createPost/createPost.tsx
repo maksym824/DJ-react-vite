@@ -1,80 +1,87 @@
-import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
-import { FaImages, FaMusic, FaVideo } from "react-icons/fa";
-import { MdOutlineEditCalendar } from "react-icons/md";
-import { TbShoppingCartPlus, TbNews } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
+import { Flex, Image, Link, Text, VStack } from "@chakra-ui/react";
+
+const CreatePost = () => {
+  return (
+    <Flex
+      w="100%"
+      h="100%"
+      minH="100vh"
+      flexDirection="column"
+      bg="#111"
+      pb="50px"
+    >
+      <Flex w="100%" justifyContent="center">
+        <Flex
+          flexDirection="column"
+          gap="25px"
+          w="100%"
+          maxW="600px"
+          pt="25px"
+          px="15px"
+        >
+          <Text
+            color="#fff"
+            lineHeight="1em"
+            fontSize="28px"
+            fontWeight="600"
+            textAlign="center"
+            w="100%"
+          >
+            Create a new post
+          </Text>
+          <Flex h="100%" justifyContent="space-evenly" wrap="wrap" gap="20px">
+            {CTAButtons.map((box, index) => (
+              <Link key={index} href={box.link} w={{ base: "45%", md: "30%" }}>
+                <VStack bg="#fff" py="20px" gap="10px" borderRadius="15px">
+                  <Image width="40px" src={box.imageUrl} />
+                  <Text fontSize="20px" color="#111" fontWeight="600">
+                    {box.name}
+                  </Text>
+                </VStack>
+              </Link>
+            ))}
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
 
 const CTAButtons = [
   {
     id: 1,
     name: "Image Post",
-    icon: <FaImages />,
+    imageUrl: "https://media.djfan.app/images/imagepost.png",
     link: "/create/image",
   },
   {
     id: 2,
     name: "Video Post",
-    icon: <FaVideo />,
+    imageUrl: "https://media.djfan.app/images/videopost.png",
     link: "/create/video",
   },
   {
     id: 3,
     name: "Audio Post",
-    icon: <FaMusic />,
+    imageUrl: "https://media.djfan.app/images/audiopost.png",
     link: "/create/audio",
   },
   {
     id: 4,
     name: "Tour Date",
-    icon: <MdOutlineEditCalendar />,
+    imageUrl: "https://media.djfan.app/images/tourdate.png",
   },
   {
     id: 5,
     name: "New Product",
-    icon: <TbShoppingCartPlus />,
+    imageUrl: "https://media.djfan.app/images/product.png",
   },
   {
     id: 6,
     name: "Text Post",
-    icon: <TbNews />,
+    imageUrl: "https://media.djfan.app/images/textpost.png",
     link: "/create/text",
   },
 ];
-
-const CreatePost = () => {
-  const navigate = useNavigate();
-  return (
-    <Box bg="black" height="100%">
-      <Box textAlign="center" py={6}>
-        <Text color="white" fontWeight="bold" fontSize={"24px"}>
-          Create a new post
-        </Text>
-      </Box>
-      <SimpleGrid columns={2} px={6} gap={6}>
-        {CTAButtons.map((button) => (
-          <Flex
-            key={button.id}
-            bg="white"
-            borderRadius="5px"
-            alignItems={"center"}
-            flexDirection={"column"}
-            p={3}
-            _hover={{
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              if (button.link) {
-                navigate(button.link);
-              }
-            }}
-          >
-            <Box fontSize={"40px"}>{button.icon}</Box>
-            <Text mt={3}>{button.name}</Text>
-          </Flex>
-        ))}
-      </SimpleGrid>
-    </Box>
-  );
-};
 
 export default CreatePost;
