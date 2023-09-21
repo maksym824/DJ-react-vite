@@ -17,7 +17,13 @@ export default function FormFooter() {
     >
       <HStack gap="4px">
         <FaArrowLeft fontSize="14px" />
-        <Box as="a" href="/" fontWeight="500" fontSize="16px" lineHeight="1em">
+        <Box
+          as="a"
+          href="/create"
+          fontWeight="500"
+          fontSize="16px"
+          lineHeight="1em"
+        >
           Return to Profile
         </Box>
       </HStack>
