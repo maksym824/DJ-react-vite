@@ -9,7 +9,7 @@ const boxes = [
   {
     text: "Create Product",
     imageUrl: "https://media.djfan.app/images/product.jpg",
-    // linkUrl: "/product",
+    linkUrl: "/product",
   },
   {
     text: "Earnings",
