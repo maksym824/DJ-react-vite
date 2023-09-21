@@ -19,7 +19,7 @@ export enum PostType {
   "video" = "video",
   "audio" = "audio",
   "text" = "text",
-  "event" = "event",
+  "product" = "product",
 }
 
 export type Country = {

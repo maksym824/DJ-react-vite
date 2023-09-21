@@ -14,6 +14,7 @@ import Earnings from "~/pages/Earnings";
 import Payouts from "~/pages/Payouts";
 import EventPost from "~/pages/createPost/EventPost";
 import Fans from "~/pages/MyFans";
+import Product from "~/pages/Product";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
                 element: <EventPost />,
               },
             ],
+          },
+          {
+            path: "/product",
+            element: <Product />,
           },
           {
             path: "/settings",

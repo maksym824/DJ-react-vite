@@ -76,6 +76,7 @@ const CTAButtons = [
     id: 5,
     name: "New Product",
     imageUrl: "https://media.djfan.app/images/product.png",
+    link: "/product",
   },
   {
     id: 6,
