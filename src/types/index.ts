@@ -34,6 +34,7 @@ export type User = {
   bank_account_number: string;
   bookings: string;
   country: string;
+  country_code: string;
   cover_photo: string;
   created_at: string;
   display_name: string;
@@ -71,6 +72,7 @@ export type UserAccount = {
   last_name: string;
   username: string;
   email: string;
+  profile_active: number;
 };
 
 export type UserStatistics = {

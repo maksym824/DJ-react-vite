@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import AuthLayout from "../layouts/AuthLayout";
+import LandingPage from "~/pages/LandingPage";
 
 interface ExternalNavigateProps {
   to: string;
@@ -8,7 +8,7 @@ interface ExternalNavigateProps {
 const ExternalNavigate: FunctionComponent<ExternalNavigateProps> = ({ to }) => {
   // window.location.replace(to);
   console.log(to);
-  return <AuthLayout />;
+  return <LandingPage />;
 };
 
 export default ExternalNavigate;
