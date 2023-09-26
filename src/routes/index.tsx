@@ -14,7 +14,9 @@ import Earnings from "~/pages/Earnings";
 import Payouts from "~/pages/Payouts";
 import EventPost from "~/pages/createPost/EventPost";
 import Fans from "~/pages/MyFans";
+import CreateAccount from "~/pages/CreateAccount";
 import Product from "~/pages/Product";
+import { CreateAccountContextProvider } from "~/pages/CreateAccount/createAccountContext";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +86,14 @@ const router = createBrowserRouter([
             element: <Fans />,
           },
         ],
+      },
+      {
+        path: "/create-account",
+        element: (
+          <CreateAccountContextProvider>
+            <CreateAccount />
+          </CreateAccountContextProvider>
+        ),
       },
     ],
   },
