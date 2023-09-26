@@ -35,6 +35,22 @@ const deleteUserAccount = () => {
   return apiClient.delete("/dj/me/delete_account");
 };
 
+const useUsernameCheck = (username?: string) => {
+  const checkUsername = () =>
+    apiClient
+      .get<{ result: boolean; profile_url: string; message: string }>(
+        `/dj/me/profile_url/${username}`
+      )
+      .then((res) => {
+        return res.data.result;
+      });
+
+  return useQuery({
+    queryKey: ["usernameCheck"],
+    queryFn: () => checkUsername(),
+  });
+};
+
 export {
   getUserAccount,
   useUserAccount,
@@ -42,4 +58,5 @@ export {
   changeEmailAddress,
   resetPassword,
   deleteUserAccount,
+  useUsernameCheck,
 };
