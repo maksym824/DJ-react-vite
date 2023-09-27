@@ -40,7 +40,13 @@ export default function LandingPage() {
               w="120px"
               src="https://creators.djfan.app/wp-content/uploads/2023/04/djfan-email.png"
             />
-            <Button>SIGN IN</Button>
+            <Button
+              onClick={() => {
+                window.open(import.meta.env.VITE_DJFAN_SIGN_IN_URL, "_self");
+              }}
+            >
+              SIGN IN
+            </Button>
           </Flex>
         </Flex>
       </Box>
@@ -75,7 +81,13 @@ export default function LandingPage() {
               consistent passive income.
             </Text>
             <HStack>
-              <Button>CREATE ACCOUNT</Button>
+              <Button
+                onClick={() => {
+                  window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+                }}
+              >
+                CREATE ACCOUNT
+              </Button>
             </HStack>
           </VStack>
         </Flex>

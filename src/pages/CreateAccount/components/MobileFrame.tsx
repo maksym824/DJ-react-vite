@@ -2,15 +2,12 @@ import {
   Avatar,
   Box,
   Text,
-  Flex,
-  Skeleton,
   Center,
-  Image,
   Stack,
   HStack,
   SkeletonText,
 } from "@chakra-ui/react";
-import { FiUnlock, FiUser, FiHeadphones } from "react-icons/fi";
+import { FiHeadphones } from "react-icons/fi";
 export default function MobileFrame() {
   return (
     <Box
