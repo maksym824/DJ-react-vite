@@ -11,10 +11,11 @@ interface PrivateRoutesProps {}
 // /create-account
 
 const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
-  const { data: user } = useUserAccount();
-  if (!user) {
+  const { data: user, isLoading } = useUserAccount();
+
+  if (isLoading) return <></>;
+  if (!user)
     return <ExternalNavigate to={import.meta.env.VITE_DJFAN_SIGN_IN_URL} />;
-  }
   if (user?.profile_active == 0) {
     if (user?.profile_done == 1) {
       return <ProfileReviewPage />;
