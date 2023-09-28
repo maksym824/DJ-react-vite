@@ -8,10 +8,9 @@ interface PrivateRoutesProps {}
 
 const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
   const { data: user } = useUserAccount();
-  console.log(user);
-  if (!user?.profile_active) return <ProfileReviewPage />;
-  if (user)
+  if (!user)
     return <ExternalNavigate to={import.meta.env.VITE_DJFAN_SIGN_IN_URL} />;
+  if (!user?.profile_active) return <ProfileReviewPage />;
   else return <Outlet />;
 };
 
