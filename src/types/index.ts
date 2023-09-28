@@ -73,6 +73,8 @@ export type UserAccount = {
   username: string;
   email: string;
   profile_active: number;
+  profile_exists: number;
+  profile_done: number;
 };
 
 export type UserStatistics = {
