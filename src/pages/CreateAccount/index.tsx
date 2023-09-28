@@ -59,7 +59,7 @@ export default function CreateAccount() {
   const [isStepLoading, setIsStepLoading] = useState(false);
   const isStep1Complete =
     step === 1 && !!displayName && !!firstName && !!lastName;
-  const isStep2Complete = step === 2 && !!username;
+  const isStep2Complete = step === 2 && !!username && username.length > 2;
   const isStep3Complete =
     step === 3 && !!shortBio && !!country && !!countryCode && !!location;
   const isStep4Complete =

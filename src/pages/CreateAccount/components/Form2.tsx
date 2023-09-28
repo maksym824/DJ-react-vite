@@ -22,11 +22,17 @@ export const Form2 = () => {
       return false;
     }
     return !!userCheck;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, userCheck]);
 
   const handleChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+    let profile_url = e.target.value;
+    const regex = /[^a-z0-9\-_]/;
+    profile_url = profile_url.toLowerCase();
+    profile_url = profile_url.replace(regex, "");
+    profile_url = profile_url.substring(0, 50);
+    setUsername(profile_url);
   };
 
   useEffect(() => {
@@ -56,8 +62,13 @@ export const Form2 = () => {
             value={username}
             onChange={handleChangeUserName}
             isInvalid={onTouched && !isValidUsername}
-            focusBorderColor={isValidUsername ? "green" : "red"}
-            errorBorderColor="red"
+            focusBorderColor={
+              !onTouched || username.length === 0
+                ? "black.500"
+                : isValidUsername
+                ? "green.500"
+                : "red.500"
+            }
             onFocus={() => setTouched(true)}
           />
         </InputGroup>
