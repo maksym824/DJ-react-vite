@@ -35,7 +35,7 @@ export default function Product() {
   const [releaseName, setReleaseName] = useState("");
   const [description, setDescription] = useState("");
   const [releaseArtwork, setReleaseArtwork] = useState<File | null>(null);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [genre, setGenre] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [recordLabel, setRecordLabel] = useState("");
@@ -316,10 +316,13 @@ export default function Product() {
                 <FormLabel>Price ($ USD)</FormLabel>
                 <NumberInput
                   value={price}
-                  onChange={(value) => setPrice(Number(value))}
-                  placeholder="e.g. 2.00"
+                  onChange={(value) => setPrice(value)}
+                  precision={2}
                 >
-                  <NumberInputField />
+                  <NumberInputField
+                    placeholder="e.g. 2.00"
+                    textAlign={"right"}
+                  />
                 </NumberInput>
               </FormControl>
 
