@@ -79,6 +79,15 @@ const SideMenuBody = () => {
         </Box>
         <BoxLink href="/settings" text="Profile Information" />
         <BoxLink href="/settings" text="Account Settings" />
+        <Box
+          fontSize="16px"
+          fontWeight="500"
+          onClick={() => {
+            window.open(import.meta.env.VITE_DJFAN_SIGN_OUT_URL, "_self");
+          }}
+        >
+          Sign Out
+        </Box>
       </Stack>
     </>
   );

@@ -1,4 +1,5 @@
 import { Flex, Box, Heading, Image, VStack } from "@chakra-ui/react";
+import SignOutBtn from "~/components/SignOutBtn";
 import { useUserData } from "~/services/settings/userData";
 
 export default function ProfileReviewPage() {
@@ -59,6 +60,7 @@ export default function ProfileReviewPage() {
             >
               Your profile is being reviewed
             </Heading>
+            <SignOutBtn />
           </VStack>
         </Flex>
       </Flex>

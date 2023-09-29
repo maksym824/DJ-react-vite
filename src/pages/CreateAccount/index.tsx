@@ -26,6 +26,7 @@ import { useCreateAccountContext } from "./useCreateAccountContext";
 import { updateUserAccount } from "~/services/settings/userAccount";
 import { updateUserData, useUserData } from "~/services/settings/userData";
 import { useNavigate } from "react-router-dom";
+import SignOutBtn from "~/components/SignOutBtn";
 
 export default function CreateAccount() {
   const { refetch } = useUserData();
@@ -155,6 +156,7 @@ export default function CreateAccount() {
           w="100%"
           justifyContent="center"
           py="5px"
+          position="relative"
         >
           <HStack
             maxW="1000px"
@@ -171,6 +173,16 @@ export default function CreateAccount() {
               />
             </Box>
           </HStack>
+          <Box
+            position="absolute"
+            right="10px"
+            top="50%"
+            transform="translateY(-50%)"
+            display="flex"
+            alignItems="center"
+          >
+            <SignOutBtn />
+          </Box>
         </Flex>
 
         <VStack pt="20px">
