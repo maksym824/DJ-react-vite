@@ -178,7 +178,7 @@ const EventPost = () => {
                   />
                 </FormControl>
 
-                <FormControl isRequired mb={4}>
+                <FormControl mb={4}>
                   <FormLabel>Start Time</FormLabel>
                   <Input
                     type="time"
@@ -187,7 +187,7 @@ const EventPost = () => {
                   />
                 </FormControl>
 
-                <FormControl isRequired mb={4}>
+                <FormControl mb={4}>
                   <FormLabel>End Time</FormLabel>
                   <Input
                     type="time"
@@ -275,8 +275,6 @@ const EventPost = () => {
                     !eventName ||
                     !eventDescription ||
                     !eventDate ||
-                    !eventStartTime ||
-                    !eventEndTime ||
                     !eventVenue ||
                     !eventCity ||
                     !eventArtwork ||
