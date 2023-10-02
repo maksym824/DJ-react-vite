@@ -58,7 +58,7 @@ const AudioPost = () => {
   };
 
   const handleInitPostToken = async () => {
-    const token = await getPostToken(PostType.video);
+    const token = await getPostToken(PostType.audio);
     setPostToken(token as string);
   };
 
