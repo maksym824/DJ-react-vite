@@ -17,6 +17,7 @@ import Fans from "~/pages/MyFans";
 import CreateAccount from "~/pages/CreateAccount";
 import Product from "~/pages/Product";
 import { CreateAccountContextProvider } from "~/pages/CreateAccount/createAccountContext";
+import Partners from "~/pages/Partners";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
           {
             path: "/",
             element: <HomePage />,
+          },
+          {
+            path: "/partners",
+            element: <Partners />,
           },
           {
             path: "/create",

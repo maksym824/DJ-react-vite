@@ -8,8 +8,6 @@ import CreateAccount from "~/pages/CreateAccount";
 
 interface PrivateRoutesProps {}
 
-// /create-account
-
 const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
   const { data: user, isLoading } = useUserAccount();
 

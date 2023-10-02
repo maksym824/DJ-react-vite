@@ -1,5 +1,7 @@
 import { Box, Stack, Divider } from "@chakra-ui/react";
 import { FaHeadphones } from "react-icons/fa";
+import apiClient from "~/services/api-client";
+import { useUserAccount } from "~/services/settings/userAccount";
 
 type BoxLinkProps = {
   href: string;
@@ -19,6 +21,11 @@ const BoxLink = ({ href, text }: BoxLinkProps) => (
 );
 
 const SideMenuBody = () => {
+  const { data: user } = useUserAccount();
+  const isLoggedAs = !user?.loginas;
+  const isPartnerPageAvailable =
+    isLoggedAs && user?.roles?.includes("ROLE_PARTNER");
+
   return (
     <>
       <Box
@@ -44,6 +51,7 @@ const SideMenuBody = () => {
           Insights
         </Box>
         <BoxLink href="/fans" text="Your Fans" />
+        {isPartnerPageAvailable && <BoxLink href="/partners" text="Partners" />}
 
         <Box py="10px">
           <Divider borderColor="#6b46c1" />
@@ -88,6 +96,19 @@ const SideMenuBody = () => {
         >
           Sign Out
         </Box>
+        {isPartnerPageAvailable && (
+          <Box
+            fontSize="16px"
+            fontWeight="500"
+            cursor={isLoggedAs ? "pointer" : "not-allowed"}
+            onClick={async () => {
+              await apiClient.get("/dj/logoutas");
+              window.location.reload();
+            }}
+          >
+            Sign Out As
+          </Box>
+        )}
       </Stack>
     </>
   );

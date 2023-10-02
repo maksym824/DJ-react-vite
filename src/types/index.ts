@@ -75,6 +75,7 @@ export type UserAccount = {
   profile_active: number;
   profile_exists: number;
   profile_done: number;
+  loginas: boolean;
 };
 
 export type UserStatistics = {
@@ -117,3 +118,12 @@ export enum FanType {
   GOLD = 2,
   VIP = 3,
 }
+
+export type Artist = {
+  display_name: string;
+  id: number;
+  profile_picture: string;
+  profile_url: string;
+  user_id: string;
+  user_key: string;
+};
