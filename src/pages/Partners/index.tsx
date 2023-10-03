@@ -1,15 +1,17 @@
 import {
   Flex,
   Table,
-  Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   TableContainer,
   Img,
   Button,
 } from "@chakra-ui/react";
+/*
+  Thead,
+  Th,
+ */
 import Header from "~/components/Header";
 import apiClient from "~/services/api-client";
 import { usePartnerArtists } from "~/services/partners/getPartnerArtists";
