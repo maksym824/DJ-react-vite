@@ -34,6 +34,9 @@ import { useUserData } from "~/services/settings/userData";
 export default function AccountSettings() {
   const { data, refetch } = useUserAccount();
   const { data: userData } = useUserData();
+
+  const isLoggedAs = data?.loginas;
+
   const { paypal } = userData ?? {};
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -129,29 +132,30 @@ export default function AccountSettings() {
   };
 
   return (
-    <>
-      <Stack p="20px" bg="#fff" mt="20px" borderRadius="10px">
-        <FormControl mb={4}>
-          <FormLabel>First Name</FormLabel>
-          <Input
-            type="text"
-            placeholder=" First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </FormControl>
+    !isLoggedAs && (
+      <>
+        <Stack p="20px" bg="#fff" mt="20px" borderRadius="10px">
+          <FormControl mb={4}>
+            <FormLabel>First Name</FormLabel>
+            <Input
+              type="text"
+              placeholder=" First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </FormControl>
 
-        <FormControl mb={4}>
-          <FormLabel>Last Name</FormLabel>
-          <Input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>Last Name</FormLabel>
+            <Input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </FormControl>
 
-        {/* <FormControl mb={4}>
+          {/* <FormControl mb={4}>
           <FormLabel>New Email Address</FormLabel>
           <Input
             type="text"
@@ -171,126 +175,127 @@ export default function AccountSettings() {
           />
         </FormControl> */}
 
-        <Button
-          type="submit"
-          background="#300a6e"
-          color="#fff"
-          fontSize="18px"
-          _hover={{ background: "#111" }}
-          height="45px"
-          onClick={handleUpdateAccount}
-          isLoading={isLoading}
-        >
-          UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
-        </Button>
-        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
-        <Flex
-          flexDirection="column"
-          justifyContent="center"
-          gap="15px"
-          mt="15px"
-          height="100%"
-        >
-          <FormControl>
-            <FormLabel>Paypal Email</FormLabel>
-            <Input
-              type="text"
-              placeholder="Enter PayPal Email"
-              value={paypalEmail}
-              onChange={(e) => setPaypalEmail(e.target.value)}
-            />
-          </FormControl>
-          <HStack gap="10px">
-            <Checkbox
-              checked={confirmCorrect}
-              onChange={(e) => setConfirmCorrect(e.target.checked)}
-            />
-            <Text>My email address for payouts is correct</Text>
-          </HStack>
           <Button
-            leftIcon={<FaStripeS />}
-            _hover={
-              confirmCorrect && !!paypalEmail
-                ? {
-                    bg: "#111111",
-                    color: "#ffffff",
-                    borderColor: "#111111",
-                  }
-                : {}
-            }
-            isDisabled={!confirmCorrect || !paypalEmail}
-            isLoading={isUpdating}
-            onClick={handleUpdatePaypal}
+            type="submit"
+            background="#300a6e"
+            color="#fff"
+            fontSize="18px"
+            _hover={{ background: "#111" }}
+            height="45px"
+            onClick={handleUpdateAccount}
+            isLoading={isLoading}
           >
-            LINK PAYPAL ACCOUNT
+            UPDATE PROFILE <FaArrowRight style={{ marginLeft: "5px" }} />
           </Button>
-        </Flex>
+          <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            gap="15px"
+            mt="15px"
+            height="100%"
+          >
+            <FormControl>
+              <FormLabel>Paypal Email</FormLabel>
+              <Input
+                type="text"
+                placeholder="Enter PayPal Email"
+                value={paypalEmail}
+                onChange={(e) => setPaypalEmail(e.target.value)}
+              />
+            </FormControl>
+            <HStack gap="10px">
+              <Checkbox
+                checked={confirmCorrect}
+                onChange={(e) => setConfirmCorrect(e.target.checked)}
+              />
+              <Text>My email address for payouts is correct</Text>
+            </HStack>
+            <Button
+              leftIcon={<FaStripeS />}
+              _hover={
+                confirmCorrect && !!paypalEmail
+                  ? {
+                      bg: "#111111",
+                      color: "#ffffff",
+                      borderColor: "#111111",
+                    }
+                  : {}
+              }
+              isDisabled={!confirmCorrect || !paypalEmail}
+              isLoading={isUpdating}
+              onClick={handleUpdatePaypal}
+            >
+              LINK PAYPAL ACCOUNT
+            </Button>
+          </Flex>
 
-        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+          <Divider paddingBottom="6px" paddingTop="6px"></Divider>
 
-        <Button
-          w="100%"
-          colorScheme="pink"
-          bgColor="rgb(191, 40, 241)"
-          color="#fff"
-          onClick={handleChangeEmailAddress}
+          <Button
+            w="100%"
+            colorScheme="pink"
+            bgColor="rgb(191, 40, 241)"
+            color="#fff"
+            onClick={handleChangeEmailAddress}
+          >
+            <BiEnvelope /> Change Email Address
+          </Button>
+          <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+
+          <Button
+            w="100%"
+            colorScheme="pink"
+            bgColor="rgb(191, 40, 241)"
+            color="#fff"
+            onClick={handleResetPassword}
+          >
+            <BiKey /> Reset Password
+          </Button>
+
+          <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+
+          <Button w="100%" color="#fff" colorScheme="red" onClick={onOpen}>
+            <BiUser /> Delete My Account
+          </Button>
+        </Stack>
+
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
         >
-          <BiEnvelope /> Change Email Address
-        </Button>
-        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Delete My Account
+              </AlertDialogHeader>
 
-        <Button
-          w="100%"
-          colorScheme="pink"
-          bgColor="rgb(191, 40, 241)"
-          color="#fff"
-          onClick={handleResetPassword}
-        >
-          <BiKey /> Reset Password
-        </Button>
+              <AlertDialogBody>
+                Are you sure you want to delete your account? You can't undo
+                this action afterwards. All subscriptions will be cancelled
+                automaticly on deletion.
+              </AlertDialogBody>
 
-        <Divider paddingBottom="6px" paddingTop="6px"></Divider>
-
-        <Button w="100%" color="#fff" colorScheme="red" onClick={onOpen}>
-          <BiUser /> Delete My Account
-        </Button>
-      </Stack>
-
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete My Account
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure you want to delete your account? You can't undo this
-              action afterwards. All subscriptions will be cancelled automaticly
-              on deletion.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                colorScheme="red"
-                onClick={() => {
-                  deleteAccount();
-                  onClose();
-                }}
-                ml={3}
-              >
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </>
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={() => {
+                    deleteAccount();
+                    onClose();
+                  }}
+                  ml={3}
+                >
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      </>
+    )
   );
 }

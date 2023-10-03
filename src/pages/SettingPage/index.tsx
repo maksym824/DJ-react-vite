@@ -11,6 +11,7 @@ import Header from "~/components/Header";
 import ProfileLinks from "./components/ProfileLinks";
 import ProfileSettings from "./components/ProfileSettings";
 import AccountSettings from "./components/AccountSettings";
+import { useUserAccount } from "~/services/settings/userAccount";
 
 const tabStyle = {
   fontSize: { base: "20px", md: "16px" },
@@ -21,6 +22,8 @@ const hiddenWord = {
 };
 
 export default function Settings() {
+  const { data: user } = useUserAccount();
+  const isLoggedAs = user?.loginas;
   return (
     <Flex
       w="100%"
@@ -48,9 +51,11 @@ export default function Settings() {
               <Tab {...tabStyle}>
                 <Box {...hiddenWord}>Profile&nbsp;</Box> Links
               </Tab>
-              <Tab {...tabStyle}>
-                Account <Box {...hiddenWord}>&nbsp;Settings</Box>
-              </Tab>
+              {!isLoggedAs && (
+                <Tab {...tabStyle}>
+                  Account <Box {...hiddenWord}>&nbsp;Settings</Box>
+                </Tab>
+              )}
             </TabList>
           </Box>
           <TabPanels>
@@ -60,9 +65,11 @@ export default function Settings() {
             <TabPanel p="0">
               <ProfileLinks />
             </TabPanel>
-            <TabPanel p="0">
-              <AccountSettings />
-            </TabPanel>
+            {!isLoggedAs && (
+              <TabPanel p="0">
+                <AccountSettings />
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
       </Flex>

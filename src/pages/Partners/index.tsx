@@ -34,6 +34,7 @@ const Partners = () => {
         {artists && (
           <TableContainer>
             <Table variant="simple">
+              {/*
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -41,10 +42,10 @@ const Partners = () => {
                   <Th></Th>
                 </Tr>
               </Thead>
+               */}
               <Tbody>
                 {parsedArtists.map((artist: Artist) => (
                   <Tr key={artist.id}>
-                    <Td>{artist.display_name}</Td>
                     <Td>
                       <Img
                         src={`https://files.djfan.app/${
@@ -54,10 +55,14 @@ const Partners = () => {
                         w="100%"
                         maxH="100px"
                         objectFit="cover"
+                        borderRadius={5}
                       />
                       {/* {artist.profile_picture} */}
                     </Td>
                     <Td>
+                      <div style={{ paddingBottom: "10px" }}>
+                        {artist.display_name}
+                      </div>
                       <Button
                         colorScheme="purple"
                         size="sm"
@@ -66,6 +71,7 @@ const Partners = () => {
                             `/dj/loginas/${artist.user_id}`
                           );
                           const { data } = res;
+                          window.location.href = "/";
                           if (data.result) {
                             console.log(data.result);
                           } else {

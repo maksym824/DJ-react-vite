@@ -1,6 +1,7 @@
 import {
   Box,
   Flex,
+  Text,
   Image,
   Drawer,
   DrawerBody,
@@ -12,9 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaTimes } from "react-icons/fa";
 import SideMenuBody from "./SideMenuBody";
+import { useUserAccount } from "~/services/settings/userAccount";
 
 const Header = () => {
+  const { data: user } = useUserAccount();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box>
       <Flex
@@ -53,14 +57,21 @@ const Header = () => {
               View Profile
             </Flex>
           </Flex>
-          <Flex w="40%" justifyContent={{ base: "flex-start", md: "center" }}>
-            <Box as="a" href="/">
-              <Image
-                id="logo"
-                w="120px"
-                src="https://media.djfan.app/images/djfan-logo-beta.png"
-              />
-            </Box>
+          <Flex w="60%" justifyContent={{ base: "flex-start", md: "center" }}>
+            {!user?.loginas && (
+              <Box as="a" href="/">
+                <Image
+                  id="logo"
+                  w="120px"
+                  src="https://media.djfan.app/images/djfan-logo-beta.png"
+                />
+              </Box>
+            )}
+            {user?.loginas && (
+              <Text fontSize="16" color="#FFF" paddingLeft={5}>
+                {user?.username && user?.username.toString().substring(0, 28)}
+              </Text>
+            )}
           </Flex>
           <Flex w="30%" justifyContent="flex-end">
             <Box as="a" onClick={onOpen} color="#fff" cursor="pointer">

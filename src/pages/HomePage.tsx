@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { Box, Flex, Link, Text, Center } from "@chakra-ui/react";
 import Header from "../components/Header";
+import { useUserAccount } from "~/services/settings/userAccount";
+import { useEffect } from "react";
 const boxes = [
   {
     text: "Create Post",
@@ -32,7 +35,18 @@ const boxes = [
     // linkUrl: "/invitations",
   },
 ];
+
 export default function Index() {
+  const { data: user } = useUserAccount();
+  const isPartner = user?.roles?.includes("ROLE_PARTNER");
+  const isLoggedAs = user?.loginas;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isPartner) {
+      navigate("/partners");
+    }
+  });
+
   return (
     <Flex
       w="100%"
@@ -52,31 +66,42 @@ export default function Index() {
           pt="25px"
           px="15px"
         >
-          <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
-            {boxes.map((box, index) => (
-              <Link
-                key={index}
-                href={box?.linkUrl ?? "/"}
-                w={{ base: "100%", md: "30%" }}
-              >
-                <Box
-                  w={{ base: "100%", md: "100%" }}
-                  h="150px"
-                  bgImage={`linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${box.imageUrl})`}
-                  bgPos="center"
-                  bgSize="cover"
-                  borderRadius="10px"
-                  position="relative"
-                >
-                  <Center h="100%">
-                    <Text fontSize="24px" color="white" fontWeight="600">
-                      {box.text}
-                    </Text>
-                  </Center>
-                </Box>
-              </Link>
-            ))}
-          </Flex>
+          {!isPartner && (
+            <Flex
+              h="100%"
+              justifyContent="space-between"
+              wrap="wrap"
+              gap="30px"
+            >
+              {boxes.map((box, index) =>
+                isLoggedAs && box.text == "Earnings" ? (
+                  <></>
+                ) : (
+                  <Link
+                    key={index}
+                    href={box?.linkUrl ?? "/"}
+                    w={{ base: "100%", md: "30%" }}
+                  >
+                    <Box
+                      w={{ base: "100%", md: "100%" }}
+                      h="150px"
+                      bgImage={`linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${box.imageUrl})`}
+                      bgPos="center"
+                      bgSize="cover"
+                      borderRadius="10px"
+                      position="relative"
+                    >
+                      <Center h="100%">
+                        <Text fontSize="24px" color="white" fontWeight="600">
+                          {box.text}
+                        </Text>
+                      </Center>
+                    </Box>
+                  </Link>
+                )
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </Flex>
