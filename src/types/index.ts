@@ -76,6 +76,7 @@ export type UserAccount = {
   profile_exists: number;
   profile_done: number;
   loginas: boolean;
+  admin: number;
 };
 
 export type UserStatistics = {
@@ -126,4 +127,12 @@ export type Artist = {
   profile_url: string;
   user_id: string;
   user_key: string;
+};
+
+export type DJSearch = {
+  user_id: number;
+  user_key: string;
+  first_name: string;
+  last_name: string;
+  display_name: string;
 };

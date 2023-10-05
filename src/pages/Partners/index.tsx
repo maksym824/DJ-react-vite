@@ -7,6 +7,7 @@ import {
   TableContainer,
   Img,
   Button,
+  Box,
 } from "@chakra-ui/react";
 /*
   Thead,
@@ -15,10 +16,15 @@ import {
 import Header from "~/components/Header";
 import apiClient from "~/services/api-client";
 import { usePartnerArtists } from "~/services/partners/getPartnerArtists";
+import { useUserAccount } from "~/services/settings/userAccount";
 import { Artist } from "~/types";
+import SearchDJ from "./SearchDJ";
 
 const Partners = () => {
   const { data: artists } = usePartnerArtists();
+  const { data: userAccount } = useUserAccount();
+  const hasAdminRight = userAccount?.admin === 1;
+
   // Because the data is an object, we need to convert it to an array
   const parsedArtists = Object.values(artists || {}) as Artist[];
 
@@ -32,7 +38,12 @@ const Partners = () => {
       pb="50px"
     >
       <Header />
-      <Flex w="100%" justifyContent="center">
+      <Flex w="100%" h="100%" justifyContent="center">
+        {hasAdminRight && (
+          <Box mt="15px">
+            <SearchDJ />
+          </Box>
+        )}
         {artists && (
           <TableContainer>
             <Table variant="simple">
