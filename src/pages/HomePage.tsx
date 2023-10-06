@@ -1,8 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import { Box, Flex, Link, Text, Center } from "@chakra-ui/react";
 import Header from "../components/Header";
 import { useUserAccount } from "~/services/settings/userAccount";
-import { useEffect } from "react";
 const boxes = [
   {
     text: "Create Post",
@@ -85,7 +83,7 @@ export default function Index() {
               */}
 
             {boxes
-              .reduce(function (result, box) {
+              .reduce(function (result: any[], box) {
                 /*
                 console.log(
                   "isDj",
@@ -114,7 +112,11 @@ export default function Index() {
                     return result;
                   }
                 }
-                result.push(box);
+                result.push({
+                  text: box.text,
+                  imageUrl: box.imageUrl,
+                  linkUrl: box.linkUrl,
+                });
                 return result;
               }, [])
               .map((box, index) => {
