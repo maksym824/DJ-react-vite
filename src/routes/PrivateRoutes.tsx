@@ -10,19 +10,20 @@ interface PrivateRoutesProps {}
 
 const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
   const { data: user, isLoading } = useUserAccount();
+  const isDj = user?.dj || false;
 
   if (isLoading) return <></>;
   if (!user)
     return <ExternalNavigate to={import.meta.env.VITE_DJFAN_SIGN_IN_URL} />;
-  if (user?.profile_active == 0) {
-    if (user?.profile_done == 1) {
-      return <ProfileReviewPage />;
-    } else {
+  if (isDj == true && !user?.profile_active) {
+    if (!user?.profile_done) {
       return (
         <CreateAccountContextProvider>
           <CreateAccount />
         </CreateAccountContextProvider>
       );
+    } else {
+      return <ProfileReviewPage />;
     }
   } else {
     return <Outlet />;

@@ -19,14 +19,20 @@ import { usePartnerArtists } from "~/services/partners/getPartnerArtists";
 import { useUserAccount } from "~/services/settings/userAccount";
 import { Artist } from "~/types";
 import SearchDJ from "./SearchDJ";
+import { useEffect } from "react";
 
 const Partners = () => {
   const { data: artists } = usePartnerArtists();
   const { data: userAccount } = useUserAccount();
-  const hasAdminRight = userAccount?.admin === 1;
-
+  const isAdmin = userAccount?.admin || userAccount?.me?.admin || false;
   // Because the data is an object, we need to convert it to an array
   const parsedArtists = Object.values(artists || {}) as Artist[];
+
+  useEffect(() => {
+    if (parsedArtists) {
+      console.log("parsedArtists", parsedArtists);
+    }
+  });
 
   return (
     <Flex
@@ -39,7 +45,7 @@ const Partners = () => {
     >
       <Header />
       <Flex w="100%" h="100%" justifyContent="center">
-        {hasAdminRight && (
+        {isAdmin && (
           <Box mt="15px">
             <SearchDJ />
           </Box>

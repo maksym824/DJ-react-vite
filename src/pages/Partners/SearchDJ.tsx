@@ -71,7 +71,7 @@ export default function SearchDJ() {
       <Popover isOpen={isOpen} onClose={onClose}>
         <PopoverTrigger>
           <InputGroup
-            w={{ base: "100%", sm: "150px", md: "200px" }}
+            w={{ base: "100%", sm: "200px", md: "250px" }}
             onClick={onToggle}
           >
             <InputLeftElement pointerEvents="none">
@@ -91,23 +91,24 @@ export default function SearchDJ() {
           </InputGroup>
         </PopoverTrigger>
         <PopoverContent
-          w={{ base: "100%", sm: "150px", md: "200px" }}
+          w={{ base: "100%", sm: "20px", md: "250px" }}
           display={search.length ? "block" : "none"}
         >
           <PopoverBody>
             <Flex direction="column">
-              {userList?.map((DJUser, index) => (
-                <Text
-                  key={index}
-                  cursor="pointer"
-                  _hover={{
-                    backgroundColor: "gray.200",
-                  }}
-                  onClick={async () => await handleSelect(DJUser)}
-                >
-                  {DJUser.display_name}
-                </Text>
-              ))}
+              {userList &&
+                userList?.map((DJUser, index) => (
+                  <Text
+                    key={index}
+                    cursor="pointer"
+                    _hover={{
+                      backgroundColor: "gray.200",
+                    }}
+                    onClick={async () => await handleSelect(DJUser)}
+                  >
+                    {DJUser.display_name}
+                  </Text>
+                ))}
             </Flex>
           </PopoverBody>
         </PopoverContent>

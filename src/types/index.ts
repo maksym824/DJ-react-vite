@@ -67,17 +67,35 @@ export type User = {
 export type UserAccount = {
   user_id: number;
   user_key: string;
-  roles: string;
   first_name: string;
   last_name: string;
   username: string;
   email: string;
-  profile_active: number;
   profile_exists: number;
-  profile_done: number;
+  profile_active: boolean;
+  profile_done: boolean;
   loginas: boolean;
-  admin: number;
+  admin: boolean;
+  partner: boolean;
+  dj: boolean;
+  me: MeAccount;
 };
+
+export type MeAccount = {
+  user_id: number;
+  user_key: string;
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  profile_exists: number;
+  profile_active: boolean;
+  profile_done: boolean;
+  loginas: boolean;
+  admin: boolean;
+  partner: boolean;
+  dj: boolean;
+}
 
 export type UserStatistics = {
   followers: number;

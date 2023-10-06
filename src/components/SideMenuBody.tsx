@@ -22,8 +22,11 @@ const BoxLink = ({ href, text }: BoxLinkProps) => (
 
 const SideMenuBody = () => {
   const { data: user } = useUserAccount();
-  const isLoggedAs = user?.loginas;
-  const isPartnerPageAvailable = user?.roles?.includes("ROLE_PARTNER");
+  // const isPartnerPageAvailable = user?.partner;
+  const isDj = user?.dj || false;
+  const isAdmin = user?.admin || user?.me?.admin || false;
+  const isPartner = user?.partner || user?.me?.partner || false;
+  const isLoggedAs = user?.loginas || false;
 
   return (
     <>
@@ -50,6 +53,30 @@ const SideMenuBody = () => {
           Sign Out As
         </Box>
       )}
+
+      {(isPartner || isAdmin) && !isLoggedAs && (
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="5px"
+          fontWeight="500"
+          boxShadow="unset"
+          _hover={{ bg: "#bf0fff" }}
+          bg="#345678"
+          color="#fff"
+          py="10px"
+          justifyContent="center"
+          _focus={{ boxShadow: "unset" }}
+          fontSize="16px"
+          cursor={"pointer"}
+          onClick={async () => {
+            window.location.href = "/partners";
+          }}
+        >
+          Partners
+        </Box>
+      )}
+
       <Box
         as="a"
         href="/settings"
@@ -69,11 +96,7 @@ const SideMenuBody = () => {
         Return to Profile
       </Box>
       <Stack px="20px" py="20px">
-        {isPartnerPageAvailable && (
-          <BoxLink href="/partners" text="My Artists" />
-        )}
-
-        {!isPartnerPageAvailable && (
+        {isDj && (
           <>
             <Box fontSize="18px" fontWeight="600" color="#6b46c1">
               Create
@@ -98,7 +121,7 @@ const SideMenuBody = () => {
               <Divider borderColor="#6b46c1" />
             </Box>
 
-            {!isLoggedAs && (
+            {(!isLoggedAs || isAdmin) && (
               <>
                 <Box fontSize="18px" fontWeight="600" color="#6b46c1">
                   Income
@@ -107,6 +130,7 @@ const SideMenuBody = () => {
                 <BoxLink href="/earnings" text="Earnings" />
               </>
             )}
+
             <BoxLink href="/invitations" text="Invitations" />
 
             <Box py="10px">
@@ -130,6 +154,29 @@ const SideMenuBody = () => {
           Sign Out
         </Box>
       </Stack>
+      {isLoggedAs && (
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="5px"
+          fontWeight="500"
+          boxShadow="unset"
+          _hover={{ bg: "#bf0fff" }}
+          bg="#123456"
+          color="#fff"
+          py="10px"
+          justifyContent="center"
+          _focus={{ boxShadow: "unset" }}
+          fontSize="16px"
+          cursor={isLoggedAs ? "pointer" : "not-allowed"}
+          onClick={async () => {
+            await apiClient.get("/dj/logoutas");
+            window.location.href = "/";
+          }}
+        >
+          Sign Out As
+        </Box>
+      )}
     </>
   );
 };

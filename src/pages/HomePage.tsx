@@ -6,46 +6,55 @@ import { useEffect } from "react";
 const boxes = [
   {
     text: "Create Post",
-    imageUrl: "https://media.djfan.app/images/create.jpg",
+    imageUrl: "https://files.djfan.app/images/create.webp",
     linkUrl: "/create",
   },
   {
     text: "Create Product",
-    imageUrl: "https://media.djfan.app/images/product.jpg",
+    imageUrl: "https://files.djfan.app/images/product.webp",
     linkUrl: "/product",
   },
   {
     text: "Earnings",
-    imageUrl: "https://media.djfan.app/images/earnings.jpg",
+    imageUrl: "https://files.djfan.app/images/earnings.webp",
     linkUrl: "/earnings",
   },
   {
     text: "My Fans",
-    imageUrl: "https://media.djfan.app/images/fans.jpg",
+    imageUrl: "https://files.djfan.app/images/fans.webp",
     linkUrl: "/fans",
   },
   {
     text: "Settings",
-    imageUrl: "https://media.djfan.app/images/settings.jpg",
+    imageUrl: "https://files.djfan.app/images/settings.webp",
     linkUrl: "/settings",
   },
   {
     text: "Invitations",
-    imageUrl: "https://media.djfan.app/images/invitations.jpg",
-    // linkUrl: "/invitations",
+    imageUrl: "https://files.djfan.app/images/invitations.webp",
+    linkUrl: "/invitations",
+  },
+  {
+    text: "Partners",
+    imageUrl: "https://files.djfan.app/images/partners.webp",
+    linkUrl: "/partners",
   },
 ];
 
 export default function Index() {
   const { data: user } = useUserAccount();
-  const isPartner = user?.roles?.includes("ROLE_PARTNER");
-  const isLoggedAs = user?.loginas;
+  const isDj = user?.dj || false;
+  const isAdmin = user?.admin || user?.me?.admin || false;
+  const isPartner = user?.partner || user?.me?.partner || false;
+  const isLoggedAs = user?.loginas || false;
+  /*
   const navigate = useNavigate();
   useEffect(() => {
     if (isPartner) {
       navigate("/partners");
     }
   });
+  */
 
   return (
     <Flex
@@ -66,15 +75,78 @@ export default function Index() {
           pt="25px"
           px="15px"
         >
-          {!isPartner && (
-            <Flex
-              h="100%"
-              justifyContent="space-between"
-              wrap="wrap"
-              gap="30px"
-            >
+          <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
+            {/*
+              if (box.text == "Earnings") {
+                  // boxes.push('hans');
+                }
+                return box;
+ 
+              */}
+
+            {boxes
+              .reduce(function (result, box) {
+                /*
+                console.log(
+                  "isDj",
+                  isDj,
+                  "isAdmin",
+                  isAdmin,
+                  "isPartner",
+                  isPartner,
+                  "isLoggedAs",
+                  isLoggedAs
+                );
+                */
+                if (isLoggedAs) {
+                  if (!isAdmin && box.text == "Earnings") {
+                    return result;
+                  }
+                  if (box.text == "Partners") {
+                    return result;
+                  }
+                } else {
+                  if (
+                    (isPartner || isAdmin) &&
+                    !isDj &&
+                    box.text != "Partners"
+                  ) {
+                    return result;
+                  }
+                }
+                result.push(box);
+                return result;
+              }, [])
+              .map((box, index) => {
+                console.log(box, index);
+                return (
+                  <Link
+                    key={index}
+                    href={box?.linkUrl ?? "/"}
+                    w={{ base: "100%", md: "30%" }}
+                  >
+                    <Box
+                      w={{ base: "100%", md: "100%" }}
+                      h="150px"
+                      bgImage={`linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${box.imageUrl})`}
+                      bgPos="center"
+                      bgSize="cover"
+                      borderRadius="10px"
+                      position="relative"
+                    >
+                      <Center h="100%">
+                        <Text fontSize="24px" color="white" fontWeight="600">
+                          {box.text}
+                        </Text>
+                      </Center>
+                    </Box>
+                  </Link>
+                );
+              })}
+
+            {/*
               {boxes.map((box, index) =>
-                isLoggedAs && box.text == "Earnings" ? (
+                !isAdmin && isLoggedAs && box.text == "Earnings" ? (
                   <></>
                 ) : (
                   <Link
@@ -100,8 +172,8 @@ export default function Index() {
                   </Link>
                 )
               )}
-            </Flex>
-          )}
+              */}
+          </Flex>
         </Flex>
       </Flex>
     </Flex>
