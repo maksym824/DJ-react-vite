@@ -8,6 +8,7 @@ import {
   VStack,
   HStack,
 } from "@chakra-ui/react";
+import FooterCTA from "./components/FooterCTA";
 
 export default function LandingPage() {
   return (
@@ -143,6 +144,7 @@ export default function LandingPage() {
           </VStack>
         </Flex>
       </Flex>
+      <FooterCTA />
       <Flex
         py="15px"
         fontSize="12px"
