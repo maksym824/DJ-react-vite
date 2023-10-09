@@ -9,6 +9,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import FooterCTA from "./components/FooterCTA";
+import PostTypeIcons from "./components/PostTypeIcons";
 
 export default function LandingPage() {
   return (
@@ -93,6 +94,7 @@ export default function LandingPage() {
           </VStack>
         </Flex>
       </Box>
+      <PostTypeIcons />
       <Flex
         w="100%"
         bg="purple.600"
