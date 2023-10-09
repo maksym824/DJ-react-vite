@@ -4,7 +4,6 @@ import ErrorPage from "~/pages/ErrorPage";
 import PrivateRoutes from "./PrivateRoutes";
 import HomePage from "~/pages/HomePage";
 import VideoPost from "~/pages/createPost/VideoPost";
-import HomeLayoutWithBottomTab from "~/layouts/HomeLayoutWithBottomTab";
 import CreatePost from "~/pages/createPost/createPost";
 import Settings from "~/pages/SettingPage";
 import ImagePost from "../pages/createPost/ImagePost";
@@ -43,9 +42,9 @@ const router = createBrowserRouter([
               {
                 path: "",
                 element: (
-                  <HomeLayoutWithBottomTab>
-                    <CreatePost />
-                  </HomeLayoutWithBottomTab>
+                  // <HomeLayoutWithBottomTab>
+                  <CreatePost />
+                  // </HomeLayoutWithBottomTab>
                 ),
               },
               {

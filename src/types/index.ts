@@ -95,7 +95,7 @@ export type MeAccount = {
   admin: boolean;
   partner: boolean;
   dj: boolean;
-}
+};
 
 export type UserStatistics = {
   followers: number;
@@ -153,4 +153,17 @@ export type DJSearch = {
   first_name: string;
   last_name: string;
   display_name: string;
+};
+
+export type Post = {
+  id: number;
+  post_id: number;
+  user_id: number;
+  title: string;
+  body: string;
+  active: number;
+  created_at: string;
+  updated_at: string;
+  posttype_id: number;
+  accesslevel_id: number;
 };
