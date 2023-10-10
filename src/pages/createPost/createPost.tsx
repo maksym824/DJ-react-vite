@@ -189,14 +189,20 @@ const Posts = () => {
                     </Box>
                     <Textarea
                       mt="10px"
+                      onFocus={() => {
+                        if (currentPostToEdit?.post_id !== post.post_id) {
+                          setCurrentPostToEdit(post);
+                        }
+                      }}
                       value={
                         currentPostToEdit?.post_id === post?.id
                           ? currentPostToEdit?.body
                           : post.body
                       }
                       onChange={(e) => {
+                        if (!currentPostToEdit) return;
                         setCurrentPostToEdit({
-                          ...post,
+                          ...currentPostToEdit,
                           body: e.target.value,
                         });
                       }}
@@ -204,16 +210,23 @@ const Posts = () => {
                     <Select
                       mt="10px"
                       placeholder="Select privacy option"
+                      onFocus={() => {
+                        if (currentPostToEdit?.post_id !== post.post_id) {
+                          setCurrentPostToEdit(post);
+                        }
+                      }}
                       value={
                         currentPostToEdit?.post_id === post?.id
                           ? currentPostToEdit?.accesslevel_id
                           : post.accesslevel_id
                       }
                       onChange={(e) => {
+                        if (!currentPostToEdit) return;
                         setCurrentPostToEdit({
-                          ...post,
-                          accesslevel_id: e.target
-                            .value as unknown as AccessLevelType,
+                          ...currentPostToEdit,
+                          accesslevel_id: Number(
+                            e.target.value as unknown as AccessLevelType
+                          ),
                         });
                       }}
                     >
