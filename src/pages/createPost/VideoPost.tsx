@@ -30,8 +30,7 @@ const VideoPost = () => {
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
       accept: {
-        "video/mp4": [],
-        "video/mov": [],
+        "video/*": [".mp4", ".mov"],
       },
     });
   const navigate = useNavigate();
