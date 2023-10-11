@@ -25,11 +25,11 @@ const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 const AudioPost = () => {
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({
+    useDropzone({});
+  /*
       accept: {
-        "audio/*": [".mp3", ".mpeg"],
-      },
-    });
+    "audio/*": [".mp3", ".mpeg"],
+    */
   const navigate = useNavigate();
   const toast = useToast();
   const [typeOfVideo, setTypeOfVideo] = useState<TypeOfVideo>(

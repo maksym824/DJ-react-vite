@@ -44,12 +44,16 @@ const Partners = () => {
       pb="50px"
     >
       <Header />
+
       <Flex w="100%" h="100%" justifyContent="center">
         {isAdmin && (
           <Box mt="15px">
             <SearchDJ />
           </Box>
         )}
+      </Flex>
+
+      <Flex w="100%" h="100%" justifyContent="center">
         {artists && (
           <TableContainer>
             <Table variant="simple">

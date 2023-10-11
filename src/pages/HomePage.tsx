@@ -74,28 +74,8 @@ export default function Index() {
           px="15px"
         >
           <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
-            {/*
-              if (box.text == "Earnings") {
-                  // boxes.push('hans');
-                }
-                return box;
- 
-              */}
-
             {boxes
               .reduce(function (result: any[], box) {
-                /*
-                console.log(
-                  "isDj",
-                  isDj,
-                  "isAdmin",
-                  isAdmin,
-                  "isPartner",
-                  isPartner,
-                  "isLoggedAs",
-                  isLoggedAs
-                );
-                */
                 if (isLoggedAs) {
                   if (!isAdmin && box.text == "Earnings") {
                     return result;
