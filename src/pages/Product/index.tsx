@@ -380,7 +380,7 @@ export default function Product() {
                 <FormLabel>Downloadable Track File</FormLabel>
                 <Input
                   type="file"
-                  accept=".mp3"
+                  accept=".mp3,.flac,.aiff,.aifc,.wav"
                   border="0px"
                   p="2px"
                   ref={(ref) => (audioInputRef.current = ref)}
