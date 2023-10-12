@@ -6,8 +6,6 @@ const uploadFile = async (
   post_token: string,
   onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
 ) => {
-  if (!post_token) return;
-
   const config = {
     onUploadProgress,
   };

@@ -140,7 +140,16 @@ export default function Product() {
       if (!file || file.size > MAX_AUDIO_FILE_SIZE) return;
       setAudioFileToUpload(file);
       if (file.size <= CHUNK_SIZE) {
-        await uploadFile(file, postToken, onUploadAudioProgress);
+        const res = await uploadFile(file, postToken, onUploadAudioProgress);
+        const { data } = res;
+        if (!data.result) {
+          toast({
+            description: data.message ?? "Error uploading file",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       } else {
         splitFileIntoChunks(file);
       }
@@ -165,7 +174,16 @@ export default function Product() {
     try {
       if (!file) return;
       setArtworkFileToUpload(file);
-      await uploadFile(file, postToken, onUploadArtworkProgress);
+      const res = await uploadFile(file, postToken, onUploadArtworkProgress);
+      const { data } = res;
+      if (!data.result) {
+        toast({
+          description: data.message ?? "Error uploading file",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.error("Error uploading artwork:", error);
     } finally {
