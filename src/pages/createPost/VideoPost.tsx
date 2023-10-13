@@ -28,11 +28,12 @@ const VideoPost = () => {
     TypeOfVideo.UPLOAD
   );
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({
+    useDropzone({});
+  /*
       accept: {
         "video/*": [".mp4", ".mov"],
       },
-    });
+    */
   const navigate = useNavigate();
   const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");

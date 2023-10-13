@@ -24,6 +24,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
+import { useUserData } from "~/services/settings/userData";
 
 const CreatePost = () => {
   return (
@@ -116,6 +117,8 @@ const CTAButtons = [
 ];
 
 const Posts = () => {
+  const { data: userData } = useUserData();
+
   const pageSize = 10;
   const {
     data: posts,
@@ -275,7 +278,10 @@ const Posts = () => {
                         mt="10px"
                         w="100%"
                         onClick={() => {
-                          window.open(`https://djfan.app/feed`, "_blank");
+                          window.open(
+                            `https://djfan.app/artists/${userData?.profile_url}`,
+                            "_blank"
+                          );
                         }}
                       >
                         <Text>View</Text>

@@ -27,11 +27,13 @@ const ImagePost = () => {
   );
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
+      maxFiles: typeOfImagePost === TypeOfImagePost.SINGLE ? 1 : undefined,
+    });
+  /*
       accept: {
         "image/*": [".png", ".jpg", ".jpeg"],
       },
-      maxFiles: typeOfImagePost === TypeOfImagePost.SINGLE ? 1 : undefined,
-    });
+    */
   const navigate = useNavigate();
   const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
