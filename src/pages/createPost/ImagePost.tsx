@@ -76,7 +76,20 @@ const ImagePost = () => {
       if (file.size > MAX_FILE_SIZE) return;
       setFileToUpload(acceptedFiles);
       if (file.size <= 100 * 1024 * 1024) {
-        await uploadFile(acceptedFiles[0], postToken, onUploadProgress);
+        const res = await uploadFile(
+          acceptedFiles[0],
+          postToken,
+          onUploadProgress
+        );
+        const { data } = res;
+        if (!data.result) {
+          toast({
+            description: data.message ?? "Error uploading file",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       } else {
         await uploadLargeFile(acceptedFiles[0], postToken, onUploadProgress);
       }

@@ -111,6 +111,8 @@ const AudioPost = () => {
     } else {
       setIsUploading(false);
       setProgress(0);
+      setChunks([]);
+      currentChunk.current = 0;
     }
   };
 
@@ -128,7 +130,20 @@ const AudioPost = () => {
       if (file.size > MAX_FILE_SIZE) return;
       setFileToUpload(acceptedFiles[0]);
       if (file.size <= CHUNK_SIZE) {
-        await uploadFile(acceptedFiles[0], postToken, onUploadProgress);
+        const res = await uploadFile(
+          acceptedFiles[0],
+          postToken,
+          onUploadProgress
+        );
+        const { data } = res;
+        if (!data.result) {
+          toast({
+            description: data.message ?? "Error uploading file",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       } else {
         splitFileIntoChunks(file);
       }
