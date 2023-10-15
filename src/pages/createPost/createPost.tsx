@@ -5,6 +5,7 @@ import {
   Image,
   Link,
   Select,
+  Spinner,
   Text,
   Textarea,
   VStack,
@@ -188,7 +189,17 @@ const Posts = () => {
                     <Box>
                       {currentPostToEdit?.post_id === post?.id
                         ? timeAgo(currentPostToEdit.created_at)
-                        : timeAgo(post.created_at)}
+                        : timeAgo(post.created_at)}{" "}
+                      <Text as="span" fontStyle={"italic"} paddingLeft="20px">
+                        {post?.publish == 0 ? (
+                          <>
+                            <Spinner size="xs" speed="1.1s" />
+                            Processing
+                          </>
+                        ) : (
+                          "Published"
+                        )}
+                      </Text>
                     </Box>
                     <Textarea
                       mt="10px"

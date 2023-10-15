@@ -165,5 +165,6 @@ export type Post = {
   created_at: string;
   updated_at: string;
   posttype_id: number;
+  publish: number;
   accesslevel_id: number;
 };

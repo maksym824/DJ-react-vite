@@ -4,6 +4,7 @@ import {
   Flex,
   Progress,
   Select,
+  Spinner,
   Text,
   Textarea,
   useToast,
@@ -19,7 +20,7 @@ import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
 import setPostData from "../../services/createVideoPost";
 
-const MAX_FILE_SIZE = 750 * 1024 * 1024; // 750MB
+const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
 
 const ImagePost = () => {
   const [typeOfImagePost, setTypeOfImagePost] = useState<TypeOfImagePost>(
@@ -27,13 +28,12 @@ const ImagePost = () => {
   );
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
+      accept: {
+        "image/*": [".png", ".jpg", ".jpeg", ".webp"],
+      },
       maxFiles: typeOfImagePost === TypeOfImagePost.SINGLE ? 1 : undefined,
     });
-  /*
-      accept: {
-        "image/*": [".png", ".jpg", ".jpeg"],
-      },
-    */
+
   const navigate = useNavigate();
   const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
@@ -185,6 +185,11 @@ const ImagePost = () => {
               >
                 Multiple Images
               </Box>
+              {isUploading && (
+                <Box padding={4}>
+                  <Spinner />
+                </Box>
+              )}
             </Flex>
             <Box mt="20px">
               <Box
@@ -195,7 +200,8 @@ const ImagePost = () => {
               >
                 <input {...getInputProps()} />
                 <Text p="10px">
-                  Drag and drop some files here, or click to select files
+                  Drag and drop some files here, or click to select files.
+                  Allowed file formats are png, jpg, jpeg, webp.
                 </Text>
               </Box>
               {isUploading ? (

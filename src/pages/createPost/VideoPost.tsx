@@ -5,6 +5,7 @@ import {
   Input,
   Progress,
   Select,
+  Spinner,
   Text,
   Textarea,
   useToast,
@@ -20,7 +21,7 @@ import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfVideo } from "../../types";
 import setPostDataVideo from "../../services/createVideoPost";
 
-const MAX_FILE_SIZE = 1500 * 1024 * 1024; // 1500Mb
+const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 const VideoPost = () => {
@@ -28,12 +29,11 @@ const VideoPost = () => {
     TypeOfVideo.UPLOAD
   );
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({});
-  /*
+    useDropzone({
       accept: {
-        "video/*": [".mp4", ".mov"],
+        "video/*": [".mkv", ".3gpp", ".webm", ".avi", ".mp4", ".mov"],
       },
-    */
+    });
   const navigate = useNavigate();
   const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
@@ -238,6 +238,11 @@ const VideoPost = () => {
               >
                 Upload Video
               </Box>
+              {isUploading && (
+                <Box padding={4}>
+                  <Spinner />
+                </Box>
+              )}
             </Flex>
             {typeOfVideo === TypeOfVideo.UPLOAD ? (
               <Box mt="20px">
@@ -251,7 +256,8 @@ const VideoPost = () => {
                 >
                   <input {...getInputProps()} />
                   <Text p="10px">
-                    Drag and drop some files here, or click to select files
+                    Drag and drop some files here, or click to select files.
+                    Allowed file formats are avi, mp4, mov. Max file size 1Gb.
                   </Text>
                 </Box>
                 {isUploading ? (
@@ -298,6 +304,15 @@ const VideoPost = () => {
                 <option value={AccessLevelType.VIP}>VIP</option>
               </Select>
             </Box>
+
+            <Box mt="20px">
+              <Text>
+                Keep in mind that it my take up to several of minutes to get
+                your post ready for publication, it depends on size, encoding &
+                workload.
+              </Text>
+            </Box>
+
             {selectedPrivacy &&
             (typeOfVideo === TypeOfVideo.UPLOAD
               ? fileToUpload
