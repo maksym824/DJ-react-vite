@@ -15,24 +15,27 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
-import { uploadFile, uploadLargeFile } from "../../services/uploadFile";
+import { uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
 import setPostData from "~/services/setPostData";
-
-const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
 
 const ImagePost = () => {
   const [typeOfImagePost, setTypeOfImagePost] = useState<TypeOfImagePost>(
     TypeOfImagePost.SINGLE
   );
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({
-      accept: {
-        "image/*": [".png", ".jpg", ".jpeg", ".webp"],
-      },
-      maxFiles: typeOfImagePost === TypeOfImagePost.SINGLE ? 1 : undefined,
-    });
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    acceptedFiles,
+    fileRejections,
+  } = useDropzone({
+    accept: {
+      "image/*": [".png", ".jpg", ".jpeg", ".webp"],
+    },
+    maxFiles: typeOfImagePost === TypeOfImagePost.SINGLE ? 1 : undefined,
+  });
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -45,6 +48,7 @@ const ImagePost = () => {
   >(undefined);
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -69,17 +73,66 @@ const ImagePost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acceptedFiles]);
 
+  useEffect(() => {
+    if (fileRejections.length) {
+      if (typeOfImagePost === TypeOfImagePost.SINGLE) {
+        toast({
+          description: "Only one file is allowed",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          description:
+            "Please upload only these accepted file types: png, jpg, jpeg, webp",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileRejections]);
+
   const handleUpload = async () => {
+    const isUploadingMultipleFiles =
+      typeOfImagePost === TypeOfImagePost.MULTIPLE;
+
+    const noDuplicateFiles = acceptedFiles.filter(
+      (x) => !uploadedFiles.includes(x.name)
+    );
+
+    if (noDuplicateFiles.length === 0) {
+      toast({
+        description: "File already uploaded",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (
+      isUploadingMultipleFiles &&
+      noDuplicateFiles.length !== acceptedFiles.length
+    ) {
+      toast({
+        description: "Some files are already uploaded and will be skipped",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+
+    setFileToUpload(noDuplicateFiles);
     setIsUploading(true);
     try {
-      const file = acceptedFiles[0];
-      if (file.size > MAX_FILE_SIZE) return;
-      setFileToUpload(acceptedFiles);
-      if (file.size <= 100 * 1024 * 1024) {
+      for (let i = 0; i < noDuplicateFiles.length; i++) {
         const res = await uploadFile(
-          acceptedFiles[0],
+          noDuplicateFiles[i],
           postToken,
-          onUploadProgress
+          isUploadingMultipleFiles ? undefined : onUploadProgress
         );
         const { data } = res;
         if (!data.result) {
@@ -90,8 +143,10 @@ const ImagePost = () => {
             isClosable: true,
           });
         }
-      } else {
-        await uploadLargeFile(acceptedFiles[0], postToken, onUploadProgress);
+        if (isUploadingMultipleFiles) {
+          setProgress((i / noDuplicateFiles.length) * 100);
+        }
+        setUploadedFiles((prev) => [...prev, noDuplicateFiles[i].name]);
       }
     } catch (err) {
       console.log(err);
@@ -109,7 +164,7 @@ const ImagePost = () => {
     } = {
       body: description,
       accesslevel_id: selectedPrivacy!,
-      files: fileToUpload?.map((x) => x.name),
+      files: uploadedFiles,
     };
     setIsLoading(true);
     try {
@@ -163,6 +218,7 @@ const ImagePost = () => {
                 onClick={() => {
                   setTypeOfImagePost(TypeOfImagePost.SINGLE);
                   setFileToUpload(null);
+                  setUploadedFiles([]);
                 }}
               >
                 Single Image
@@ -181,6 +237,7 @@ const ImagePost = () => {
                 onClick={() => {
                   setTypeOfImagePost(TypeOfImagePost.MULTIPLE);
                   setFileToUpload(null);
+                  setUploadedFiles([]);
                 }}
               >
                 Multiple Images
@@ -204,23 +261,30 @@ const ImagePost = () => {
                   Allowed file formats are png, jpg, jpeg, webp.
                 </Text>
               </Box>
+              {uploadedFiles ? (
+                <>
+                  {uploadedFiles?.map((fileName, index) => (
+                    <Flex alignItems="center" mt="10px" key={index}>
+                      <FaTrash
+                        onClick={() => {
+                          setUploadedFiles((prev) =>
+                            prev.filter((x) => x !== fileName)
+                          );
+                        }}
+                      />
+                      <Text ml="10px">{fileName}</Text>
+                    </Flex>
+                  ))}
+                </>
+              ) : null}
               {isUploading ? (
                 <>
                   {fileToUpload?.map((file, index) => (
                     <Box mt="10px" key={index}>
                       <Text mb="10px">Uploading {file?.name}</Text>
-                      <Progress hasStripe value={progress} />
                     </Box>
                   ))}
-                </>
-              ) : fileToUpload ? (
-                <>
-                  {fileToUpload?.map((file, index) => (
-                    <Flex alignItems="center" mt="10px" key={index}>
-                      <FaTrash onClick={() => setFileToUpload(null)} />
-                      <Text ml="10px">{file?.name}</Text>
-                    </Flex>
-                  ))}
+                  <Progress hasStripe value={progress} />
                 </>
               ) : null}
             </Box>

@@ -15,26 +15,6 @@ const uploadFile = async (
   return await apiClient.post(`/dj/post/${post_token}/upload`, fData, config);
 };
 
-const uploadLargeFile = async (
-  file: File,
-  post_token: string,
-  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
-) => {
-  if (!post_token) return;
-
-  const config = {
-    onUploadProgress,
-  };
-
-  const fData = new FormData();
-  fData.append("file", file);
-  return await apiClient.post(
-    `/dj/post/${post_token}/upload/large`,
-    fData,
-    config
-  );
-};
-
 const uploadChunkFile = async (
   chunk: Blob,
   post_token: string,
@@ -57,4 +37,4 @@ const uploadChunkFile = async (
   });
 };
 
-export { uploadFile, uploadLargeFile, uploadChunkFile };
+export { uploadFile, uploadChunkFile };
