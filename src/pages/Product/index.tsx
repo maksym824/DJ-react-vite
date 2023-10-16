@@ -14,6 +14,7 @@ import {
   Box,
   Text,
   Progress,
+  Spinner,
 } from "@chakra-ui/react";
 import { FaArrowRight, FaTrash } from "react-icons/fa";
 import Header from "~/components/Header";
@@ -420,10 +421,16 @@ export default function Product() {
               </FormControl>
 
               {isUploadingAudio ? (
-                <Box>
-                  <Text mb="10px">Uploading {audioFileToUpload?.name}</Text>
-                  <Progress hasStripe value={progressAudio} />
-                </Box>
+                <>
+                  <Box>
+                    <Text mb="10px">Uploading {audioFileToUpload?.name}</Text>
+                    <Text as="span" paddingLeft="10px">
+                      {" "}
+                      <Spinner />{" "}
+                    </Text>
+                    <Progress hasStripe value={progressAudio} />
+                  </Box>
+                </>
               ) : audioFileToUpload ? (
                 <Flex alignItems="center">
                   <FaTrash
