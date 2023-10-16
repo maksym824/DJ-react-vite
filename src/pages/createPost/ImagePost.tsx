@@ -18,7 +18,7 @@ import getPostToken from "../../services/getPostToken";
 import { uploadFile, uploadLargeFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
-import setPostData from "../../services/createVideoPost";
+import setPostData from "~/services/setPostData";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
 
@@ -101,7 +101,7 @@ const ImagePost = () => {
     }
   };
 
-  const handlePostImage = async () => {
+  const handleSaveImagePost = async () => {
     const submittedData: {
       body: string;
       accesslevel_id: AccessLevelType;
@@ -254,7 +254,7 @@ const ImagePost = () => {
                 mt="20px"
                 isLoading={isLoading}
                 colorScheme="purple"
-                onClick={handlePostImage}
+                onClick={handleSaveImagePost}
               >
                 Post
               </Button>

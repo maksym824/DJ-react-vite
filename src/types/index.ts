@@ -4,7 +4,7 @@ export enum AccessLevelType {
   VIP = 3,
 }
 
-export enum TypeOfVideo {
+export enum TypeOfAttachedFile {
   EMBED = 1,
   UPLOAD = 0,
 }

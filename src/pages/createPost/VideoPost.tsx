@@ -18,16 +18,15 @@ import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
 import { uploadChunkFile, uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
-import { AccessLevelType, PostType, TypeOfVideo } from "../../types";
-import setPostDataVideo from "../../services/createVideoPost";
+import { AccessLevelType, PostType, TypeOfAttachedFile } from "../../types";
+import setPostData from "~/services/setPostData";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 const VideoPost = () => {
-  const [typeOfVideo, setTypeOfVideo] = useState<TypeOfVideo>(
-    TypeOfVideo.UPLOAD
-  );
+  const [typeOfAttachedFile, setTypeOfAttachedFile] =
+    useState<TypeOfAttachedFile>(TypeOfAttachedFile.UPLOAD);
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
     useDropzone({
       accept: {
@@ -156,7 +155,7 @@ const VideoPost = () => {
     }
   };
 
-  const handlePostVideo = async () => {
+  const handleSaveVideoPost = async () => {
     const submittedData: {
       embedded?: number;
       body: string;
@@ -167,7 +166,7 @@ const VideoPost = () => {
       body: description,
       accesslevel_id: selectedPrivacy!,
     };
-    if (typeOfVideo === TypeOfVideo.EMBED) {
+    if (typeOfAttachedFile === TypeOfAttachedFile.EMBED) {
       submittedData.embedded = 1;
       submittedData.location = locationToEmbed;
     } else {
@@ -176,7 +175,7 @@ const VideoPost = () => {
     }
     setIsLoading(true);
     try {
-      await setPostDataVideo(submittedData, postToken);
+      await setPostData(submittedData, postToken);
       toast({
         description: "Post created",
         status: "success",
@@ -219,9 +218,11 @@ const VideoPost = () => {
                 borderTopLeftRadius="5px"
                 borderBottomLeftRadius="5px"
                 backgroundColor={
-                  typeOfVideo === TypeOfVideo.EMBED ? "#a37cf0" : "white"
+                  typeOfAttachedFile === TypeOfAttachedFile.EMBED
+                    ? "#a37cf0"
+                    : "white"
                 }
-                onClick={() => setTypeOfVideo(TypeOfVideo.EMBED)}
+                onClick={() => setTypeOfAttachedFile(TypeOfAttachedFile.EMBED)}
               >
                 Embed Video
               </Box>
@@ -232,9 +233,11 @@ const VideoPost = () => {
                 borderTopRightRadius="5px"
                 borderBottomRightRadius="5px"
                 backgroundColor={
-                  typeOfVideo === TypeOfVideo.UPLOAD ? "#a37cf0" : "white"
+                  typeOfAttachedFile === TypeOfAttachedFile.UPLOAD
+                    ? "#a37cf0"
+                    : "white"
                 }
-                onClick={() => setTypeOfVideo(TypeOfVideo.UPLOAD)}
+                onClick={() => setTypeOfAttachedFile(TypeOfAttachedFile.UPLOAD)}
               >
                 Upload Video
               </Box>
@@ -244,7 +247,7 @@ const VideoPost = () => {
                 </Box>
               )}
             </Flex>
-            {typeOfVideo === TypeOfVideo.UPLOAD ? (
+            {typeOfAttachedFile === TypeOfAttachedFile.UPLOAD ? (
               <Box mt="20px">
                 <Box
                   border={
@@ -314,7 +317,7 @@ const VideoPost = () => {
             </Box>
 
             {selectedPrivacy &&
-            (typeOfVideo === TypeOfVideo.UPLOAD
+            (typeOfAttachedFile === TypeOfAttachedFile.UPLOAD
               ? fileToUpload
               : locationToEmbed) &&
             description &&
@@ -323,7 +326,7 @@ const VideoPost = () => {
                 isLoading={isLoading}
                 mt="20px"
                 colorScheme="purple"
-                onClick={handlePostVideo}
+                onClick={handleSaveVideoPost}
               >
                 Post
               </Button>

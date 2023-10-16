@@ -1,15 +1,24 @@
-import { Box, Button, Flex, Select, Text, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Select,
+  Text,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
 import Header from "../../components/Header";
 import { FaRegEdit, FaReply } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
 import { AccessLevelType, PostType } from "../../types";
-import setPostDataVideo from "../../services/createVideoPost";
 import { TbNews } from "react-icons/tb";
+import setPostData from "~/services/setPostData";
 
 const TextPost = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
   const [selectedPrivacy, setSelectedPrivacy] = useState<
     AccessLevelType | undefined
@@ -17,7 +26,7 @@ const TextPost = () => {
   const [description, setDescription] = useState<string>("");
 
   const handleInitPostToken = async () => {
-    const token = await getPostToken(PostType.image);
+    const token = await getPostToken(PostType.text);
     setPostToken(token as string);
   };
 
@@ -25,7 +34,7 @@ const TextPost = () => {
     handleInitPostToken();
   }, []);
 
-  const handlePostImage = async () => {
+  const handleSaveTextPost = async () => {
     const submittedData: {
       body: string;
       accesslevel_id: AccessLevelType;
@@ -34,9 +43,14 @@ const TextPost = () => {
       accesslevel_id: selectedPrivacy!,
     };
     try {
-      const response = await setPostDataVideo(submittedData, postToken);
-      console.log("data", response);
-      // navigate("/");
+      await setPostData(submittedData, postToken);
+      toast({
+        description: "Post created",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate("/");
     } catch (err) {
       console.log("err", err);
     }
@@ -84,7 +98,11 @@ const TextPost = () => {
               </Select>
             </Box>
             {selectedPrivacy && description ? (
-              <Button mt="20px" colorScheme="purple" onClick={handlePostImage}>
+              <Button
+                mt="20px"
+                colorScheme="purple"
+                onClick={handleSaveTextPost}
+              >
                 Post
               </Button>
             ) : null}

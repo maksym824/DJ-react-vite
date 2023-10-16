@@ -18,8 +18,8 @@ import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
 import { uploadChunkFile, uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
-import { AccessLevelType, PostType, TypeOfVideo } from "../../types";
-import setPostDataVideo from "../../services/createVideoPost";
+import { AccessLevelType, PostType, TypeOfAttachedFile } from "../../types";
+import setPostData from "~/services/setPostData";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
@@ -42,9 +42,8 @@ const AudioPost = () => {
     });
   const navigate = useNavigate();
   const toast = useToast();
-  const [typeOfVideo, setTypeOfVideo] = useState<TypeOfVideo>(
-    TypeOfVideo.UPLOAD
-  );
+  const [typeOfAttachedFile, setTypeOfAttachedFile] =
+    useState<TypeOfAttachedFile>(TypeOfAttachedFile.UPLOAD);
   const [postToken, setPostToken] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -165,7 +164,7 @@ const AudioPost = () => {
     }
   };
 
-  const handlePostAudio = async () => {
+  const handleSaveAudioPost = async () => {
     const submittedData: {
       embedded?: number;
       body: string;
@@ -176,7 +175,7 @@ const AudioPost = () => {
       body: description,
       accesslevel_id: selectedPrivacy!,
     };
-    if (typeOfVideo === TypeOfVideo.EMBED) {
+    if (typeOfAttachedFile === TypeOfAttachedFile.EMBED) {
       submittedData.embedded = 1;
       submittedData.location = locationToEmbed;
     } else {
@@ -185,7 +184,7 @@ const AudioPost = () => {
     }
     setIsLoading(true);
     try {
-      await setPostDataVideo(submittedData, postToken);
+      await setPostData(submittedData, postToken);
       toast({
         description: "Post created",
         status: "success",
@@ -228,9 +227,11 @@ const AudioPost = () => {
                 borderTopLeftRadius="5px"
                 borderBottomLeftRadius="5px"
                 backgroundColor={
-                  typeOfVideo === TypeOfVideo.EMBED ? "#a37cf0" : "white"
+                  typeOfAttachedFile === TypeOfAttachedFile.EMBED
+                    ? "#a37cf0"
+                    : "white"
                 }
-                onClick={() => setTypeOfVideo(TypeOfVideo.EMBED)}
+                onClick={() => setTypeOfAttachedFile(TypeOfAttachedFile.EMBED)}
               >
                 Embed Audio
               </Box>
@@ -241,9 +242,11 @@ const AudioPost = () => {
                 borderTopRightRadius="5px"
                 borderBottomRightRadius="5px"
                 backgroundColor={
-                  typeOfVideo === TypeOfVideo.UPLOAD ? "#a37cf0" : "white"
+                  typeOfAttachedFile === TypeOfAttachedFile.UPLOAD
+                    ? "#a37cf0"
+                    : "white"
                 }
-                onClick={() => setTypeOfVideo(TypeOfVideo.UPLOAD)}
+                onClick={() => setTypeOfAttachedFile(TypeOfAttachedFile.UPLOAD)}
               >
                 Upload Audio
               </Box>
@@ -253,7 +256,7 @@ const AudioPost = () => {
                 </Box>
               )}
             </Flex>
-            {typeOfVideo === TypeOfVideo.UPLOAD ? (
+            {typeOfAttachedFile === TypeOfAttachedFile.UPLOAD ? (
               <Box mt="20px">
                 <Box
                   border={
@@ -324,7 +327,7 @@ const AudioPost = () => {
             </Box>
 
             {selectedPrivacy &&
-            (typeOfVideo === TypeOfVideo.UPLOAD
+            (typeOfAttachedFile === TypeOfAttachedFile.UPLOAD
               ? fileToUpload
               : locationToEmbed) &&
             description &&
@@ -333,7 +336,7 @@ const AudioPost = () => {
                 mt="20px"
                 isLoading={isLoading}
                 colorScheme="purple"
-                onClick={handlePostAudio}
+                onClick={handleSaveAudioPost}
               >
                 Post
               </Button>

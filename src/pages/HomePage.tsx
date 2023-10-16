@@ -1,7 +1,14 @@
 import { Box, Flex, Link, Text, Center } from "@chakra-ui/react";
 import Header from "../components/Header";
 import { useUserAccount } from "~/services/settings/userAccount";
-const boxes = [
+
+type BoxItem = {
+  text: string;
+  imageUrl: string;
+  linkUrl: string;
+};
+
+const boxes: BoxItem[] = [
   {
     text: "Create Post",
     imageUrl: "https://files.djfan.app/images/create.webp",
@@ -75,7 +82,7 @@ export default function Index() {
         >
           <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
             {boxes
-              .reduce(function (result: any[], box) {
+              .reduce(function (result: BoxItem[], box) {
                 if (isLoggedAs) {
                   if (!isAdmin && box.text == "Earnings") {
                     return result;
@@ -100,7 +107,6 @@ export default function Index() {
                 return result;
               }, [])
               .map((box, index) => {
-                console.log(box, index);
                 return (
                   <Link
                     key={index}
