@@ -36,7 +36,7 @@ export default function ProfileReviewPage() {
             <Image
               id="logo"
               w="120px"
-              src="https://creators.djfan.app/wp-content/uploads/2023/04/djfan-email.png"
+              src="https://files.djfan.app/images/djfan-beta.png"
             />
           </Flex>
         </Flex>

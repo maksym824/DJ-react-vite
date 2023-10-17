@@ -44,7 +44,7 @@ export default function BottomTab() {
               border="none"
               fontWeight="600"
               onClick={() => {
-                window.open("https://creators.djfan.app", "_self");
+                window.open("https://dj.djfan.app", "_self");
               }}
               height="35px"
             >
