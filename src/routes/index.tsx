@@ -17,6 +17,7 @@ import CreateAccount from "~/pages/CreateAccount";
 import Product from "~/pages/Product";
 import { CreateAccountContextProvider } from "~/pages/CreateAccount/createAccountContext";
 import Partners from "~/pages/Partners";
+import Invitations from "~/pages/Invitations";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
           {
             path: "/fans",
             element: <Fans />,
+          },
+          {
+            path: "/invitations",
+            element: <Invitations />,
           },
         ],
       },
