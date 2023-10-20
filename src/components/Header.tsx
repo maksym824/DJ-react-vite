@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   Text,
+  Link,
   Image,
   Drawer,
   DrawerBody,
@@ -59,12 +60,14 @@ const Header = () => {
           </Flex>
           <Flex w="60%" justifyContent={{ base: "flex-start", md: "center" }}>
             {!user?.loginas && (
-              <Box as="a" href="/">
-                <Image
-                  id="logo"
-                  w="120px"
-                  src="https://media.djfan.app/images/djfan-logo-beta.png"
-                />
+              <Box>
+                <Link href="/">
+                  <Image
+                    id="logo"
+                    w="120px"
+                    src="https://media.djfan.app/images/djfan-logo-beta.png"
+                  />
+                </Link>
               </Box>
             )}
             {user?.loginas && (

@@ -1,4 +1,4 @@
-import { Box, Stack, Divider } from "@chakra-ui/react";
+import { Box, Stack, Divider, Link } from "@chakra-ui/react";
 import { FaHeadphones } from "react-icons/fa";
 import apiClient from "~/services/api-client";
 import { useUserAccount } from "~/services/settings/userAccount";
@@ -152,6 +152,16 @@ const SideMenuBody = () => {
           }}
         >
           Sign Out
+        </Box>
+
+        <Box py="10px">
+          <Divider borderColor="#6b46c1" />
+        </Box>
+
+        <Box fontSize="18px" fontWeight="600" color="#6b46c1">
+          <Link href="https://help.djfan.app/?dj" target="_new">
+            Support
+          </Link>
         </Box>
       </Stack>
       {isLoggedAs && (
