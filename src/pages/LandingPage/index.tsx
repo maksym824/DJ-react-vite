@@ -1,4 +1,4 @@
-import { Flex, Box, Button, Image } from "@chakra-ui/react";
+import { Flex, Box, Button, Image, Link } from "@chakra-ui/react";
 import FooterCTA from "./components/FooterCTA";
 import PostTypeIcons from "./components/PostTypeIcons";
 import FeatureCards from "./components/FeatureCards";
@@ -32,11 +32,14 @@ export default function LandingPage() {
             px={{ base: "10px", md: "0px" }}
             py="10px"
           >
-            <Image
-              id="logo"
-              w="120px"
-              src="https://files.djfan.app/images/djfan-beta.png"
-            />
+            <Link href="/">
+              <Image
+                id="logo"
+                w="120px"
+                src="https://files.djfan.app/images/djfan-beta.png"
+              />
+            </Link>
+
             <Button
               onClick={() => {
                 window.open(import.meta.env.VITE_DJFAN_SIGN_IN_URL, "_self");
