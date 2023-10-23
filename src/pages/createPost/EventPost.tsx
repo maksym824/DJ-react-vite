@@ -169,7 +169,7 @@ const EventPost = () => {
                 </FormControl>
 
                 <FormControl isRequired mb={4}>
-                  <FormLabel>Release Date</FormLabel>
+                  <FormLabel>Event Date</FormLabel>
                   <Input
                     type="date"
                     value={eventDate}
@@ -216,7 +216,7 @@ const EventPost = () => {
                   />
                 </FormControl>
 
-                <FormControl isRequired>
+                <FormControl>
                   <FormLabel>Event Artwork</FormLabel>
                   <Input
                     ref={(ref) => (fileInputRef.current = ref)}
@@ -252,7 +252,7 @@ const EventPost = () => {
                   </>
                 ) : null}
 
-                <FormControl mb={4} isRequired>
+                <FormControl mb={4}>
                   <FormLabel>Link to book or buy tickets</FormLabel>
                   <Input
                     type="url"
@@ -276,11 +276,10 @@ const EventPost = () => {
                     !eventDescription ||
                     !eventDate ||
                     !eventVenue ||
-                    !eventCity ||
-                    !eventArtwork ||
-                    !eventLink
+                    !eventCity
                   }
                 >
+                  {/* !eventLink || !eventArtwork */}
                   CREATE EVENT{" "}
                   <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
                 </Button>
