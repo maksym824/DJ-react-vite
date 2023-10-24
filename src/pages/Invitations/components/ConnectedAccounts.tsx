@@ -44,6 +44,7 @@ export default function ConnectedAccounts() {
               </Tr>
             </Thead>
             <Tbody>
+              {/* 
               <Tr>
                 <Td>
                   <Flex
@@ -120,6 +121,7 @@ export default function ConnectedAccounts() {
                   </Flex>
                 </Td>
               </Tr>
+                    */}
             </Tbody>
           </Table>
         </TableContainer>
