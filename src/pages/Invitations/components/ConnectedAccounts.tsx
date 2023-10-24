@@ -44,7 +44,6 @@ export default function ConnectedAccounts() {
               </Tr>
             </Thead>
             <Tbody>
-              {/* 
               <Tr>
                 <Td>
                   <Flex
@@ -59,7 +58,7 @@ export default function ConnectedAccounts() {
                     <Avatar
                       size="sm"
                       border="1px solid #111111"
-                      src="https://djfan.ams3.cdn.digitaloceanspaces.com/2023/05/ff-bc341bdfde4ec0d1a583944ca302aa39-ff-richy_ahmed_metrodanceclub-358x500-1.jpg"
+                      src=""
                     ></Avatar>
                     <Text
                       fontWeight="600"
@@ -68,13 +67,13 @@ export default function ConnectedAccounts() {
                         textDecoration: "underline",
                       }}
                     >
-                      Richy Ahmed
+                      {/* dj name */}
                     </Text>
                   </Flex>
                 </Td>
-                <Td>11/10/2023</Td>
+                <Td>{/* date */}</Td>
                 <Td>
-                  <b>$350</b> per month
+                  <b>{/* amount */}</b> per month
                 </Td>
 
                 <Td>
@@ -83,6 +82,7 @@ export default function ConnectedAccounts() {
                   </Flex>
                 </Td>
               </Tr>
+              {/*
               <Tr>
                 <Td>
                   <Flex
