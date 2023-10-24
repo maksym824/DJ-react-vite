@@ -10,9 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FaBarcode } from "react-icons/fa";
 import { GrClose } from "react-icons/gr";
-import QRCode from "react-qr-code";
-import { Canvg } from "canvg";
-import { useRef } from "react";
+import QRCode from "qrcode.react";
 
 type AppProps = {
   link: string;
@@ -20,28 +18,17 @@ type AppProps = {
 
 export default function QRcode(props: AppProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const ref = useRef(null);
-
-  const getQRImage = async function () {
-    const element: HTMLElement = ref.current!;
-    if (element != null) {
-      const canvas: HTMLCanvasElement = document.createElement("canvas");
-      const context = canvas.getContext("2d")!;
-      console.log(element?.outerHTML);
-      const serializer = new XMLSerializer();
-      const svgString = serializer.serializeToString(element);
-      const v = Canvg.fromString(context, svgString);
-      await v.render();
-      const dataUri = canvas.toDataURL("image/png");
-      console.log(dataUri);
-      /*
-      const v = Canvg.fromString(context, element?.outerHTML);
-      await v.render();
-      const dataUri = canvas.toDataURL("image/png");
-      console.log(dataUri);
-      */
-      // return dataUri;
-    }
+  const downloadQRCode = async function () {
+    const canvas: HTMLCanvasElement = document.createElement("canvas");
+    const pngUrl = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    let downloadLink = document.createElement("a");
+    downloadLink.href = pngUrl;
+    downloadLink.download = "qrcode.png";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   };
 
   return (
@@ -98,8 +85,7 @@ export default function QRcode(props: AppProps) {
                 }}
               >
                 <QRCode
-                  level="Q"
-                  ref={ref}
+                  level="H"
                   size={256}
                   style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                   value={props?.link}
@@ -107,16 +93,12 @@ export default function QRcode(props: AppProps) {
                 />
               </Box>
 
-              <Button colorScheme="teal" size="xs" onClick={getQRImage}>
-                Button
-              </Button>
-
-              {/*
               <Box
                 as="a"
-                style={{ textDecoration: "none" }}
-                height="24px"
-                lineHeight="1.2"
+                onClick={downloadQRCode}
+                style={{ textDecoration: "none", cursor: "pointer" }}
+                height="26px"
+                lineHeight="24px"
                 transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
                 border="1px"
                 px="8px"
@@ -139,7 +121,6 @@ export default function QRcode(props: AppProps) {
               >
                 Save Image
               </Box>
-              */}
             </Flex>
           </ModalBody>
         </ModalContent>
