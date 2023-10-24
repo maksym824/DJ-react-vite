@@ -168,3 +168,27 @@ export type Post = {
   publish: number;
   accesslevel_id: number;
 };
+
+export type Product = {
+  product_id: number;
+  accesslevel_id: number;
+  user_id: number;
+  name: string;
+  active: string;
+  price: string;
+  description: string;
+  tax_code: string;
+  shippable: number;
+  statement_descriptor: string;
+  stripe_id: string;
+  image_url: string;
+  product_url: string;
+  sku: string;
+  stripe_price_id: string;
+  type: number;
+  product_type: string;
+  status_id: number;
+  created_at: string;
+  updated_at: string;
+  publish: number;
+};
