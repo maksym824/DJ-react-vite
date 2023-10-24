@@ -12,9 +12,13 @@ import ConnectedAccounts from "./components/ConnectedAccounts";
 import { FaLink, FaCopy } from "react-icons/fa";
 import QRcode from "./components/QRcode";
 import Header from "~/components/Header";
+import { useUserAccount } from "~/services/settings/userAccount";
 
 export default function Invitations() {
-  const link = "https://djfan.app/invite?by=dmj";
+  const { data: user } = useUserAccount();
+  const myUserId = user?.user_id || 0;
+  const invite = (10000000 + myUserId).toString(36);
+  const link = `https://dj.djfan.app/?invite=${invite}`;
   const toast = useToast();
 
   return (
@@ -96,7 +100,7 @@ export default function Invitations() {
                   >
                     Copy Link
                   </Button>
-                  <QRcode />
+                  <QRcode link={link} />
                 </HStack>
               </Stack>
             </Flex>

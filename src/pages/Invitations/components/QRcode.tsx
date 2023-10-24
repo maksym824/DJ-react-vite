@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Button,
-  Img,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -11,11 +10,40 @@ import {
 } from "@chakra-ui/react";
 import { FaBarcode } from "react-icons/fa";
 import { GrClose } from "react-icons/gr";
+import QRCode from "react-qr-code";
+import { Canvg } from "canvg";
+import { useRef } from "react";
 
-export default function QRcode() {
+type AppProps = {
+  link: string;
+};
+
+export default function QRcode(props: AppProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const qrCodeDataUrl =
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQMAAABncE31AAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZdJREFUaIHtmcsNhDAMRC1RACXRekqigJWyxONxAGlv8Z4mh4g4Dy4jf7Ee62O9mWGz4zqa7bxrJqqEcrPtYfZD7+fWw4Y3RdVQQ4g2LIfLcQHXFm9SOlG11HVwXfzYu6h/UhCHMUrUH6iHxV3Ejt/xS9RCKtYQYn9tvBNVQ80FhVyXodDjTlQFFfVn5oKju3cYpTunD4laTkESsxmKvAt4+pCoAupmmWavRJEawjVEVVBocmmGOyA3p01UEeVCuEwhzhbVEDzGIJOoAspv/BDAODe/f9dMohZT0AAKpST3iRsbMlHLqZgyWHrCHtUQSqIxjRBVReV0jeKw+31GJlEFVGNQoidsMfy0nAQ1USWUaxCVqPOd8SibYVFlFCrRqIGYljmDwDdElVDT7MpEQkilOHkQVUDNdatEMx7NTdR6ikpkQmBJhHEzK1FRFRREmlGII0+Kw2pIVAGVari5p3fEEzxHVCmFBuDVhgERVU0Zx83wk565WVQV5SpAIf5UnDXQkX2aqPVUrPjNMpuCyA/nlpNmUWupL7rJUdWp6+TVAAAAAElFTkSuQmCC";
+  const ref = useRef(null);
+
+  const getQRImage = async function () {
+    const element: HTMLElement = ref.current!;
+    if (element != null) {
+      const canvas: HTMLCanvasElement = document.createElement("canvas");
+      const context = canvas.getContext("2d")!;
+      console.log(element?.outerHTML);
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(element);
+      const v = Canvg.fromString(context, svgString);
+      await v.render();
+      const dataUri = canvas.toDataURL("image/png");
+      console.log(dataUri);
+      /*
+      const v = Canvg.fromString(context, element?.outerHTML);
+      await v.render();
+      const dataUri = canvas.toDataURL("image/png");
+      console.log(dataUri);
+      */
+      // return dataUri;
+    }
+  };
+
   return (
     <>
       <Button
@@ -60,11 +88,32 @@ export default function QRcode() {
               alignItems="center"
               gap="20px"
             >
-              <Img height="150px" objectFit="contain" src={qrCodeDataUrl} />
+              <Box
+                paddingTop={10}
+                style={{
+                  height: "auto",
+                  margin: "0 auto",
+                  maxWidth: 256,
+                  width: "100%",
+                }}
+              >
+                <QRCode
+                  level="Q"
+                  ref={ref}
+                  size={256}
+                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  value={props?.link}
+                  viewBox={`0 0 256 256`}
+                />
+              </Box>
+
+              <Button colorScheme="teal" size="xs" onClick={getQRImage}>
+                Button
+              </Button>
+
+              {/*
               <Box
                 as="a"
-                href={qrCodeDataUrl}
-                download="QRCode.png"
                 style={{ textDecoration: "none" }}
                 height="24px"
                 lineHeight="1.2"
@@ -90,6 +139,7 @@ export default function QRcode() {
               >
                 Save Image
               </Box>
+              */}
             </Flex>
           </ModalBody>
         </ModalContent>
