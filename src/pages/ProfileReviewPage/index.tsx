@@ -58,7 +58,8 @@ export default function ProfileReviewPage() {
               maxW={{ base: "100%", md: "90%" }}
               textAlign={"center"}
             >
-              Your profile is being reviewed
+              Your profile is being reviewed, and we will inform you when ready
+              to use.
             </Heading>
             <SignOutBtn />
           </VStack>

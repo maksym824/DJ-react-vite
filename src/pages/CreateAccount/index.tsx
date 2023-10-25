@@ -25,12 +25,10 @@ import { theme } from "./theme";
 import { useCreateAccountContext } from "./useCreateAccountContext";
 import { updateUserAccount } from "~/services/settings/userAccount";
 import { updateUserData, useUserData } from "~/services/settings/userData";
-import { useNavigate } from "react-router-dom";
 import SignOutBtn from "~/components/SignOutBtn";
 
 export default function CreateAccount() {
   const { refetch } = useUserData();
-  const navigate = useNavigate();
   const toast = useToast();
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(20);
@@ -280,7 +278,7 @@ export default function CreateAccount() {
                         duration: 3000,
                         isClosable: true,
                       });
-                      navigate("/");
+                      window.location.reload();
                     }}
                   >
                     FINISH
