@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { useUserAccount } from "~/services/settings/userAccount";
 
 type BoxItem = {
+  id: number;
   text: string;
   imageUrl: string;
   linkUrl: string;
@@ -10,36 +11,49 @@ type BoxItem = {
 
 const boxes: BoxItem[] = [
   {
+    id: 1,
     text: "Create Post",
     imageUrl: "https://files.djfan.app/images/create.webp",
     linkUrl: "/create",
   },
   {
+    id: 2,
     text: "Create Product",
     imageUrl: "https://files.djfan.app/images/product.webp",
     linkUrl: "/product",
   },
   {
+    id: 3,
     text: "Earnings",
     imageUrl: "https://files.djfan.app/images/earnings.webp",
     linkUrl: "/earnings",
   },
   {
+    id: 4,
     text: "My Fans",
     imageUrl: "https://files.djfan.app/images/fans.webp",
     linkUrl: "/fans",
   },
   {
+    id: 5,
+    text: "", // My djfan page - Dummy
+    imageUrl: "https://files.djfan.app/images/mydjfan-new.webp",
+    linkUrl: "",
+  },
+  {
+    id: 6,
     text: "Settings",
     imageUrl: "https://files.djfan.app/images/settings.webp",
     linkUrl: "/settings",
   },
   {
+    id: 7,
     text: "Invitations",
     imageUrl: "https://files.djfan.app/images/invitations.webp",
     linkUrl: "/invitations",
   },
   {
+    id: 8,
     text: "Partners",
     imageUrl: "https://files.djfan.app/images/partners.webp",
     linkUrl: "/partners",
@@ -52,15 +66,6 @@ export default function Index() {
   const isAdmin = user?.admin || user?.me?.admin || false;
   const isPartner = user?.partner || user?.me?.partner || false;
   const isLoggedAs = user?.loginas || false;
-
-  /*
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (isPartner) {
-      navigate("/partners");
-    }
-  });
-  */
 
   return (
     <Flex
@@ -84,17 +89,23 @@ export default function Index() {
           <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
             {boxes
               .reduce(function (result: BoxItem[], box) {
+                if (box.id == 5) {
+                  box.text = "" + user?.display_name;
+                  box.linkUrl =
+                    "https://djfan.app/artists/" + user?.profile_url;
+                }
                 if (isLoggedAs) {
-                  if (!isAdmin && box.text == "Earnings") {
+                  if (!isAdmin && box.id == 3) {
                     return result;
                   }
-                  if (box.text == "Partners") {
+                  if (box.id == 8) {
                     return result;
                   }
-                } else if (!isPartner && !isAdmin && box.text == "Partners") {
+                } else if (!isPartner && !isAdmin && box.id == 8) {
                   return result;
                 }
                 result.push({
+                  id: box.id,
                   text: box.text,
                   imageUrl: box.imageUrl,
                   linkUrl: box.linkUrl,
@@ -104,6 +115,7 @@ export default function Index() {
               .map((box, index) => {
                 return (
                   <Link
+                    isExternal={box?.id == 5 ? true : false}
                     key={index}
                     href={box?.linkUrl ?? "/"}
                     w={{ base: "100%", md: "30%" }}
@@ -116,6 +128,7 @@ export default function Index() {
                       bgSize="cover"
                       borderRadius="10px"
                       position="relative"
+                      backgroundColor="#000"
                     >
                       <Center h="100%">
                         <Text fontSize="24px" color="white" fontWeight="600">

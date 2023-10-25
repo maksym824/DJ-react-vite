@@ -71,6 +71,8 @@ export type UserAccount = {
   last_name: string;
   username: string;
   email: string;
+  profile_url: string;
+  display_name: string;
   profile_exists: number;
   profile_active: boolean;
   profile_done: boolean;
