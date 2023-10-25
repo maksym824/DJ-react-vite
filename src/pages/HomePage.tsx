@@ -48,10 +48,11 @@ const boxes: BoxItem[] = [
 
 export default function Index() {
   const { data: user } = useUserAccount();
-  const isDj = user?.dj || false;
+  // const isDj = user?.dj || false;
   const isAdmin = user?.admin || user?.me?.admin || false;
   const isPartner = user?.partner || user?.me?.partner || false;
   const isLoggedAs = user?.loginas || false;
+
   /*
   const navigate = useNavigate();
   useEffect(() => {
