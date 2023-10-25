@@ -20,7 +20,7 @@ import { usePartnerArtists } from "~/services/partners/getPartnerArtists";
 import { useUserAccount } from "~/services/settings/userAccount";
 import { Artist } from "~/types";
 import SearchDJ from "./SearchDJ";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 const Partners = () => {
   const { data: artists } = usePartnerArtists();
