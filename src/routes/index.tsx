@@ -18,6 +18,7 @@ import Product from "~/pages/Product";
 import { CreateAccountContextProvider } from "~/pages/CreateAccount/createAccountContext";
 import Partners from "~/pages/Partners";
 import Invitations from "~/pages/Invitations";
+import EditProductPage from "~/pages/Product/EditProduct";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
           {
             path: "/product",
             element: <Product />,
+          },
+          {
+            path: "/product/:product_id",
+            element: <EditProductPage />,
           },
           {
             path: "/settings",

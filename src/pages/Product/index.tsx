@@ -15,6 +15,14 @@ import {
   Text,
   Progress,
   Spinner,
+  VStack,
+  Image,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import { FaArrowRight, FaTrash } from "react-icons/fa";
 import Header from "~/components/Header";
@@ -23,13 +31,17 @@ import setProductData, { ProductPayload } from "~/services/createProduct";
 import { uploadChunkFile, uploadFile } from "~/services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import getPostToken from "~/services/getPostToken";
-import { PostType } from "~/types";
+import { PostType, Product } from "~/types";
 import { useNavigate } from "react-router-dom";
+import { deleteProduct, useProduct } from "~/services/products";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { timeAgo } from "~/utils";
+import { useUserData } from "~/services/settings/userData";
 
 const MAX_AUDIO_FILE_SIZE = 1 * 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
-export default function Product() {
+const ProductPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const [postToken, setPostToken] = useState<string>("");
@@ -235,246 +247,432 @@ export default function Product() {
   };
 
   return (
-    <Flex
-      w="100%"
-      h="100%"
-      minH="100vh"
-      flexDirection="column"
-      bg="#ececec"
-      pb="50px"
-    >
-      <Header />
-      <Flex w="100%" justifyContent="center">
+    <>
+      <Flex
+        w="100%"
+        h="100%"
+        minH="100vh"
+        flexDirection="column"
+        bg="#ececec"
+        pb="50px"
+      >
+        <Header />
         <Flex
-          flexDirection="column"
-          gap="35px"
           w="100%"
-          maxW="1000px"
-          pt="25px"
-          px="15px"
+          justifyContent="center"
+          flexDirection="column"
           alignItems="center"
         >
           <Flex
-            gap="10px"
-            bg="#fff"
             flexDirection="column"
-            w={{ base: "100%", sm: "500px" }}
-            borderRadius="10px"
-            overflow="hidden"
+            gap="35px"
+            w="100%"
+            maxW="1000px"
+            pt="25px"
+            px="15px"
+            alignItems="center"
           >
-            <Flex background="#300a6e" justifyContent="center">
-              <Heading
-                color="#fff"
-                fontSize="20px"
-                display="flex"
-                alignItems="center"
-                gap="6px"
-                py="15px"
-              >
-                Create Product
-              </Heading>
-            </Flex>
-            <Stack px="20px" pt="10px" pb="20px">
-              <FormControl isRequired mb={4}>
-                <FormLabel>Release Name</FormLabel>
-                <Input
-                  type="text"
-                  value={releaseName}
-                  placeholder="Name of Release / Track"
-                  onChange={(e) => setReleaseName(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl mb={4}>
-                <FormLabel>Description</FormLabel>
-                <Textarea
-                  value={description}
-                  placeholder="Write something about this release"
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl isRequired>
-                <FormLabel>Release Artwork</FormLabel>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  border="0px"
-                  p="2px"
-                  ref={(ref) => (artWorkInputRef.current = ref)}
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      const file = e.target.files[0];
-                      setReleaseArtwork(file);
-                    } else {
-                      setReleaseArtwork(null);
-                      setArtworkFileToUpload(null);
-                    }
-                  }}
-                />
-              </FormControl>
-              {isUploadingArtwork ? (
-                <Box>
-                  <Text mb="10px">Uploading {artworkFileToUpload?.name}</Text>
-                  <Progress hasStripe value={progressArtwork} />
-                </Box>
-              ) : artworkFileToUpload ? (
-                <Flex alignItems="center">
-                  <FaTrash
-                    onClick={() => {
-                      setArtworkFileToUpload(null);
-                      if (artWorkInputRef.current)
-                        artWorkInputRef.current.value = "";
-                    }}
-                  />
-                  <Text ml="10px">{artworkFileToUpload?.name}</Text>
-                </Flex>
-              ) : null}
-
-              <FormControl isRequired mb={4}>
-                <FormLabel>Price ($ USD)</FormLabel>
-                <NumberInput
-                  value={price}
-                  onChange={(value) => setPrice(value)}
-                  precision={2}
+            <Flex
+              gap="10px"
+              bg="#fff"
+              flexDirection="column"
+              w={{ base: "100%", sm: "500px" }}
+              borderRadius="10px"
+              overflow="hidden"
+            >
+              <Flex background="#300a6e" justifyContent="center">
+                <Heading
+                  color="#fff"
+                  fontSize="20px"
+                  display="flex"
+                  alignItems="center"
+                  gap="6px"
+                  py="15px"
                 >
-                  <NumberInputField
-                    placeholder="e.g. 2.00"
-                    textAlign={"right"}
+                  Create Product
+                </Heading>
+              </Flex>
+              <Stack px="20px" pt="10px" pb="20px">
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Release Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={releaseName}
+                    placeholder="Name of Release / Track"
+                    onChange={(e) => setReleaseName(e.target.value)}
                   />
-                </NumberInput>
-              </FormControl>
+                </FormControl>
 
-              <FormControl isRequired mb={4}>
-                <FormLabel>Genre</FormLabel>
-                <Input
-                  type="text"
-                  value={genre}
-                  onChange={(e) => setGenre(e.target.value)}
-                  placeholder="e.g. Tech House"
-                />
-              </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Description</FormLabel>
+                  <Textarea
+                    value={description}
+                    placeholder="Write something about this release"
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </FormControl>
 
-              <FormControl isRequired mb={4}>
-                <FormLabel>Release Date</FormLabel>
-                <Input
-                  type="date"
-                  value={releaseDate}
-                  placeholder="Select a date"
-                  onChange={(e) => setReleaseDate(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl isRequired mb={4}>
-                <FormLabel>Record Label</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Name of Record Label"
-                  value={recordLabel}
-                  onChange={(e) => setRecordLabel(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl mb={4}>
-                <FormLabel>Featured Artists</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="All Featured Artists"
-                  value={featuredArtists}
-                  onChange={(e) => setFeaturedArtists(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl mb={4}>
-                <FormLabel>Downloadable File Name</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="e.g. song-name.wav"
-                  value={fileName}
-                  onChange={(e) => setFileName(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl isRequired>
-                <FormLabel>Downloadable Track File</FormLabel>
-                <Input
-                  type="file"
-                  accept=".mp3,.flac,.aiff,.aifc,.wav"
-                  border="0px"
-                  p="2px"
-                  ref={(ref) => (audioInputRef.current = ref)}
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      if (file.size > MAX_AUDIO_FILE_SIZE) {
-                        e.target.value = "";
-                        return;
+                <FormControl isRequired>
+                  <FormLabel>Release Artwork</FormLabel>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    border="0px"
+                    p="2px"
+                    ref={(ref) => (artWorkInputRef.current = ref)}
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        const file = e.target.files[0];
+                        setReleaseArtwork(file);
+                      } else {
+                        setReleaseArtwork(null);
+                        setArtworkFileToUpload(null);
                       }
-                      setDownloadableTrackFile(file);
-                    } else {
-                      setDownloadableTrackFile(null);
-                      setAudioFileToUpload(null);
-                    }
-                  }}
-                />
-              </FormControl>
-
-              {isUploadingAudio ? (
-                <>
-                  <Box>
-                    <Text mb="10px">Uploading {audioFileToUpload?.name}</Text>
-                    <Text as="span" paddingLeft="10px">
-                      {" "}
-                      <Spinner />{" "}
-                    </Text>
-                    <Progress hasStripe value={progressAudio} />
-                  </Box>
-                </>
-              ) : audioFileToUpload ? (
-                <Flex alignItems="center">
-                  <FaTrash
-                    onClick={() => {
-                      setAudioFileToUpload(null);
-                      if (audioInputRef.current)
-                        audioInputRef.current.value = "";
                     }}
                   />
-                  <Text ml="10px">{audioFileToUpload?.name}</Text>
-                </Flex>
-              ) : null}
+                </FormControl>
+                {isUploadingArtwork ? (
+                  <Box>
+                    <Text mb="10px">Uploading {artworkFileToUpload?.name}</Text>
+                    <Progress hasStripe value={progressArtwork} />
+                  </Box>
+                ) : artworkFileToUpload ? (
+                  <Flex alignItems="center">
+                    <FaTrash
+                      onClick={() => {
+                        setArtworkFileToUpload(null);
+                        if (artWorkInputRef.current)
+                          artWorkInputRef.current.value = "";
+                      }}
+                    />
+                    <Text ml="10px">{artworkFileToUpload?.name}</Text>
+                  </Flex>
+                ) : null}
 
-              <FileChoices />
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Price ($ USD)</FormLabel>
+                  <NumberInput
+                    value={price}
+                    onChange={(value) => setPrice(value)}
+                    precision={2}
+                  >
+                    <NumberInputField
+                      placeholder="e.g. 2.00"
+                      textAlign={"right"}
+                    />
+                  </NumberInput>
+                </FormControl>
 
-              <Button
-                mt={4}
-                type="submit"
-                background="#300a6e"
-                color="#fff"
-                fontSize="18px"
-                _hover={{ background: "#111" }}
-                height="45px"
-                isLoading={isCreating}
-                onClick={handleSubmit}
-                isDisabled={
-                  !releaseName ||
-                  !releaseArtwork ||
-                  !price ||
-                  !genre ||
-                  !releaseDate ||
-                  !recordLabel ||
-                  !downloadableTrackFile ||
-                  isUploadingArtwork ||
-                  isUploadingAudio
-                }
-              >
-                CREATE PRODUCT{" "}
-                <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
-              </Button>
-            </Stack>
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Genre</FormLabel>
+                  <Input
+                    type="text"
+                    value={genre}
+                    onChange={(e) => setGenre(e.target.value)}
+                    placeholder="e.g. Tech House"
+                  />
+                </FormControl>
+
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Release Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={releaseDate}
+                    placeholder="Select a date"
+                    onChange={(e) => setReleaseDate(e.target.value)}
+                  />
+                </FormControl>
+
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Record Label</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Name of Record Label"
+                    value={recordLabel}
+                    onChange={(e) => setRecordLabel(e.target.value)}
+                  />
+                </FormControl>
+
+                <FormControl mb={4}>
+                  <FormLabel>Featured Artists</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="All Featured Artists"
+                    value={featuredArtists}
+                    onChange={(e) => setFeaturedArtists(e.target.value)}
+                  />
+                </FormControl>
+
+                <FormControl mb={4}>
+                  <FormLabel>Downloadable File Name</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="e.g. song-name.wav"
+                    value={fileName}
+                    onChange={(e) => setFileName(e.target.value)}
+                  />
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel>Downloadable Track File</FormLabel>
+                  <Input
+                    type="file"
+                    accept=".mp3,.flac,.aiff,.aifc,.wav"
+                    border="0px"
+                    p="2px"
+                    ref={(ref) => (audioInputRef.current = ref)}
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        if (file.size > MAX_AUDIO_FILE_SIZE) {
+                          e.target.value = "";
+                          return;
+                        }
+                        setDownloadableTrackFile(file);
+                      } else {
+                        setDownloadableTrackFile(null);
+                        setAudioFileToUpload(null);
+                      }
+                    }}
+                  />
+                </FormControl>
+
+                {isUploadingAudio ? (
+                  <>
+                    <Box>
+                      <Text mb="10px">Uploading {audioFileToUpload?.name}</Text>
+                      <Text as="span" paddingLeft="10px">
+                        {" "}
+                        <Spinner />{" "}
+                      </Text>
+                      <Progress hasStripe value={progressAudio} />
+                    </Box>
+                  </>
+                ) : audioFileToUpload ? (
+                  <Flex alignItems="center">
+                    <FaTrash
+                      onClick={() => {
+                        setAudioFileToUpload(null);
+                        if (audioInputRef.current)
+                          audioInputRef.current.value = "";
+                      }}
+                    />
+                    <Text ml="10px">{audioFileToUpload?.name}</Text>
+                  </Flex>
+                ) : null}
+
+                <FileChoices />
+
+                <Button
+                  mt={4}
+                  type="submit"
+                  background="#300a6e"
+                  color="#fff"
+                  fontSize="18px"
+                  _hover={{ background: "#111" }}
+                  height="45px"
+                  isLoading={isCreating}
+                  onClick={handleSubmit}
+                  isDisabled={
+                    !releaseName ||
+                    !releaseArtwork ||
+                    !price ||
+                    !genre ||
+                    !releaseDate ||
+                    !recordLabel ||
+                    !downloadableTrackFile ||
+                    isUploadingArtwork ||
+                    isUploadingAudio
+                  }
+                >
+                  CREATE PRODUCT{" "}
+                  <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
+                </Button>
+              </Stack>
+            </Flex>
           </Flex>
+          <Box w={{ base: "100%", sm: "500px" }}>
+            <ProductList />
+          </Box>
         </Flex>
       </Flex>
-    </Flex>
+    </>
   );
-}
+};
+
+const ProductList = () => {
+  const { data: userData } = useUserData();
+
+  const pageSize = 10;
+  const {
+    data: products,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useProduct({ pageSize });
+  const navigate = useNavigate();
+
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  const handleLoadMore = () => {
+    fetchNextPage();
+  };
+
+  const handleDeleteProduct = async () => {
+    if (!selectedProduct) return;
+    // console.log("selectedProduct", selectedProduct);
+    await deleteProduct(selectedProduct.product_id);
+    await refetch();
+  };
+
+  return (
+    <>
+      <InfiniteScroll
+        dataLength={(products?.pages?.length ?? 0) * pageSize}
+        next={handleLoadMore}
+        hasMore={hasNextPage ?? false}
+        loader={<></>}
+        endMessage={
+          <>
+            {(products?.pages ?? [])?.flat()?.length > 0 ? (
+              <Text fontSize="lg" fontWeight={600} textAlign="center">
+                All products displayed
+              </Text>
+            ) : null}
+          </>
+        }
+      >
+        <Flex
+          w="100%"
+          flexDirection="column"
+          justifyContent="center"
+          align="center"
+          m="auto"
+          p="0px"
+          gap="20px"
+          mt="30px"
+        >
+          <Box p="4" bg="white" borderRadius="15px" w="100%" textAlign="center">
+            <Text fontWeight="700">List of products</Text>
+          </Box>
+          {products?.pages?.map((page: Product[], index: number) => {
+            return (
+              <Box key={index} w="100%">
+                {page.map((product: Product) => {
+                  return (
+                    <Box
+                      key={product.product_id}
+                      bg="white"
+                      w="100%"
+                      mb="40px"
+                      p="8"
+                      mt="10px"
+                      borderRadius="15px"
+                    >
+                      <Box>
+                        <Image
+                          src={product.image_url}
+                          fallbackSrc={userData?.profile_picture}
+                          alt="product-image"
+                          width="100%"
+                          height="auto"
+                          borderRadius="15px"
+                          mt="10px"
+                        />
+                        <Flex alignItems="center" mt="10px">
+                          <Text>{timeAgo(product.created_at)}</Text>
+                          <Text fontStyle={"italic"} paddingLeft="20px">
+                            {product?.publish === 0 ? (
+                              <>
+                                <Spinner size="xs" speed="1.1s" />
+                                Processing
+                              </>
+                            ) : (
+                              "Published"
+                            )}
+                          </Text>
+                        </Flex>
+                        <Text>
+                          Product ID: <b>{product.product_id}</b>
+                        </Text>
+                        <Text>
+                          Name: <b>{product.name}</b>
+                        </Text>
+                        <Text>
+                          SKU: <b>{product.sku}</b>
+                        </Text>
+                        <Text>
+                          Product Type: <b>{product.product_type}</b>
+                        </Text>
+                      </Box>
+                      <VStack>
+                        <Button
+                          mt="10px"
+                          w="100%"
+                          color="#fff"
+                          colorScheme="red"
+                          onClick={() => {
+                            setSelectedProduct(product);
+                            onOpen();
+                          }}
+                        >
+                          <Text>Delete</Text>
+                        </Button>
+                        <Button
+                          mt="10px"
+                          w="100%"
+                          onClick={() => {
+                            navigate(`/product/${product.product_id}`);
+                          }}
+                        >
+                          <Text>Edit</Text>
+                        </Button>
+                      </VStack>
+                    </Box>
+                  );
+                })}
+              </Box>
+            );
+          })}
+        </Flex>
+      </InfiniteScroll>
+
+      {selectedProduct && (
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Delete Post: {selectedProduct.name}
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={async () => {
+                    await handleDeleteProduct();
+                    onClose();
+                  }}
+                  ml={3}
+                >
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      )}
+    </>
+  );
+};
+
+export default ProductPage;
