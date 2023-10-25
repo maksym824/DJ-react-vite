@@ -29,12 +29,6 @@ const Partners = () => {
   // Because the data is an object, we need to convert it to an array
   const parsedArtists = Object.values(artists || {}) as Artist[];
 
-  useEffect(() => {
-    if (parsedArtists) {
-      console.log("parsedArtists", parsedArtists);
-    }
-  });
-
   return (
     <Flex
       w="100%"
@@ -55,13 +49,13 @@ const Partners = () => {
       </Flex>
 
       <Flex w="100%" h="100%" justifyContent="center">
-        {parsedArtists[0] == false && (
+        {artists && artists.result == false && (
           <Text fontSize="3xl" paddingTop={12}>
             No partners connected yet.
           </Text>
         )}
 
-        {parsedArtists[0] != false && (
+        {artists && artists.result != false && (
           <TableContainer>
             <Table variant="simple">
               {/*
