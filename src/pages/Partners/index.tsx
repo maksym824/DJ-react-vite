@@ -1,5 +1,6 @@
 import {
   Flex,
+  Text,
   Table,
   Tbody,
   Tr,
@@ -54,7 +55,13 @@ const Partners = () => {
       </Flex>
 
       <Flex w="100%" h="100%" justifyContent="center">
-        {artists && (
+        {parsedArtists[0] == false && (
+          <Text fontSize="3xl" paddingTop={12}>
+            No partners connected yet.
+          </Text>
+        )}
+
+        {parsedArtists[0] != false && (
           <TableContainer>
             <Table variant="simple">
               {/*

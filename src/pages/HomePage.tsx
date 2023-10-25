@@ -90,14 +90,8 @@ export default function Index() {
                   if (box.text == "Partners") {
                     return result;
                   }
-                } else {
-                  if (
-                    (isPartner || isAdmin) &&
-                    !isDj &&
-                    box.text != "Partners"
-                  ) {
-                    return result;
-                  }
+                } else if (!isPartner && !isAdmin && box.text == "Partners") {
+                  return result;
                 }
                 result.push({
                   text: box.text,
