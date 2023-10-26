@@ -104,7 +104,7 @@ const SideMenuBody = () => {
             <BoxLink href="/create/image" text="Image Post" />
             <BoxLink href="/create/video" text="Video Post" />
             <BoxLink href="/create/audio" text="Audio Post" />
-            <BoxLink href="/create/event" text="Tour Date" />
+            <BoxLink href="/event" text="Tour Date" />
             <BoxLink href="/product" text="Product" />
             <BoxLink href="/create/text" text="Text Post" />
 

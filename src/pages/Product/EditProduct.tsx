@@ -272,7 +272,6 @@ const EditProductPage = () => {
 
     try {
       const res = await updateProduct(Number(product_id), postToken, payload);
-      console.log("res", res);
       if (res.data?.result) {
         toast({
           description: "Product updated",

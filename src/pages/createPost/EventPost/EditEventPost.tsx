@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Progress,
   Stack,
@@ -12,20 +13,26 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import Header from "../../components/Header";
 import { FaArrowRight, FaTrash } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import getPostToken from "../../services/getPostToken";
-import { PostType } from "../../types";
-import FormFooter from "~/components/FormFooter";
+import { useNavigate, useParams } from "react-router-dom";
 import { AxiosProgressEvent } from "axios";
 import { uploadFile } from "~/services/uploadFile";
-import createEvent, { EventPayload } from "~/services/createEvent";
+import { EventPayload } from "~/services/createEvent";
+import getPostToken from "~/services/getPostToken";
+import { Event, PostType } from "~/types";
+import Header from "~/components/Header";
+import { getEventById, updateEvent } from "~/services/events";
 
-const EventPost = () => {
+type EventDetails = Event & EventPayload;
+
+const EditEventPost = () => {
   const navigate = useNavigate();
   const toast = useToast();
+  const params = useParams();
+  const { event_id = "" } = params;
+  const [currentEvent, setCurrentEvent] = useState<EventDetails | null>(null);
+
   const [postToken, setPostToken] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -42,6 +49,38 @@ const EventPost = () => {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [artworkPreview, setArtworkPreview] = useState<string>("");
+
+  const getEventData = async (eventID: number) => {
+    try {
+      const res = await getEventById(eventID);
+      const { data } = res;
+      if (data.length) {
+        const _event = data[0] as EventDetails;
+        setCurrentEvent(_event);
+      }
+    } catch (error) {
+      console.error("Error getting event:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!event_id) return;
+    getEventData(Number(event_id));
+  }, [event_id]);
+
+  useEffect(() => {
+    if (!currentEvent) return;
+    setEventName(currentEvent.event_name);
+    setEventDescription(currentEvent.description);
+    setEventDate(currentEvent.event_date);
+    setEventStartTime(currentEvent.start_time);
+    setEventEndTime(currentEvent.end_time);
+    setEventVenue(currentEvent.venue);
+    setEventCity(currentEvent.city);
+    setEventLink(currentEvent.link_buy_tickets);
+    setArtworkPreview(currentEvent.artwork_cache);
+  }, [currentEvent]);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -78,8 +117,8 @@ const EventPost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventArtwork]);
 
-  const handleCreateEvent = async () => {
-    const payload: EventPayload = {
+  const handleUpdateEvent = async () => {
+    const payload: Partial<EventDetails> = {
       event_name: eventName,
       event_date: eventDate,
       start_time: eventStartTime,
@@ -92,11 +131,11 @@ const EventPost = () => {
     };
     setIsLoading(true);
     try {
-      const response = await createEvent(payload, postToken);
+      const response = await updateEvent(Number(event_id), postToken, payload);
       if (response.data?.result) {
         setIsLoading(false);
         toast({
-          title: "Event created.",
+          title: "Event updated.",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -216,6 +255,19 @@ const EventPost = () => {
                   />
                 </FormControl>
 
+                {!eventArtwork && (
+                  <FormControl mb={4}>
+                    <FormLabel>Artwork Preview</FormLabel>
+                    <Image
+                      src={"https://files.djfan.app/" + artworkPreview}
+                      width="100%"
+                      height="auto"
+                      objectFit="cover"
+                      borderRadius="10px"
+                    />
+                  </FormControl>
+                )}
+
                 <FormControl>
                   <FormLabel>Event Artwork</FormLabel>
                   <Input
@@ -270,22 +322,21 @@ const EventPost = () => {
                   _hover={{ background: "#111" }}
                   height="45px"
                   isLoading={isLoading}
-                  onClick={handleCreateEvent}
+                  onClick={handleUpdateEvent}
                   isDisabled={
                     !eventName ||
                     !eventDescription ||
                     !eventDate ||
                     !eventVenue ||
-                    !eventCity
+                    !eventCity ||
+                    isUploading
                   }
                 >
-                  {/* !eventLink || !eventArtwork */}
-                  CREATE EVENT{" "}
+                  UPDATE EVENT{" "}
                   <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
                 </Button>
               </Stack>
             </Flex>
-            <FormFooter />
           </Flex>
         </Flex>
       </Flex>
@@ -293,4 +344,4 @@ const EventPost = () => {
   );
 };
 
-export default EventPost;
+export default EditEventPost;

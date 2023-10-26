@@ -194,3 +194,20 @@ export type Product = {
   updated_at: string;
   publish: number;
 };
+
+export type Event = {
+  id: number;
+  event_name: string;
+  event_date: string;
+  start_time: string;
+  end_time: string;
+  description: string;
+  link_buy_tickets: string;
+  artwork: string;
+  artwork_cache: string;
+  venue: string;
+  city: string;
+  publish: number;
+  created_at: string;
+  updated_at: string;
+};

@@ -20,6 +20,8 @@ import Partners from "~/pages/Partners";
 import Invitations from "~/pages/Invitations";
 import EditProductPage from "~/pages/Product/EditProduct";
 import CreateProductPage from "~/pages/Product/CreateProduct";
+import CreateEventPost from "~/pages/createPost/EventPost/CreateEventPost";
+import EditEventPost from "~/pages/createPost/EventPost/EditEventPost";
 
 const router = createBrowserRouter([
   {
@@ -66,11 +68,19 @@ const router = createBrowserRouter([
                 path: "/create/text",
                 element: <TextPost />,
               },
-              {
-                path: "/create/event",
-                element: <EventPost />,
-              },
             ],
+          },
+          {
+            path: "/event",
+            element: <EventPost />,
+          },
+          {
+            path: "/event/create",
+            element: <CreateEventPost />,
+          },
+          {
+            path: "/event/edit/:event_id",
+            element: <EditEventPost />,
           },
           {
             path: "/product",

@@ -100,7 +100,7 @@ const CTAButtons = [
   {
     id: 4,
     name: "Event",
-    link: "/create/event",
+    link: "/event",
     imageUrl: "https://media.djfan.app/images/tourdate.png",
   },
   {
