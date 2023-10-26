@@ -62,8 +62,13 @@ export default function CreateAccount() {
   const isStep3Complete =
     step === 3 && !!shortBio && !!country && !!countryCode && !!location;
   const isStep4Complete =
-    step === 4 && !!instagram && !!soundcloud && !!website;
+    (step === 4 && !!instagram) || !!soundcloud || !!website;
   const isStep5Complete = step === 5 && !!profileImage && !!coverImage;
+
+  /*
+  const isStep4Complete =
+    step === 4 && !!instagram && !!soundcloud && !!website;
+  */
 
   const handleContinue = async () => {
     switch (step) {

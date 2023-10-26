@@ -28,7 +28,9 @@ export const Form3 = () => {
           Add Profile Links
         </Heading>
         <Heading fontSize="14px" fontWeight="500">
-          Link to your website & other social profiles
+          Link to your website & other social profiles, why are we asking for
+          this? We use Instagram to prevent impersonators and verify your DJfan
+          profile.
         </Heading>
       </Box>
       <FormControl>
