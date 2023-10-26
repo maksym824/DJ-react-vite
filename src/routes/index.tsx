@@ -19,6 +19,7 @@ import { CreateAccountContextProvider } from "~/pages/CreateAccount/createAccoun
 import Partners from "~/pages/Partners";
 import Invitations from "~/pages/Invitations";
 import EditProductPage from "~/pages/Product/EditProduct";
+import CreateProductPage from "~/pages/Product/CreateProduct";
 
 const router = createBrowserRouter([
   {
@@ -76,7 +77,11 @@ const router = createBrowserRouter([
             element: <Product />,
           },
           {
-            path: "/product/:product_id",
+            path: "/product/create",
+            element: <CreateProductPage />,
+          },
+          {
+            path: "/product/edit/:product_id",
             element: <EditProductPage />,
           },
           {
