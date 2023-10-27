@@ -102,9 +102,19 @@ const CreateEventPost = () => {
           isClosable: true,
         });
         navigate("/");
+      } else {
+        setIsLoading(false);
+        toast({
+          title: "Error creating event.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (err) {
       console.log("err", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 

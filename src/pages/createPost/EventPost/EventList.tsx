@@ -55,6 +55,12 @@ const EventList = () => {
           isClosable: true,
         });
       } else {
+        toast({
+          title: "Event deleted!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         await refetch();
       }
     } catch (err) {
