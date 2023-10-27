@@ -279,7 +279,7 @@ const EditProductPage = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate("/create");
+        navigate("/product");
       } else {
         toast({
           description: "Update failed",

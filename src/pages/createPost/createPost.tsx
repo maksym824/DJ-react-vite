@@ -15,7 +15,7 @@ import { useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Header from "~/components/Header";
 import { deletePost, updatePost, usePosts } from "~/services/posts";
-import { AccessLevelType, Post } from "~/types";
+import { PostVariant, AccessLevelType, Post } from "~/types";
 import { timeAgo } from "~/utils";
 
 import {
@@ -98,6 +98,12 @@ const CTAButtons = [
     link: "/create/audio",
   },
   {
+    id: 6,
+    name: "Text Post",
+    imageUrl: "https://media.djfan.app/images/textpost.png",
+    link: "/create/text",
+  },
+  {
     id: 4,
     name: "Event",
     link: "/event",
@@ -105,15 +111,9 @@ const CTAButtons = [
   },
   {
     id: 5,
-    name: "New Product",
+    name: "Product",
     imageUrl: "https://media.djfan.app/images/product.png",
     link: "/product",
-  },
-  {
-    id: 6,
-    name: "Text Post",
-    imageUrl: "https://media.djfan.app/images/textpost.png",
-    link: "/create/text",
   },
 ];
 
@@ -187,6 +187,9 @@ const Posts = () => {
                     borderRadius="15px"
                   >
                     <Box>
+                      <Text as="span" fontSize="lg" fontStyle={"bold"}>
+                        {post?.posttype_id && PostVariant[post.posttype_id]}
+                      </Text>{" "}
                       {currentPostToEdit?.post_id === post?.id
                         ? timeAgo(currentPostToEdit.created_at)
                         : timeAgo(post.created_at)}{" "}

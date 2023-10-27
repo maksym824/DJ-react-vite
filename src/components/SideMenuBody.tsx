@@ -1,5 +1,5 @@
 import { Box, Stack, Divider, Link } from "@chakra-ui/react";
-import { FaHeadphones } from "react-icons/fa";
+import { FaHeadphones, FaHome, FaPeopleArrows } from "react-icons/fa";
 import apiClient from "~/services/api-client";
 import { useUserAccount } from "~/services/settings/userAccount";
 
@@ -54,6 +54,44 @@ const SideMenuBody = () => {
         </Box>
       )}
 
+      <Box
+        as="a"
+        href="/create"
+        display="flex"
+        alignItems="center"
+        gap="5px"
+        fontWeight="500"
+        boxShadow="unset"
+        _hover={{ bg: "#bf0fff" }}
+        bg="#d932ac"
+        color="#fff"
+        py="10px"
+        justifyContent="center"
+        _focus={{ boxShadow: "unset" }}
+      >
+        <FaHome />
+        Home
+      </Box>
+
+      <Box
+        as="a"
+        href="/settings"
+        display="flex"
+        alignItems="center"
+        gap="5px"
+        fontWeight="500"
+        boxShadow="unset"
+        _hover={{ bg: "#bf0fff" }}
+        bg="#6b46c1"
+        color="#fff"
+        py="10px"
+        justifyContent="center"
+        _focus={{ boxShadow: "unset" }}
+      >
+        <FaHeadphones />
+        Profile
+      </Box>
+
       {(isPartner || isAdmin) && !isLoggedAs && (
         <Box
           display="flex"
@@ -73,33 +111,16 @@ const SideMenuBody = () => {
             window.location.href = "/partners";
           }}
         >
+          <FaPeopleArrows />
           Partners
         </Box>
       )}
 
-      <Box
-        as="a"
-        href="/settings"
-        display="flex"
-        alignItems="center"
-        gap="5px"
-        fontWeight="500"
-        boxShadow="unset"
-        _hover={{ bg: "#bf0fff" }}
-        bg="#6b46c1"
-        color="#fff"
-        py="10px"
-        justifyContent="center"
-        _focus={{ boxShadow: "unset" }}
-      >
-        <FaHeadphones />
-        Return to Profile
-      </Box>
       <Stack px="20px" py="20px">
         {isDj && (
           <>
             <Box fontSize="18px" fontWeight="600" color="#6b46c1">
-              Create
+              <Link href="/create">Create</Link>
             </Box>
             <BoxLink href="/create/image" text="Image Post" />
             <BoxLink href="/create/video" text="Video Post" />

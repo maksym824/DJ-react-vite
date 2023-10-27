@@ -101,7 +101,7 @@ const CreateEventPost = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate("/");
+        navigate("/event");
       } else {
         setIsLoading(false);
         toast({

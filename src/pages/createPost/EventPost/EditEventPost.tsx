@@ -140,7 +140,7 @@ const EditEventPost = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate("/");
+        navigate("/event");
       }
     } catch (err) {
       console.log("err", err);

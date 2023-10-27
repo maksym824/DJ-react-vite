@@ -12,21 +12,21 @@ type BoxItem = {
 const boxes: BoxItem[] = [
   {
     id: 1,
-    text: "Create Post",
+    text: "Post",
     imageUrl: "https://files.djfan.app/images/create.webp",
     linkUrl: "/create",
   },
   {
     id: 2,
-    text: "Create Product",
+    text: "Product",
     imageUrl: "https://files.djfan.app/images/product.webp",
     linkUrl: "/product",
   },
   {
-    id: 3,
-    text: "Earnings",
-    imageUrl: "https://files.djfan.app/images/earnings.webp",
-    linkUrl: "/earnings",
+    id: 5,
+    text: "My page", // My djfan page - Dummy
+    imageUrl: "https://files.djfan.app/images/mydjfan-new.webp",
+    linkUrl: "",
   },
   {
     id: 4,
@@ -35,10 +35,10 @@ const boxes: BoxItem[] = [
     linkUrl: "/fans",
   },
   {
-    id: 5,
-    text: "", // My djfan page - Dummy
-    imageUrl: "https://files.djfan.app/images/mydjfan-new.webp",
-    linkUrl: "",
+    id: 3,
+    text: "Earnings",
+    imageUrl: "https://files.djfan.app/images/earnings.webp",
+    linkUrl: "/earnings",
   },
   {
     id: 6,
@@ -80,17 +80,17 @@ export default function Index() {
       <Flex w="100%" justifyContent="center">
         <Flex
           flexDirection="column"
-          gap="35px"
+          gap="20px"
           w="100%"
           maxW="1000px"
           pt="25px"
           px="15px"
         >
-          <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="30px">
+          <Flex h="100%" justifyContent="space-between" wrap="wrap" gap="20px">
             {boxes
               .reduce(function (result: BoxItem[], box) {
                 if (box.id == 5) {
-                  box.text = "" + user?.display_name;
+                  /* box.text = "" + user?.display_name; */
                   box.linkUrl =
                     "https://djfan.app/artists/" + user?.profile_url;
                 }
@@ -118,7 +118,8 @@ export default function Index() {
                     isExternal={box?.id == 5 ? true : false}
                     key={index}
                     href={box?.linkUrl ?? "/"}
-                    w={{ base: "100%", md: "30%" }}
+                    /* w={{ base: "100%", md: "30%" }} */
+                    w={{ base: "45%", md: "30%" }}
                   >
                     <Box
                       w={{ base: "100%", md: "100%" }}

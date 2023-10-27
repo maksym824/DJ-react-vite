@@ -225,7 +225,7 @@ const CreateProductPage = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate("/create");
+        navigate("/product");
       }
     } catch (error) {
       console.error("Error creating product:", error);

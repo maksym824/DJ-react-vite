@@ -50,7 +50,7 @@ const TextPost = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate("/");
+      navigate("/create");
     } catch (err) {
       console.log("err", err);
     }

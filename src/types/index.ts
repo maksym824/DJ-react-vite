@@ -23,6 +23,13 @@ export enum PostType {
   "event" = "event",
 }
 
+export enum PostVariant {
+  Text = 1,
+  Video = 2,
+  Audio = 3,
+  Images = 4,
+}
+
 export type Country = {
   country_code: string;
   country: string;
