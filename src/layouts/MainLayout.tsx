@@ -2,7 +2,7 @@
 import { Outlet, useSearchParams } from "react-router-dom";
 
 const MainLayout = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   if (searchParams.get("invite") != undefined) {
     window.location.assign(
       "https://auth.djfan.app/auth/signupdj?invite=" +
