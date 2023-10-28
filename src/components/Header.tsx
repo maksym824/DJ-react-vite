@@ -55,7 +55,7 @@ const Header = () => {
               _hover={{ color: "cyan" }}
             >
               <FaArrowLeft fontSize="12px" />
-              View Profile
+              Home
             </Flex>
           </Flex>
           <Flex w="60%" justifyContent={{ base: "flex-start", md: "center" }}>
