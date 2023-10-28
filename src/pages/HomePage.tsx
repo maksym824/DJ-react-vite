@@ -92,7 +92,9 @@ export default function Index() {
                 if (box.id == 5) {
                   /* box.text = "" + user?.display_name; */
                   box.linkUrl =
-                    "https://djfan.app/artists/" + user?.profile_url;
+                    import.meta.env.VITE_DJAPP_FAN_URL +
+                    "/artists/" +
+                    user?.profile_url;
                 }
                 if (isLoggedAs) {
                   if (!isAdmin && box.id == 3) {

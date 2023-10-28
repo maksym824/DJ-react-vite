@@ -5,7 +5,8 @@ const MainLayout = () => {
   const [searchParams] = useSearchParams();
   if (searchParams.get("invite") != undefined) {
     window.location.assign(
-      "https://auth.djfan.app/auth/signupdj?invite=" +
+      import.meta.env.VITE_DJFAN_SIGN_UP_URL +
+        "?invite=" +
         searchParams.get("invite")
     );
   }
