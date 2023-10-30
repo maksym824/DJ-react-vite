@@ -6,8 +6,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Box,
-  CircularProgress,
 } from "@chakra-ui/react";
 import FanTable from "./components/FanTable";
 import Header from "~/components/Header";
@@ -15,6 +13,7 @@ import { useFanList } from "~/services/fans/getFanList";
 import { Fan, FanType } from "~/types";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Loader from "~/components/Loader";
 
 export default function Fans() {
   const pageSize = 15;
@@ -23,12 +22,6 @@ export default function Fans() {
     pageSize,
     type: tabType,
   });
-
-  const Loader = () => (
-    <Box height="5rem" display="flex" justifyContent="center" p={2}>
-      <CircularProgress isIndeterminate />
-    </Box>
-  );
 
   const renderFanTable = () => {
     return (
