@@ -1,20 +1,26 @@
-import {
-  Avatar,
-  Flex,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Text,
-  Tr,
-  Heading,
-  Stack,
-} from "@chakra-ui/react";
-import ViewConnectedAccount from "./ViewConnectedAccount";
+import { Flex, Heading, Stack } from "@chakra-ui/react";
+import { useInvitee } from "~/services/invitations";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loader from "~/components/Loader";
+import ConnectionTable from "./ConnectionTable";
+import { Invitee } from "~/types";
+import { useEffect } from "react";
 
 export default function ConnectedAccounts() {
+  const pageSize = 10;
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInvitee({
+    pageSize,
+  });
+
+  useEffect(() => {
+    const infiniteScrollWrapper = document.querySelector(
+      ".infinite-scroll-component__outerdiv"
+    );
+    if (infiniteScrollWrapper) {
+      (infiniteScrollWrapper as HTMLElement).style.width = "100%";
+    }
+  }, []);
+
   return (
     <Stack gap="15px">
       <Heading fontSize="24px" alignSelf="flex-start">
@@ -26,105 +32,27 @@ export default function ConnectedAccounts() {
         overflow="hidden"
         border="1px solid #111111"
       >
-        <TableContainer
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-          flex="1"
-          overflowY="auto"
-          fontSize="16px"
+        <InfiniteScroll
+          dataLength={(data?.pages.length ?? 0) * pageSize}
+          next={fetchNextPage}
+          hasMore={hasNextPage ?? false}
+          loader={<Loader />}
         >
-          <Table variant="simple" overflow="auto" maxH="calc(100vh - 260px)">
-            <Thead position="sticky" top="0" color="#fff" bg="black">
-              <Tr>
-                <Th color={"white"}>Creator</Th>
-                <Th color={"white"}>Joined</Th>
-                <Th color={"white"}> Commission</Th>
-                <Th color={"white"}> Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>
-                  <Flex
-                    alignItems="center"
-                    gap="8px"
-                    as="a"
-                    href="/profile"
-                    _hover={{
-                      color: "#9b5de5",
-                    }}
-                  >
-                    <Avatar
-                      size="sm"
-                      border="1px solid #111111"
-                      src=""
-                    ></Avatar>
-                    <Text
-                      fontWeight="600"
-                      _hover={{
-                        color: "#9b5de5",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {/* dj name */}
-                    </Text>
-                  </Flex>
-                </Td>
-                <Td>{/* date */}</Td>
-                <Td>
-                  <b>{/* amount */}</b> per month
-                </Td>
-
-                <Td>
-                  <Flex>
-                    <ViewConnectedAccount />
-                  </Flex>
-                </Td>
-              </Tr>
-              {/*
-              <Tr>
-                <Td>
-                  <Flex
-                    alignItems="center"
-                    gap="8px"
-                    as="a"
-                    href="/profile"
-                    _hover={{
-                      color: "#9b5de5",
-                    }}
-                  >
-                    <Avatar
-                      size="sm"
-                      border="1px solid #111111"
-                      src="https://djfan.ams3.cdn.digitaloceanspaces.com/2023/05/ff-8e14e364f1a0dab2636d07aecd4b0988-ff-EC21F503-E96D-4B3E-93E2-0BD81EB4FAAC.jpeg"
-                    ></Avatar>
-                    <Text
-                      fontWeight="600"
-                      _hover={{
-                        color: "#9b5de5",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      DJ Exotic
-                    </Text>
-                  </Flex>
-                </Td>
-                <Td>21/11/2023</Td>
-                <Td>
-                  <b>$350</b> per month
-                </Td>
-
-                <Td>
-                  <Flex>
-                    <ViewConnectedAccount />
-                  </Flex>
-                </Td>
-              </Tr>
-                    */}
-            </Tbody>
-          </Table>
-        </TableContainer>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <ConnectionTable>
+              {data?.pages.map((page) =>
+                page.map((invitee: Invitee) => (
+                  <ConnectionTable.Row
+                    key={invitee.display_name}
+                    invitee={invitee}
+                  />
+                ))
+              )}
+            </ConnectionTable>
+          )}
+        </InfiniteScroll>
       </Flex>
     </Stack>
   );

@@ -202,6 +202,16 @@ export type Product = {
   publish: number;
 };
 
+export type Invitee = {
+  start_period: string;
+  end_period: string;
+  amount: string;
+  created_at: string;
+  display_name: string;
+  profile_url: string;
+  profile_picture_cache: string;
+};
+
 export type Event = {
   id: number;
   event_name: string;
