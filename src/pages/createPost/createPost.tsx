@@ -293,7 +293,8 @@ const Posts = () => {
                         w="100%"
                         onClick={() => {
                           window.open(
-                            `https://djfan.app/artists/${userData?.profile_url}`,
+                            import.meta.env.VITE_DJAPP_FAN_URL +
+                              `/artists/${userData?.profile_url}`,
                             "_blank"
                           );
                         }}
