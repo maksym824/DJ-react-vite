@@ -75,9 +75,8 @@ const Partners = () => {
                         src={`https://files.djfan.app/${
                           artist?.profile_picture ?? ""
                         }`}
-                        h="full"
-                        w="100%"
-                        maxH="100px"
+                        h="150px"
+                        w="150px"
                         objectFit="cover"
                         borderRadius={5}
                       />
