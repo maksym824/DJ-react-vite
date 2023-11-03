@@ -27,13 +27,14 @@ const uploadChunkFile = async (
   const formData = new FormData();
   formData.append("file", chunk);
 
-  await apiClient.post(`/dj/post/${post_token}/upload/large`, formData, {
+  return await apiClient.post(`/dj/post/${post_token}/upload/large`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       "File-Total-Chunks": totalChunks.toString(),
       "File-Chunk-Number": currentChunk.toString(),
       "File-Name": fileName,
     },
+    timeout: 20000,
   });
 };
 

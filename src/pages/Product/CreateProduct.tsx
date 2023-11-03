@@ -59,7 +59,6 @@ const CreateProductPage = () => {
   );
   const [audioFileToUpload, setAudioFileToUpload] = useState<File | null>(null);
   const [chunks, setChunks] = useState<Blob[]>([]);
-  const currentChunk = useRef<number>(0);
   const [totalChunks, setTotalChunks] = useState<number>(0);
 
   const onUploadArtworkProgress = (progressEvent: AxiosProgressEvent) => {
@@ -109,30 +108,105 @@ const CreateProductPage = () => {
 
   const uploadChunks = async () => {
     setIsUploadingAudio(true);
-    if (currentChunk?.current < totalChunks) {
-      const chunk = chunks[currentChunk.current];
+    const maxConcurrency = 2;
+    const chunkQueue: {
+      chunk: Blob;
+      chunkIndex: number;
+    }[] = [];
 
+    const uploadingChunks: number[] = [];
+    const failedChunks: number[] = [];
+
+    const processChunkAudio = async (chunk: Blob, chunkIndex: number) => {
       try {
-        await uploadChunkFile(
+        const res = await uploadChunkFile(
           chunk,
           postToken,
           totalChunks,
-          currentChunk.current + 1,
+          chunkIndex + 1,
           audioFileToUpload?.name ?? ""
         );
-        // Chunk uploaded successfully, move to the next chunk
-        currentChunk.current++;
-        setProgressAudio(
-          Math.round((currentChunk.current / totalChunks) * 100)
-        );
-        await uploadChunks(); // Recursively upload the next chunk
+
+        if (res?.data?.result) {
+          setProgressAudio(Math.round(((chunkIndex + 1) / totalChunks) * 100));
+        } else {
+          console.error(`Audio Chunk ${chunkIndex + 1} failed to upload`);
+          failedChunks.push(chunkIndex);
+        }
       } catch (error) {
-        console.error("Error uploading chunk:", error);
+        console.error(`Audio Chunk ${chunkIndex + 1} failed to upload`);
+        failedChunks.push(chunkIndex);
       }
-    } else {
-      setIsUploadingAudio(false);
-      setProgressAudio(0);
+      const index = uploadingChunks.indexOf(chunkIndex);
+      if (index !== -1) {
+        uploadingChunks.splice(index, 1);
+      }
+    };
+
+    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+      if (failedChunks.includes(chunkIndex)) {
+        continue;
+      }
+
+      const chunk = chunks[chunkIndex];
+      if (uploadingChunks.length < maxConcurrency) {
+        uploadingChunks.push(chunkIndex);
+        processChunkAudio(chunk, chunkIndex);
+      } else {
+        chunkQueue.push({ chunk, chunkIndex });
+        await Promise.race(
+          uploadingChunks.map((chunkIndex: number) => {
+            return new Promise((resolve) => {
+              const interval = setInterval(() => {
+                if (uploadingChunks.indexOf(chunkIndex) === -1) {
+                  clearInterval(interval);
+                  resolve(chunkIndex);
+                }
+              }, 1000);
+            });
+          })
+        );
+        const nextChunk = chunkQueue.shift();
+        if (nextChunk) {
+          const { chunk, chunkIndex } = nextChunk;
+          uploadingChunks.push(chunkIndex);
+          processChunkAudio(chunk, chunkIndex);
+        }
+      }
     }
+
+    // Wait for any remaining audio chunks to finish uploading
+    await Promise.all(
+      uploadingChunks.map((chunkIndex: number) => {
+        return new Promise((resolve) => {
+          const interval = setInterval(() => {
+            if (uploadingChunks.indexOf(chunkIndex) === -1) {
+              clearInterval(interval);
+              resolve(chunkIndex);
+            }
+          }, 1000);
+        });
+      })
+    );
+
+    if (failedChunks.length > 0) {
+      for (const chunkIndex of failedChunks) {
+        const chunk = chunks[chunkIndex];
+        const res = await uploadChunkFile(
+          chunk,
+          postToken,
+          totalChunks,
+          chunkIndex + 1,
+          audioFileToUpload?.name ?? ""
+        );
+        if (!res?.data?.result) {
+          console.error(`Audio Chunk ${chunkIndex + 1} failed to upload`);
+        }
+      }
+    }
+
+    setIsUploadingAudio(false);
+    setProgressAudio(0);
   };
 
   const handleUploadAudio = async (file: File) => {
