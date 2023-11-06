@@ -24,8 +24,14 @@ import { Form5 } from "./components/Form5";
 import { theme } from "./theme";
 import { useCreateAccountContext } from "./useCreateAccountContext";
 import { updateUserAccount } from "~/services/settings/userAccount";
-import { updateUserData, useUserData } from "~/services/settings/userData";
+import {
+  finishSignUp,
+  updateUserData,
+  useUserData,
+} from "~/services/settings/userData";
 import SignOutBtn from "~/components/SignOutBtn";
+
+const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function CreateAccount() {
   const { refetch } = useUserData();
@@ -275,15 +281,29 @@ export default function CreateAccount() {
                     variant="solid"
                     isDisabled={!isStep5Complete}
                     onClick={async () => {
-                      await refetch();
-                      toast({
-                        title: "Account created.",
-                        description: "We've created your account for you.",
-                        status: "success",
-                        duration: 3000,
-                        isClosable: true,
-                      });
-                      window.location.reload();
+                      try {
+                        const response = await finishSignUp();
+                        if (response.data?.result) {
+                          toast({
+                            title: "Account created.",
+                            description: "We've created your account for you.",
+                            status: "success",
+                            duration: 3000,
+                            isClosable: true,
+                          });
+                          await delay(1000);
+                          await refetch();
+                          await delay(1000);
+                          window.location.href =
+                            import.meta.env.VITE_DJAPP_DJ_URL;
+                        }
+                      } catch (err) {}
+                      /*
+                      finishSignUp();
+                      await delay(1000);
+                      await delay(1000);
+                      window.location.href = "/";
+                      */
                     }}
                   >
                     FINISH

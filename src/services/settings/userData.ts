@@ -23,4 +23,11 @@ const updateUserData = (data: Partial<User>) => {
   return apiClient.post("/dj/me/details", data);
 };
 
-export { getUserData, useUserData, updateUserData };
+const finishSignUp = () => {
+  return apiClient.patch<{ result: boolean }>(
+    "/dj/me/finishsignup",
+    {}
+  );
+};
+
+export { getUserData, useUserData, updateUserData, finishSignUp };
