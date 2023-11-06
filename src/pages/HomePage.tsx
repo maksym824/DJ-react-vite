@@ -54,6 +54,12 @@ const boxes: BoxItem[] = [
   },
   {
     id: 8,
+    text: "Chat",
+    imageUrl: "https://files.djfan.app/images/mydjfan-new.webp",
+    linkUrl: "/chat",
+  },
+  {
+    id: 9,
     text: "Partners",
     imageUrl: "https://files.djfan.app/images/partners.webp",
     linkUrl: "/partners",
