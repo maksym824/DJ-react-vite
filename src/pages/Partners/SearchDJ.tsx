@@ -106,6 +106,8 @@ export default function SearchDJ() {
                     }}
                     onClick={async () => await handleSelect(DJUser)}
                   >
+                    {DJUser.first_name}
+                    {DJUser.last_name}
                     {DJUser.display_name}
                   </Text>
                 ))}

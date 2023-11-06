@@ -162,6 +162,7 @@ export type DJSearch = {
   first_name: string;
   last_name: string;
   display_name: string;
+  profile_url: string;
 };
 
 export type Post = {
