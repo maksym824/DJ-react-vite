@@ -119,7 +119,7 @@ const EventList = () => {
                     >
                       <Box>
                         <Image
-                          src={event.artwork_cache}
+                          src={event.artwork}
                           fallbackSrc={userData?.profile_picture}
                           alt="event-image"
                           width="100%"
