@@ -22,6 +22,7 @@ import EditProductPage from "~/pages/Product/EditProduct";
 import CreateProductPage from "~/pages/Product/CreateProduct";
 import CreateEventPost from "~/pages/createPost/EventPost/CreateEventPost";
 import EditEventPost from "~/pages/createPost/EventPost/EditEventPost";
+import ChatPage from "~/pages/Chat";
 
 const router = createBrowserRouter([
   {
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
           {
             path: "/invitations",
             element: <Invitations />,
+          },
+          {
+            path: "/chat",
+            element: <ChatPage />,
           },
         ],
       },
