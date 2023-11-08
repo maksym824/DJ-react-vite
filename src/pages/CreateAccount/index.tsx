@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   ChakraProvider,
@@ -31,10 +31,10 @@ import {
 } from "~/services/settings/userData";
 import SignOutBtn from "~/components/SignOutBtn";
 
-const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export default function CreateAccount() {
-  const { refetch } = useUserData();
+  const { data: userData, refetch } = useUserData();
   const toast = useToast();
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(20);
@@ -60,6 +60,10 @@ export default function CreateAccount() {
     website,
     profileImage,
     coverImage,
+    setDisplayName,
+    setFirstName,
+    setLastName,
+    setUsername,
   } = useCreateAccountContext();
   const [isStepLoading, setIsStepLoading] = useState(false);
   const isStep1Complete =
@@ -75,6 +79,17 @@ export default function CreateAccount() {
   const isStep4Complete =
     step === 4 && !!instagram && !!soundcloud && !!website;
   */
+
+  useEffect(() => {
+    if (userData) {
+      if (userData.display_name) setDisplayName(userData.display_name);
+      if (userData.first_name) setFirstName(userData.first_name);
+      if (userData.last_name) setLastName(userData.last_name);
+      if (userData.username) setUsername(userData.username);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData]);
 
   const handleContinue = async () => {
     switch (step) {
@@ -297,7 +312,9 @@ export default function CreateAccount() {
                           window.location.href =
                             import.meta.env.VITE_DJAPP_DJ_URL;
                         }
-                      } catch (err) {}
+                      } catch (err) {
+                        console.log(err);
+                      }
                       /*
                       finishSignUp();
                       await delay(1000);
