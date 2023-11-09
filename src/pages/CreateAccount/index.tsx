@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   ChakraProvider,
@@ -23,18 +23,25 @@ import { Form4 } from "./components/Form4";
 import { Form5 } from "./components/Form5";
 import { theme } from "./theme";
 import { useCreateAccountContext } from "./useCreateAccountContext";
-import { updateUserAccount } from "~/services/settings/userAccount";
+import {
+  updateUserAccount,
+  useUserAccount,
+} from "~/services/settings/userAccount";
 import {
   finishSignUp,
   updateUserData,
   useUserData,
 } from "~/services/settings/userData";
 import SignOutBtn from "~/components/SignOutBtn";
+import apiClient from "~/services/api-client";
 
-const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export default function CreateAccount() {
-  const { refetch } = useUserData();
+  const { data: userData, refetch } = useUserData();
+  const { data: userAccount } = useUserAccount();
+  const isAdmin = userAccount?.admin || userAccount?.me?.admin || false;
+  const isPartner = userAccount?.partner || userAccount?.me?.partner || false;
   const toast = useToast();
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(20);
@@ -60,6 +67,19 @@ export default function CreateAccount() {
     website,
     profileImage,
     coverImage,
+    setDisplayName,
+    setFirstName,
+    setLastName,
+    setUsername,
+    setShortBio,
+    setLocation,
+    setCountry,
+    setCountryCode,
+    setInstagram,
+    setSoundcloud,
+    setWebsite,
+    setProfilePreview,
+    setCoverPreview,
   } = useCreateAccountContext();
   const [isStepLoading, setIsStepLoading] = useState(false);
   const isStep1Complete =
@@ -69,12 +89,35 @@ export default function CreateAccount() {
     step === 3 && !!shortBio && !!country && !!countryCode && !!location;
   const isStep4Complete =
     (step === 4 && !!instagram) || !!soundcloud || !!website;
-  const isStep5Complete = step === 5 && !!profileImage && !!coverImage;
+  const isStep5Complete =
+    step === 5 &&
+    ((!!profileImage && !!coverImage) ||
+      (!!userData?.profile_picture && !!userData?.cover_photo));
 
   /*
   const isStep4Complete =
     step === 4 && !!instagram && !!soundcloud && !!website;
   */
+
+  useEffect(() => {
+    if (userData) {
+      if (userData.display_name) setDisplayName(userData.display_name);
+      if (userData.first_name) setFirstName(userData.first_name);
+      if (userData.last_name) setLastName(userData.last_name);
+      if (userData.username) setUsername(userData.username);
+      if (userData.title) setShortBio(userData.title);
+      if (userData.location) setLocation(userData.location);
+      if (userData.country) setCountry(userData.country);
+      if (userData.country_code) setCountryCode(userData.country_code);
+      if (userData.instagram) setInstagram(userData.instagram);
+      if (userData.soundcloud) setSoundcloud(userData.soundcloud);
+      if (userData.website) setWebsite(userData.website);
+      if (userData.profile_picture) setProfilePreview(userData.profile_picture);
+      if (userData.cover_photo) setCoverPreview(userData.cover_photo);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData]);
 
   const handleContinue = async () => {
     switch (step) {
@@ -189,8 +232,19 @@ export default function CreateAccount() {
             transform="translateY(-50%)"
             display="flex"
             alignItems="center"
+            gap="10px"
           >
             <SignOutBtn />
+            {(isAdmin || isPartner) && (
+              <Button
+                onClick={async () => {
+                  await apiClient.get("/dj/logoutas");
+                  window.location.href = "/";
+                }}
+              >
+                Sign Out As
+              </Button>
+            )}
           </Box>
         </Flex>
 
@@ -297,7 +351,9 @@ export default function CreateAccount() {
                           window.location.href =
                             import.meta.env.VITE_DJAPP_DJ_URL;
                         }
-                      } catch (err) {}
+                      } catch (err) {
+                        console.log(err);
+                      }
                       /*
                       finishSignUp();
                       await delay(1000);
