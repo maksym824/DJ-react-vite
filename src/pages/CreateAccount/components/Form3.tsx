@@ -54,6 +54,7 @@ export const Form3 = () => {
               borderColor="#ffffff00"
               placeholder="Instagram Username"
               focusBorderColor="#ffffff00"
+              value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
             />
           </InputGroup>
@@ -89,6 +90,7 @@ export const Form3 = () => {
               borderColor="#ffffff00"
               placeholder="SoundCloud Username"
               focusBorderColor="#ffffff00"
+              value={soundcloud}
               onChange={(e) => setSoundcloud(e.target.value)}
             />
           </InputGroup>
@@ -128,6 +130,7 @@ export const Form3 = () => {
               borderColor="#ffffff00"
               placeholder="Website e.g. artistname.com"
               focusBorderColor="#ffffff00"
+              value={website}
               onChange={(e) => setWebsite(e.target.value)}
             />
           </InputGroup>

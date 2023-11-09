@@ -64,6 +64,15 @@ export default function CreateAccount() {
     setFirstName,
     setLastName,
     setUsername,
+    setShortBio,
+    setLocation,
+    setCountry,
+    setCountryCode,
+    setInstagram,
+    setSoundcloud,
+    setWebsite,
+    setProfilePreview,
+    setCoverPreview,
   } = useCreateAccountContext();
   const [isStepLoading, setIsStepLoading] = useState(false);
   const isStep1Complete =
@@ -73,7 +82,10 @@ export default function CreateAccount() {
     step === 3 && !!shortBio && !!country && !!countryCode && !!location;
   const isStep4Complete =
     (step === 4 && !!instagram) || !!soundcloud || !!website;
-  const isStep5Complete = step === 5 && !!profileImage && !!coverImage;
+  const isStep5Complete =
+    step === 5 &&
+    ((!!profileImage && !!coverImage) ||
+      (!!userData?.profile_picture && !!userData?.cover_photo));
 
   /*
   const isStep4Complete =
@@ -86,6 +98,15 @@ export default function CreateAccount() {
       if (userData.first_name) setFirstName(userData.first_name);
       if (userData.last_name) setLastName(userData.last_name);
       if (userData.username) setUsername(userData.username);
+      if (userData.title) setShortBio(userData.title);
+      if (userData.location) setLocation(userData.location);
+      if (userData.country) setCountry(userData.country);
+      if (userData.country_code) setCountryCode(userData.country_code);
+      if (userData.instagram) setInstagram(userData.instagram);
+      if (userData.soundcloud) setSoundcloud(userData.soundcloud);
+      if (userData.website) setWebsite(userData.website);
+      if (userData.profile_picture) setProfilePreview(userData.profile_picture);
+      if (userData.cover_photo) setCoverPreview(userData.cover_photo);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
