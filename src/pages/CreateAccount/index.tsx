@@ -23,25 +23,18 @@ import { Form4 } from "./components/Form4";
 import { Form5 } from "./components/Form5";
 import { theme } from "./theme";
 import { useCreateAccountContext } from "./useCreateAccountContext";
-import {
-  updateUserAccount,
-  useUserAccount,
-} from "~/services/settings/userAccount";
+import { updateUserAccount } from "~/services/settings/userAccount";
 import {
   finishSignUp,
   updateUserData,
   useUserData,
 } from "~/services/settings/userData";
 import SignOutBtn from "~/components/SignOutBtn";
-import apiClient from "~/services/api-client";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export default function CreateAccount() {
   const { data: userData, refetch } = useUserData();
-  const { data: userAccount } = useUserAccount();
-  const isAdmin = userAccount?.admin || userAccount?.me?.admin || false;
-  const isPartner = userAccount?.partner || userAccount?.me?.partner || false;
   const toast = useToast();
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(20);
@@ -232,19 +225,8 @@ export default function CreateAccount() {
             transform="translateY(-50%)"
             display="flex"
             alignItems="center"
-            gap="10px"
           >
             <SignOutBtn />
-            {(isAdmin || isPartner) && (
-              <Button
-                onClick={async () => {
-                  await apiClient.get("/dj/logoutas");
-                  window.location.href = "/";
-                }}
-              >
-                Sign Out As
-              </Button>
-            )}
           </Box>
         </Flex>
 
