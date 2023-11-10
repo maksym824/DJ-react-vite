@@ -1,7 +1,7 @@
 import apiClient from "../api-client";
 
 const updateUserPaypalEmail = (paypalEmail: string) => {
-  return apiClient.post("/dj/me/details", {
+  return apiClient.patch("/dj/me/paypal", {
     paypal: paypalEmail,
   });
 };

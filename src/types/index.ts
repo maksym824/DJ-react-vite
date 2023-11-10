@@ -68,7 +68,6 @@ export type User = {
   username: string;
   website: string;
   youtube: string;
-  paypal: string;
 };
 
 export type UserAccount = {
@@ -87,6 +86,7 @@ export type UserAccount = {
   admin: boolean;
   partner: boolean;
   dj: boolean;
+  paypal: string;
   me: MeAccount;
 };
 
