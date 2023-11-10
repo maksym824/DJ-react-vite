@@ -1,3 +1,12 @@
-.str-custom__full-height-container {
-  height: 100vh;
+.str-chat {
+  height: 100%;
+  width: 100%;
+}
+
+.str-chat__message-input {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
 }

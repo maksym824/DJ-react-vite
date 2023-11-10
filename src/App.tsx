@@ -23,10 +23,7 @@ function App() {
   );
 
   return (
-    <Chat
-      client={streamChatClient}
-      theme="str-chat__theme-light str-custom__full-height-container"
-    >
+    <Chat client={streamChatClient} theme="str-chat__theme-light">
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
           <RouterProvider router={router} />

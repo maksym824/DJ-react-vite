@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AscDesc } from "stream-chat";
 import {
@@ -9,6 +10,7 @@ import {
   Window,
   useChatContext,
 } from "stream-chat-react";
+import Header from "~/components/Header";
 import { useUserData } from "~/services/settings/userData";
 
 const ChatPage = () => {
@@ -50,13 +52,16 @@ const ChatPage = () => {
   }
 
   return (
-    <Channel channel={channel}>
-      <Window>
-        <ChannelHeader />
-        <MessageList />
-        <MessageInput />
-      </Window>
-    </Channel>
+    <Flex direction="column">
+      <Header />
+      <Channel channel={channel}>
+        <Window>
+          <ChannelHeader />
+          <MessageList />
+          <MessageInput grow={true} />
+        </Window>
+      </Channel>
+    </Flex>
   );
 };
 
