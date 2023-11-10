@@ -29,23 +29,25 @@ import {
 import { BiEnvelope, BiKey, BiUser } from "react-icons/bi";
 import { FaArrowRight, FaStripeS } from "react-icons/fa";
 import updateUserPaypalEmail from "~/services/payouts/updateUserPaypalEmail";
-import { useUserData } from "~/services/settings/userData";
+// import { useUserData } from "~/services/settings/userData";
 
 export default function AccountSettings() {
   const { data, refetch } = useUserAccount();
-  const { data: userData } = useUserData();
+  // const { data: userData } = useUserData();
 
   const isLoggedAs = data?.loginas;
 
-  const { paypal } = userData ?? {};
+  // const paypal = data?.paypal; // userData ?? {};
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
+  const [paypalEmail, setPaypalEmail] = useState<string>("");
+  // const [paypalEmail, setPaypalEmail] = useState("");
+
   // const [newEmail, setNewEmail] = useState<string>("");
   // const [confirmEmail, setConfirmEmail] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const [paypalEmail, setPaypalEmail] = useState("");
   const [confirmCorrect, setConfirmCorrect] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -53,13 +55,16 @@ export default function AccountSettings() {
   useEffect(() => {
     setFirstName(data?.first_name ?? "");
     setLastName(data?.last_name ?? "");
+    setPaypalEmail(data?.paypal ?? "");
   }, [data]);
 
+  /*
   useEffect(() => {
     if (paypal) {
       setPaypalEmail(paypal);
     }
   }, [paypal]);
+  */
 
   const handleUpdateAccount = async () => {
     const payload = {
