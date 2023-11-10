@@ -34,8 +34,8 @@ const ConnectionTable = ({ children }: ConnectionTableProps) => {
             <Th color={"white"}>Creator</Th>
             <Th color={"white"}>Joined</Th>
             <Th color={"white"}>Period</Th>
-            <Th color={"white"}> Commission</Th>
-            <Th color={"white"}> Actions</Th>
+            <Th color={"white"}>Commission</Th>
+            <Th color={"white"}>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>{children}</Tbody>
@@ -74,7 +74,7 @@ const ConnectionRow = ({ invitee }: { invitee: Invitee }) => {
         </Flex>
       </Td>
       <Td>{dayjs(new Date(invitee.created_at)).format("DD/MM/YYYY")}</Td>
-      <Td>{dayjs(new Date(invitee.start_period)).format("MMMM YYYY")}</Td>
+      <Td>{dayjs(new Date(invitee.period)).format("MMMM YYYY")}</Td>
       <Td>
         <b>{invitee.amount}</b> per month
       </Td>

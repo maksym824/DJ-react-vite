@@ -58,15 +58,6 @@ const Partners = () => {
         {artists && artists.result != false && (
           <TableContainer>
             <Table variant="simple">
-              {/*
-              <Thead>
-                <Tr>
-                  <Th>Name</Th>
-                  <Th>Profile Picture</Th>
-                  <Th></Th>
-                </Tr>
-              </Thead>
-               */}
               <Tbody>
                 {parsedArtists.map((artist: Artist) => (
                   <Tr key={artist.id}>

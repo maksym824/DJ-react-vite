@@ -204,8 +204,7 @@ export type Product = {
 };
 
 export type Invitee = {
-  start_period: string;
-  end_period: string;
+  period: string;
   amount: string;
   created_at: string;
   display_name: string;
