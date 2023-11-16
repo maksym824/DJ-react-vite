@@ -72,11 +72,13 @@ export default function Index() {
   const isAdmin = user?.admin || user?.me?.admin || false;
   const isPartner = user?.partner || user?.me?.partner || false;
   const isLoggedAs = user?.loginas || false;
+  /*
   (window as any).kompassifyLaunchTour(
     "152bb8e4-dfdd-41cf-aeaf-29d76f4978ee",
     0,
     true
   );
+  */
 
   return (
     <Flex
