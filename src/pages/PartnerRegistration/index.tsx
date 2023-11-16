@@ -15,9 +15,9 @@ import {
   Image,
   HStack,
   Select,
-  useNumberInput,
   FormErrorMessage,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
@@ -26,38 +26,132 @@ import {
   HiLockClosed,
   HiOfficeBuilding,
   HiUser,
-  HiMinus,
-  HiPlus,
   HiEye,
   HiEyeOff,
   HiArrowRight,
 } from "react-icons/hi";
+import {
+  PartnerRegistrationPayload,
+  createPartner,
+} from "~/services/partners/partnerRegistration";
+
+enum DJCount {
+  oneToFive = "1-5",
+  fileToFifteen = "5-15",
+  fifteenToThirty = "15-30",
+  thirtyToFifty = "30-50",
+}
+
+const DJCountOptions = [
+  {
+    value: DJCount.oneToFive,
+    label: "1-5",
+  },
+  {
+    value: DJCount.fileToFifteen,
+    label: "5-15",
+  },
+  {
+    value: DJCount.fifteenToThirty,
+    label: "15-30",
+  },
+  {
+    value: DJCount.thirtyToFifty,
+    label: "30-50",
+  },
+];
+
+const SUCCESS_REDIRECT_URL = "https://auth.djfan.app/auth/signinpartner";
 
 export default function PartnerRegistration() {
-  const [emailCreds, setEmailCreds] = useState("");
-  const [passwordCreds, setPasswordCreds] = useState("");
+  const [partnerType, setPartnerType] = useState("");
+  const [djCount, setDJCount] = useState(DJCount.oneToFive);
+  const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [emailCreds, setEmailCreds] = useState("");
+  const [confirmEmailCreds, setConfirmEmailCreds] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
+  const [passwordCreds, setPasswordCreds] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [partnerType, setPartnerType] = useState("");
-  const [artistCount, setartistCount] = useState("");
   const [confirmPasswordCreds, setConfirmPasswordCreds] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
   const isPasswordValid = passwordCreds.length >= 8;
   const isConfirmPasswordValid = passwordCreds === confirmPasswordCreds;
-  // const colorScheme = isConfirmPasswordValid ? "green" : "red";
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: 1,
-      min: 1,
-      max: 100,
-    });
+  const isEmailValid =
+    emailCreds.length > 0 &&
+    confirmEmailCreds.length > 0 &&
+    emailCreds === confirmEmailCreds;
 
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
+  const isFormValid = () => {
+    return (
+      partnerType.length > 0 &&
+      djCount.length > 0 &&
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      emailCreds.length > 0 &&
+      confirmEmailCreds.length > 0 &&
+      company.length > 0 &&
+      phone.length > 0 &&
+      passwordCreds.length > 0 &&
+      confirmPasswordCreds.length > 0 &&
+      isPasswordValid &&
+      isConfirmPasswordValid &&
+      isEmailValid
+    );
+  };
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    if (!isFormValid()) {
+      return;
+    }
+    const payload: PartnerRegistrationPayload = {
+      partner_type: partnerType,
+      dj_count: djCount,
+      first_name: firstName,
+      last_name: lastName,
+      email: emailCreds,
+      company,
+      phone,
+      password: passwordCreds,
+      re_email: confirmEmailCreds,
+      re_password: confirmPasswordCreds,
+    };
+    setIsLoading(true);
+    try {
+      const res = await createPartner(payload);
+      const { data } = res;
+      if (data.result) {
+        toast({
+          title: "Success",
+          description: "Partner account created successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setIsLoading(false);
+        setTimeout(() => {
+          window.location.href = SUCCESS_REDIRECT_URL;
+        }, 2000);
+      } else {
+        toast({
+          title: "Error",
+          description: data?.message ?? "Partner account creation failed",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.log("err", err);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Flex w="100%" bg="#111111" minH="100vh" flexDirection="column" pb="80px">
@@ -86,13 +180,13 @@ export default function PartnerRegistration() {
             >
               Become a Partner
             </Heading>
-            <Text textAlign="center" fontSize="18px" px="15px">
+            <Box textAlign="center" fontSize="18px" px="15px">
               Refer creators and receive{" "}
               <Box display="inline" fontWeight="600" color="cyan">
                 5% commission
               </Box>{" "}
               on the DJfan earnings of each artist.
-            </Text>
+            </Box>
           </Stack>
 
           <Stack w="100%" px={{ base: "25px", md: "15px" }} as="form">
@@ -122,44 +216,47 @@ export default function PartnerRegistration() {
                 <FormLabel htmlFor="number-artist" fontSize="16px">
                   How many DJs can you invite?
                 </FormLabel>
-                <HStack>
-                  <Flex
-                    bg="#fff"
-                    color="#111"
-                    alignItems="center"
-                    height="full"
-                    py="10px"
-                    px="9px"
-                  >
-                    <HiMinus {...dec} />
-                  </Flex>
-                  <Input
-                    id="partnerType"
-                    value={artistCount}
-                    onChange={(e) => setartistCount(e.target.value)}
-                    {...input}
-                    color="#fff"
-                    focusBorderColor="#71fbfd"
-                    _placeholder={{ opacity: 0.7, color: "#fff" }}
-                  />
-                  <Flex
-                    bg="#fff"
-                    color="#111"
-                    alignItems="center"
-                    height="full"
-                    py="10px"
-                    px="8px"
-                  >
-                    <HiPlus {...inc} />
-                  </Flex>
-                </HStack>
+                <Select
+                  id="artistCount"
+                  placeholder="Please choose"
+                  value={djCount}
+                  onChange={(e) => setDJCount(e.target.value as DJCount)}
+                  color="#fff"
+                  focusBorderColor="#71fbfd"
+                  _placeholder={{ opacity: 0.7, color: "#fff" }}
+                >
+                  {DJCountOptions.map((item) => (
+                    <option value={item.value} key={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </Select>
               </FormControl>
               <Text mt="5px" fontWeight="600" lineHeight="1em" fontSize="18px">
                 Personal Details
               </Text>
               <FormControl>
+                <FormLabel htmlFor="first-name" display="none">
+                  First Name
+                </FormLabel>
+                <InputGroup>
+                  <InputLeftElement pointerEvents="none">
+                    <HiUser />
+                  </InputLeftElement>
+                  <Input
+                    id="first-name"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    color="#fff"
+                    focusBorderColor="#71fbfd"
+                    _placeholder={{ opacity: 0.7, color: "#fff" }}
+                  />
+                </InputGroup>
+              </FormControl>
+              <FormControl>
                 <FormLabel htmlFor="last-name" display="none">
-                  Full Name
+                  Last Name
                 </FormLabel>
                 <InputGroup>
                   <InputLeftElement pointerEvents="none">
@@ -167,7 +264,7 @@ export default function PartnerRegistration() {
                   </InputLeftElement>
                   <Input
                     id="last-name"
-                    placeholder="Full Name"
+                    placeholder="Last Name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     color="#fff"
@@ -195,6 +292,31 @@ export default function PartnerRegistration() {
                     _placeholder={{ opacity: 0.7, color: "#fff" }}
                   />
                 </InputGroup>
+              </FormControl>
+              <FormControl
+                isInvalid={!isEmailValid && confirmEmailCreds.length > 0}
+              >
+                <FormLabel htmlFor="confirmEmailCreds" display="none">
+                  Confirm Email
+                </FormLabel>
+                <InputGroup>
+                  <InputLeftElement pointerEvents="none">
+                    <HiMail color="gray.300" />
+                  </InputLeftElement>
+                  <Input
+                    name="confirmEmailCreds"
+                    id="confirmEmailCreds"
+                    placeholder="Confirm Email Address"
+                    value={confirmEmailCreds}
+                    onChange={(e) => setConfirmEmailCreds(e.target.value)}
+                    color="#fff"
+                    focusBorderColor="#71fbfd"
+                    _placeholder={{ opacity: 0.7, color: "#fff" }}
+                  />
+                </InputGroup>
+                {!isEmailValid && (
+                  <FormErrorMessage>Email must match</FormErrorMessage>
+                )}
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="phone" display="none">
@@ -336,6 +458,9 @@ export default function PartnerRegistration() {
                 bg="#be04f1"
                 mt="5px"
                 _hover={{ color: "#be04f1", bg: "#ffffff" }}
+                onClick={handleSubmit}
+                isDisabled={!isFormValid()}
+                isLoading={isLoading}
               >
                 CREATE ACCOUNT
               </Button>
