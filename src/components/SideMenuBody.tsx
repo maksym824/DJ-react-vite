@@ -117,6 +117,26 @@ const SideMenuBody = () => {
       )}
 
       <Stack px="20px" py="20px">
+        {isPartner && (
+          <>
+            <Box fontSize="18px" fontWeight="600" color="#6b46c1">
+              Income
+            </Box>
+            <BoxLink href="/payouts" text="Payouts" />
+            <BoxLink href="/earnings" text="Earnings" />
+            <BoxLink href="/invitations" text="Invitations" />
+
+            <Box py="10px">
+              <Divider borderColor="#6b46c1" />
+            </Box>
+
+            <Box fontSize="18px" fontWeight="600" color="#6b46c1">
+              Settings
+            </Box>
+            <BoxLink href="/settings" text="Account" />
+          </>
+        )}
+
         {isDj && (
           <>
             <Box fontSize="18px" fontWeight="600" color="#6b46c1">
