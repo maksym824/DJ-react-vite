@@ -40,6 +40,7 @@ enum DJCount {
   fileToFifteen = "5-15",
   fifteenToThirty = "15-30",
   thirtyToFifty = "30-50",
+  fiftyPlus = ">50",
 }
 
 const DJCountOptions = [
@@ -59,9 +60,14 @@ const DJCountOptions = [
     value: DJCount.thirtyToFifty,
     label: "30-50",
   },
+  {
+    value: DJCount.fiftyPlus,
+    label: ">50",
+  },
 ];
 
-const SUCCESS_REDIRECT_URL = "https://auth.djfan.app/auth/signinpartner";
+// const SUCCESS_REDIRECT_URL = "https://auth.djfan.app/auth/signinpartner";
+const SUCCESS_REDIRECT_URL = "/";
 
 export default function PartnerRegistration() {
   const [partnerType, setPartnerType] = useState("");
@@ -181,7 +187,7 @@ export default function PartnerRegistration() {
               Become a Partner
             </Heading>
             <Box textAlign="center" fontSize="18px" px="15px">
-              Refer creators and receive{" "}
+              Refer creators receive{" "}
               <Box display="inline" fontWeight="600" color="cyan">
                 5% commission
               </Box>{" "}
@@ -197,19 +203,28 @@ export default function PartnerRegistration() {
                 </FormLabel>
                 <Select
                   id="partnerType"
-                  placeholder="Please choose"
                   value={partnerType}
                   onChange={(e) => setPartnerType(e.target.value)}
-                  color="#fff"
-                  focusBorderColor="#71fbfd"
-                  _placeholder={{ opacity: 0.7, color: "#fff" }}
                 >
-                  <option value="agent">Agent</option>
-                  <option value="musicLabel">Music Label</option>
-                  <option value="management">Management</option>
-                  <option value="venue">Venue</option>
-                  <option value="artist">Artist</option>
-                  <option value="other">Other</option>
+                  <option style={{ background: "#000" }}>Please choose</option>
+                  <option value="agent" style={{ background: "#000" }}>
+                    Agent
+                  </option>
+                  <option value="musicLabel" style={{ background: "#000" }}>
+                    Music Label
+                  </option>
+                  <option value="management" style={{ background: "#000" }}>
+                    Management
+                  </option>
+                  <option value="venue" style={{ background: "#000" }}>
+                    Venue
+                  </option>
+                  <option value="artist" style={{ background: "#000" }}>
+                    Artist
+                  </option>
+                  <option value="other" style={{ background: "#000" }}>
+                    Other
+                  </option>
                 </Select>
               </FormControl>
               <FormControl>
@@ -218,15 +233,15 @@ export default function PartnerRegistration() {
                 </FormLabel>
                 <Select
                   id="artistCount"
-                  placeholder="Please choose"
                   value={djCount}
                   onChange={(e) => setDJCount(e.target.value as DJCount)}
-                  color="#fff"
-                  focusBorderColor="#71fbfd"
-                  _placeholder={{ opacity: 0.7, color: "#fff" }}
                 >
                   {DJCountOptions.map((item) => (
-                    <option value={item.value} key={item.value}>
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      style={{ background: "#000" }}
+                    >
                       {item.label}
                     </option>
                   ))}

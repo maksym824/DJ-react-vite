@@ -103,7 +103,6 @@ export default function Index() {
             {boxes
               .reduce(function (result: BoxItem[], box) {
                 if (box.id == 5) {
-                  /* box.text = "" + user?.display_name; */
                   box.linkUrl =
                     import.meta.env.VITE_DJAPP_FAN_URL +
                     "/artists/" +
@@ -116,6 +115,8 @@ export default function Index() {
                   if (box.id == 8) {
                     return result;
                   }
+                } else if (isPartner && ![3, 6, 7].includes(box.id)) {
+                  return result;
                 } else if (!isPartner && !isAdmin && box.id == 8) {
                   return result;
                 }

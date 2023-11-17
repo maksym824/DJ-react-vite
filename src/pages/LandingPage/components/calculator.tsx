@@ -14,9 +14,9 @@ import { useState } from "react";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 const EarningsCalculator = () => {
-  const [users, setUsers] = useState(50000);
+  const [users, setUsers] = useState(500000);
 
-  const earnings = Math.round(0.05 * users * 7.5);
+  const earnings = Math.round(0.005 * users * 7.5);
 
   return (
     <VStack py="30px" bgGradient="linear(to-r, #0e0725, #5c03bc, #e536ab)">
@@ -64,8 +64,8 @@ const EarningsCalculator = () => {
           maxW="80%"
           aria-label="Number of Users"
           value={users}
-          min={10000}
-          max={200000}
+          min={100000}
+          max={2000000}
           onChange={(val) => setUsers(val)}
           defaultValue={50000}
         >
