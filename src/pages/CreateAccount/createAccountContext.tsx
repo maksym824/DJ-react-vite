@@ -4,7 +4,7 @@ interface CreateAccountContextData {
   displayName: string;
   firstName: string;
   lastName: string;
-  username: string;
+  profileURL: string;
   shortBio: string;
   location: string;
   country: string;
@@ -19,7 +19,7 @@ interface CreateAccountContextData {
   setDisplayName: (displayName: string) => void;
   setFirstName: (firstName: string) => void;
   setLastName: (lastName: string) => void;
-  setUsername: (username: string) => void;
+  setProfileURL: (profileURL: string) => void;
   setShortBio: (shortBio: string) => void;
   setLocation: (location: string) => void;
   setCountry: (country: string) => void;
@@ -45,7 +45,7 @@ export const CreateAccountContextProvider = ({
   const [displayName, setDisplayName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
+  const [profileURL, setProfileURL] = useState("");
   const [shortBio, setShortBio] = useState("");
   const [location, setLocation] = useState("");
   const [country, setCountry] = useState("");
@@ -64,7 +64,7 @@ export const CreateAccountContextProvider = ({
         displayName,
         firstName,
         lastName,
-        username,
+        profileURL,
         shortBio,
         location,
         country,
@@ -79,7 +79,7 @@ export const CreateAccountContextProvider = ({
         setDisplayName,
         setFirstName,
         setLastName,
-        setUsername,
+        setProfileURL,
         setShortBio,
         setLocation,
         setCountry,
