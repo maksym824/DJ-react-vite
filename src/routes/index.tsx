@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "~/layouts/MainLayout";
 import ErrorPage from "~/pages/ErrorPage";
@@ -22,8 +23,10 @@ import EditProductPage from "~/pages/Product/EditProduct";
 import CreateProductPage from "~/pages/Product/CreateProduct";
 import CreateEventPost from "~/pages/createPost/EventPost/CreateEventPost";
 import EditEventPost from "~/pages/createPost/EventPost/EditEventPost";
-import ChatPage from "~/pages/Chat";
 import PartnerRegistration from "~/pages/PartnerRegistration";
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ChatPage = React.lazy(() => import("~/pages/Chat/ChatWrapper"));
 
 const router = createBrowserRouter([
   {
@@ -118,7 +121,11 @@ const router = createBrowserRouter([
           },
           {
             path: "/chat",
-            element: <ChatPage />,
+            element: (
+              <Suspense>
+                <ChatPage />
+              </Suspense>
+            ),
           },
         ],
       },
