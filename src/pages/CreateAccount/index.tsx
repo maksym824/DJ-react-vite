@@ -50,7 +50,7 @@ export default function CreateAccount() {
     displayName,
     firstName,
     lastName,
-    username,
+    profileURL,
     shortBio,
     country,
     countryCode,
@@ -63,7 +63,7 @@ export default function CreateAccount() {
     setDisplayName,
     setFirstName,
     setLastName,
-    setUsername,
+    setProfileURL,
     setShortBio,
     setLocation,
     setCountry,
@@ -77,7 +77,7 @@ export default function CreateAccount() {
   const [isStepLoading, setIsStepLoading] = useState(false);
   const isStep1Complete =
     step === 1 && !!displayName && !!firstName && !!lastName;
-  const isStep2Complete = step === 2 && !!username && username.length > 2;
+  const isStep2Complete = step === 2 && !!profileURL && profileURL.length > 2;
   const isStep3Complete =
     step === 3 && !!shortBio && !!country && !!countryCode && !!location;
   const isStep4Complete =
@@ -97,7 +97,7 @@ export default function CreateAccount() {
       if (userData.display_name) setDisplayName(userData.display_name);
       if (userData.first_name) setFirstName(userData.first_name);
       if (userData.last_name) setLastName(userData.last_name);
-      if (userData.username) setUsername(userData.username);
+      if (userData.profile_url) setProfileURL(userData.profile_url);
       if (userData.title) setShortBio(userData.title);
       if (userData.location) setLocation(userData.location);
       if (userData.country) setCountry(userData.country);
@@ -138,7 +138,7 @@ export default function CreateAccount() {
         setIsStepLoading(true);
         try {
           await updateUserData({
-            profile_url: username,
+            profile_url: profileURL,
           });
           setStep(step + 1);
           setProgress(progress + 20);
