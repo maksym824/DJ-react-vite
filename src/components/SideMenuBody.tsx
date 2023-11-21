@@ -117,7 +117,7 @@ const SideMenuBody = () => {
       )}
 
       <Stack px="20px" py="20px">
-        {isPartner && (
+        {isPartner && !isDj && (
           <>
             <Box fontSize="18px" fontWeight="600" color="#6b46c1">
               Income

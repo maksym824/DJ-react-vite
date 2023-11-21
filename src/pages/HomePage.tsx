@@ -68,7 +68,7 @@ const boxes: BoxItem[] = [
 
 export default function Index() {
   const { data: user } = useUserAccount();
-  // const isDj = user?.dj || false;
+  const isDj = user?.dj || false;
   const isAdmin = user?.admin || user?.me?.admin || false;
   const isPartner = user?.partner || user?.me?.partner || false;
   const isLoggedAs = user?.loginas || false;
@@ -115,9 +115,13 @@ export default function Index() {
                   if (box.id == 8) {
                     return result;
                   }
-                } else if (isPartner && ![3, 6, 7].includes(box.id)) {
+                } else if (isPartner && ![3, 6, 7].includes(box.id) && !isDj) {
                   return result;
-                } else if (!isPartner && !isAdmin && box.id == 8) {
+                } else if (!isDj && box.id == 8) {
+                  return result;
+                }
+                // no chat for now
+                if (box.id == 8) {
                   return result;
                 }
                 result.push({
