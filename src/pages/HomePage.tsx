@@ -115,10 +115,22 @@ export default function Index() {
                   if (box.id == 8) {
                     return result;
                   }
-                } else if (isPartner && ![3, 6, 7].includes(box.id) && !isDj) {
-                  return result;
-                } else if (!isDj && box.id == 8) {
-                  return result;
+                } else {
+                  // partner only
+                  if (isPartner && !isDj) {
+                    if ([1, 2, 4, 5, 8].includes(box.id)) {
+                      return result;
+                    }
+                  }
+                  // partner and dj
+                  if (isPartner && isDj) {
+                  }
+                  // dj only
+                  if (!isPartner && isDj) {
+                    if ([9].includes(box.id)) {
+                      return result;
+                    }
+                  }
                 }
                 // no chat for now
                 if (box.id == 8) {
