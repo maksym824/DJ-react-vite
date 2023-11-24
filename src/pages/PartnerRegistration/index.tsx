@@ -18,6 +18,8 @@ import {
   FormErrorMessage,
   VStack,
   useToast,
+  Checkbox,
+  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
@@ -84,6 +86,7 @@ export default function PartnerRegistration() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [termAccepted, setTermAccepted] = useState(false);
 
   const isPasswordValid = passwordCreds.length >= 8;
   const isConfirmPasswordValid = passwordCreds === confirmPasswordCreds;
@@ -466,7 +469,17 @@ export default function PartnerRegistration() {
                   )}
                 </FormControl>
               )}
-
+              <Checkbox
+                size="sm"
+                spacing="3"
+                checked={termAccepted}
+                onChange={(e) => setTermAccepted(e.target.checked)}
+              >
+                I agree to DJfan{" "}
+                <Link href="/terms" color="cyan">
+                  partner terms
+                </Link>
+              </Checkbox>
               <Button
                 rightIcon={<HiArrowRight />}
                 color="white"
@@ -474,7 +487,7 @@ export default function PartnerRegistration() {
                 mt="5px"
                 _hover={{ color: "#be04f1", bg: "#ffffff" }}
                 onClick={handleSubmit}
-                isDisabled={!isFormValid()}
+                isDisabled={!isFormValid() || !termAccepted}
                 isLoading={isLoading}
               >
                 CREATE ACCOUNT
