@@ -132,10 +132,6 @@ export default function Index() {
                     }
                   }
                 }
-                // no chat for now
-                if (box.id == 8) {
-                  return result;
-                }
                 result.push({
                   id: box.id,
                   text: box.text,
