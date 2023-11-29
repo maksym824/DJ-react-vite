@@ -10,3 +10,18 @@
   right: 0;
   z-index: 100;
 }
+
+.str-chat-channel-list {
+  height: 100%;
+  width: 65px;
+}
+
+@media (min-width: 768px) {
+  .str-chat-channel-list {
+    width: 25%;
+  }
+
+  .str-chat-channel {
+    flex-grow: 1;
+  }
+}
