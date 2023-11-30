@@ -14,6 +14,7 @@ import {
 import Header from "~/components/Header";
 import getDJDMChannels from "~/services/getDJDMChannels";
 import { useUserData } from "~/services/settings/userData";
+import ChannelListPreview from "./ChannelListPreview";
 
 interface ChannelData {
   channel_id: string;
@@ -24,7 +25,7 @@ const sort = [{ last_message_at: -1 as AscDesc }];
 
 const ChatPage = () => {
   const { data: userData } = useUserData();
-  const { client } = useChatContext();
+  const { client, channel: activeChannel } = useChatContext();
   const [channel, setChannel] = useState<IChannel>();
   const [loading, setLoading] = useState(true);
   const [dmChannelFilters, setDMChannelFilters] = useState<ChannelFilters>();
@@ -39,10 +40,10 @@ const ChatPage = () => {
         watch: true,
         state: true,
       });
-      setChannel(channels[0]);
+      setChannel(channels[0]); // for community channel
 
       const dmChannelList: ChannelData[] = await getDJDMChannels();
-
+      // for filtering the DM channels
       const dmChannelFilter = {
         type: "messaging",
         $or: [
@@ -62,11 +63,6 @@ const ChatPage = () => {
         },
       } as ChannelFilters;
       setDMChannelFilters(dmChannelFilter);
-      // const _channels = await client.queryChannels(dmChannelFilter, sort, {
-      //   watch: true,
-      //   state: true,
-      // });
-      // console.log("_channels", _channels);
     } catch (err) {
       console.log("err", err);
     } finally {
@@ -87,11 +83,15 @@ const ChatPage = () => {
   }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" h="100vh">
       <Header />
-      <Flex>
-        <ChannelList sort={sort} filters={dmChannelFilters} />
-        <Channel channel={channel}>
+      <Flex h="100%">
+        <ChannelList
+          sort={sort}
+          filters={dmChannelFilters}
+          Preview={ChannelListPreview}
+        />
+        <Channel channel={activeChannel ?? channel}>
           <Window>
             <ChannelHeader />
             <MessageList />
