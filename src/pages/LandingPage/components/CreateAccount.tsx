@@ -6,7 +6,9 @@ import {
   Heading,
   Text,
   VStack,
+  Link,
 } from "@chakra-ui/react";
+import { FaArrowRight } from "react-icons/fa";
 
 const CreateAccountSection = () => {
   return (
@@ -36,9 +38,8 @@ const CreateAccountSection = () => {
             maxW={{ base: "100%", md: "90%" }}
             textAlign={"center"}
           >
-            We provide a membership platform for DJs where they can connect and
-            engage with their fans and access to tools generate a consistent
-            passive income.
+            We give you all the tools to engage & grow your audience. Get paid
+            with subscriptions, products, and more.
           </Text>
           <HStack>
             <Button
@@ -48,6 +49,25 @@ const CreateAccountSection = () => {
             >
               CREATE ACCOUNT
             </Button>
+          </HStack>
+          <HStack gap="15px">
+            <Text
+              as={Link}
+              display={"flex"}
+              alignItems={"center"}
+              fontSize={"12px"}
+              color={"white"}
+              fontWeight={"600"}
+              lineHeight={"1em"}
+              gap={"5px"}
+              cursor={"pointer"}
+              href="https://dj.djfan.app/partners-registration"
+              _hover={{
+                color: "cyan",
+              }}
+            >
+              PARTNER PROGRAM <FaArrowRight />
+            </Text>
           </HStack>
         </VStack>
       </Flex>
