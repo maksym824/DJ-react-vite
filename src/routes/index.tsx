@@ -24,6 +24,7 @@ import CreateProductPage from "~/pages/Product/CreateProduct";
 import CreateEventPost from "~/pages/createPost/EventPost/CreateEventPost";
 import EditEventPost from "~/pages/createPost/EventPost/EditEventPost";
 import PartnerRegistration from "~/pages/PartnerRegistration";
+import PartnerTerms from "~/pages/PartnerTerms";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ChatPage = React.lazy(() => import("~/pages/Chat/ChatWrapper"));
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "partner_terms",
+        element: <PartnerTerms />,
+      },
       {
         element: <PrivateRoutes />,
         path: "",
