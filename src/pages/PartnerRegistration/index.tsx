@@ -476,7 +476,7 @@ export default function PartnerRegistration() {
                 onChange={(e) => setTermAccepted(e.target.checked)}
               >
                 I agree to DJfan{" "}
-                <Link href="/terms" color="cyan">
+                <Link href="/partner_terms" color="cyan" target="_new">
                   partner terms
                 </Link>
               </Checkbox>
