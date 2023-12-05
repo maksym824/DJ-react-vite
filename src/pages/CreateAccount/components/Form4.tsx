@@ -13,13 +13,19 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverCloseButton,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import getCountryList from "~/services/settings/getCountryList";
 import { useCreateAccountContext } from "../useCreateAccountContext";
 import { Country } from "~/types";
+import { MdArrowDropDown } from "react-icons/md";
 
 export const Form4 = () => {
   const [country, setCountry] = useState<Country[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const toast = useToast();
+
   const {
     setCountry: setSelectedCountry,
     shortBio,
@@ -30,10 +36,26 @@ export const Form4 = () => {
     setCountryCode,
   } = useCreateAccountContext();
 
+  const initCountry = async () => {
+    try {
+      const countryList = await getCountryList();
+      setCountry(countryList);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: "Failed to load country list",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    getCountryList().then((res) => {
-      setCountry(res);
-    });
+    initCountry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -98,6 +120,7 @@ export const Form4 = () => {
       <FormControl>
         <FormLabel>Where are you from?</FormLabel>
         <Select
+          icon={loading ? <Spinner /> : <MdArrowDropDown />}
           placeholder="Select Country"
           value={countryCode}
           onChange={(e) => {

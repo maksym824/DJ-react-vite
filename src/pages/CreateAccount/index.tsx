@@ -78,7 +78,7 @@ export default function CreateAccount() {
   const isStep1Complete =
     step === 1 && !!displayName && !!firstName && !!lastName;
   const isStep2Complete = step === 2 && !!profileURL && profileURL.length > 2;
-  const isStep3Complete = step === 3 && !!shortBio && !!location; // && !!country && !!countryCode
+  const isStep3Complete = step === 3 && !!shortBio && !!location;
   const isStep4Complete =
     (step === 4 && !!instagram) || !!soundcloud || !!website;
   const isStep5Complete =
