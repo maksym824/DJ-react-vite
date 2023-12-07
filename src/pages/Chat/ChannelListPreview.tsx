@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Badge, Tooltip } from "@chakra-ui/react";
 import {
   Avatar,
   ChannelPreviewUIComponentProps,
@@ -17,6 +17,18 @@ const ChannelListPreview = (props: ChannelPreviewUIComponentProps) => {
       channel.state.messages[channel.state.messages.length - 1].text;
     const text = lastMessageText || "message text";
     return text.length < 25 ? lastMessageText : `${text.slice(0, 25)}...`;
+  };
+
+  const messageCount = () => {
+    if (!channel?.data?.message_count) return <></>;
+    const messageCount = channel?.data?.message_count as string;
+    return (
+      <Tooltip label="Number of message fan can still send.">
+        <Badge colorScheme="teal" size="md">
+          {messageCount}
+        </Badge>
+      </Tooltip>
+    );
   };
 
   return (
@@ -54,6 +66,7 @@ const ChannelListPreview = (props: ChannelPreviewUIComponentProps) => {
                 channel?.data?.fan_name ??
                 "Channel") as string
             }
+            {messageCount()}
           </Text>
           <Text>{channel.data?.subtitle}</Text>
         </Box>
