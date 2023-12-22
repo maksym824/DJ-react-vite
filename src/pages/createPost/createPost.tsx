@@ -11,7 +11,7 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Header from "~/components/Header";
 import { deletePost, updatePost, usePosts } from "~/services/posts";
@@ -26,6 +26,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { useUserData } from "~/services/settings/userData";
+import { socket } from "~/services/socket";
 
 const CreatePost = () => {
   return (
@@ -127,6 +128,49 @@ const Posts = () => {
     hasNextPage,
     refetch,
   } = usePosts({ pageSize });
+  const nonPublishedPosts = posts?.pages?.flat()?.filter((x) => !x.publish);
+
+  useEffect(() => {
+    const shouldConnectSocket = (nonPublishedPosts?.length ?? 0) > 0;
+    if (!shouldConnectSocket) {
+      if (!socket.connected) return;
+      socket.disconnect();
+      return;
+    }
+
+    // we disabled autoConnect so we can connect only when some posts are not published
+    socket.connect();
+
+    function onConnect() {
+      console.log("connected");
+      const postIDs = nonPublishedPosts?.map((x) => x.post_id);
+
+      postIDs?.forEach((postID) => {
+        console.log("emit post_id in process", postID);
+        socket.emit("post:add", postID?.toString());
+      });
+    }
+
+    function onDisconnect() {
+      console.log("disconnected");
+    }
+
+    function onPostReady(value: string) {
+      console.log("onPostReady", value);
+      refetch();
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("post:ready", onPostReady);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("post:ready", onPostReady);
+    };
+  }, [nonPublishedPosts, refetch]);
+
   const [currentPostToEdit, setCurrentPostToEdit] = useState<Post | null>(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
