@@ -2,6 +2,11 @@ import {
   Box,
   Button,
   Flex,
+  Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
   Progress,
   Select,
   Spinner,
@@ -19,6 +24,15 @@ import { uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
 import setPostData from "~/services/setPostData";
+import Cropper from "react-easy-crop";
+import getCroppedImg from "~/utils/cropImage";
+import { blobToFile } from "~/utils/blobToFile";
+
+type Preview = {
+  id: string;
+  name: string;
+  preview: string;
+};
 
 const ImagePost = () => {
   const [typeOfImagePost, setTypeOfImagePost] = useState<TypeOfImagePost>(
@@ -49,6 +63,68 @@ const ImagePost = () => {
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [selectedPreview, setSelectedPreview] = useState<Preview | undefined>(
+    undefined
+  );
+  const [preview, setPreviews] = useState<Preview[]>([]);
+  const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+  // eslint-disable-next-line
+  // @ts-ignore
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const showCroppedImage = async () => {
+    if (!selectedPreview || !croppedAreaPixels) {
+      return;
+    }
+    try {
+      const croppedImage = await getCroppedImg(
+        selectedPreview.preview,
+        croppedAreaPixels,
+        rotation
+      );
+      setPreviews((prev) =>
+        prev.map((x) =>
+          x.name === selectedPreview.name
+            ? { ...x, preview: croppedImage as string }
+            : x
+        )
+      );
+      setIsUploading(true);
+      try {
+        const res = await uploadFile(
+          blobToFile(croppedImage as Blob, selectedPreview.name),
+          postToken,
+          onUploadProgress
+        );
+        const { data } = res;
+        if (!data.result) {
+          toast({
+            description: data.message ?? "Error uploading file",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      } finally {
+        setIsUploading(false);
+        setRotation(0);
+        setSelectedPreview(undefined);
+        setShowModalEdit(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -126,6 +202,15 @@ const ImagePost = () => {
     }
 
     setFileToUpload(noDuplicateFiles);
+    setPreviews((preview) => [
+      ...preview,
+      ...noDuplicateFiles.map((x) => ({
+        id: x.name,
+        name: x.name,
+        preview: URL.createObjectURL(x),
+      })),
+    ]);
+
     setIsUploading(true);
     try {
       for (let i = 0; i < noDuplicateFiles.length; i++) {
@@ -186,8 +271,8 @@ const ImagePost = () => {
   return (
     <>
       <Header />
-      <Box height="calc(100vh - 64px - 52px)" bg="black">
-        <Flex mx={2} flexDirection={"column"} height="100%">
+      <Box height="100%">
+        <Flex flexDirection={"column"} height="100%" pb="100px">
           <Flex
             bg="#30096e"
             color="white"
@@ -201,7 +286,7 @@ const ImagePost = () => {
               Create Image Post
             </Text>
           </Flex>
-          <Flex grow={1} flexDirection="column" bg="white" color="black" p="2">
+          <Flex grow={1} flexDirection="column" bg="white" color="black" p="5">
             <Text my="10px">Select post type</Text>
             <Flex height="min-content" mt="1">
               <Box
@@ -263,18 +348,52 @@ const ImagePost = () => {
               </Box>
               {uploadedFiles ? (
                 <>
-                  {uploadedFiles?.map((fileName, index) => (
-                    <Flex alignItems="center" mt="10px" key={index}>
-                      <FaTrash
-                        onClick={() => {
-                          setUploadedFiles((prev) =>
-                            prev.filter((x) => x !== fileName)
-                          );
-                        }}
-                      />
-                      <Text ml="10px">{fileName}</Text>
-                    </Flex>
-                  ))}
+                  {uploadedFiles?.map((fileName, index) => {
+                    const foundPreview = preview?.find(
+                      (x) => x.name === fileName
+                    );
+                    const currentPreviewURL = foundPreview?.preview;
+                    return (
+                      <Flex flexDirection="column" key={index}>
+                        <Flex alignItems="center" mt="10px">
+                          <FaTrash
+                            onClick={() => {
+                              setUploadedFiles((prev) =>
+                                prev.filter((x) => x !== fileName)
+                              );
+                              setPreviews(
+                                (prev) =>
+                                  prev?.filter((x) => x.name !== fileName) ?? []
+                              );
+                            }}
+                            cursor="pointer"
+                          />
+                          <Text ml="10px">{fileName}</Text>
+                        </Flex>
+                        {currentPreviewURL && (
+                          <Flex flexDirection="column">
+                            <Text>Preview</Text>
+                            <Image
+                              my="20px"
+                              src={currentPreviewURL}
+                              alt="preview"
+                              width="200px"
+                              height="auto"
+                            />
+                            <Button
+                              onClick={() => {
+                                setSelectedPreview(foundPreview);
+                                setShowModalEdit(true);
+                              }}
+                              w="200px"
+                            >
+                              Edit
+                            </Button>
+                          </Flex>
+                        )}
+                      </Flex>
+                    );
+                  })}
                 </>
               ) : null}
               {isUploading ? (
@@ -325,12 +444,92 @@ const ImagePost = () => {
             ) : null}
           </Flex>
         </Flex>
+        {selectedPreview && (
+          <Modal
+            isOpen={showModalEdit}
+            onClose={() => {
+              setRotation(0);
+              setSelectedPreview(undefined);
+              setShowModalEdit(false);
+            }}
+            size="xl"
+            isCentered
+          >
+            <ModalOverlay />
+            <ModalContent p={5}>
+              <ModalBody>
+                <Text textAlign="center" mb="20px">
+                  Edit image
+                </Text>
+                <Box
+                  height={{
+                    base: "200px",
+                    md: "400px",
+                  }}
+                  position="relative"
+                >
+                  <Cropper
+                    image={selectedPreview.preview}
+                    crop={crop}
+                    rotation={rotation}
+                    zoom={zoom}
+                    onCropChange={setCrop}
+                    onRotationChange={setRotation}
+                    onCropComplete={onCropComplete}
+                    onZoomChange={setZoom}
+                    showGrid={false}
+                    objectFit="cover"
+                  />
+                </Box>
+                <Flex
+                  mt="20px"
+                  alignItems="center"
+                  justifyContent="space-around"
+                >
+                  <Button
+                    onClick={() => {
+                      if (rotation === 0) {
+                        return;
+                      }
+                      setRotation(rotation - 90);
+                    }}
+                  >
+                    Rotate Left
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (rotation === 360) {
+                        return;
+                      }
+                      setRotation(rotation + 90);
+                    }}
+                  >
+                    Rotate Right
+                  </Button>
+                </Flex>
+                <Flex>
+                  <Button
+                    onClick={showCroppedImage}
+                    mt="20px"
+                    w="100%"
+                    colorScheme="purple"
+                    isLoading={isUploading}
+                  >
+                    Save Change
+                  </Button>
+                </Flex>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        )}
       </Box>
       <Box
         as="nav"
         role="navigation"
-        position="sticky"
+        position="fixed"
         bottom="0"
+        left="0"
+        right="0"
         zIndex="docked"
         bg="bg-accent"
       >
