@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   Input,
   Progress,
   Select,
@@ -12,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import Header from "../../components/Header";
 import { FaMusic, FaRegEdit, FaReply, FaTrash } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
@@ -57,6 +59,13 @@ const AudioPost = () => {
   const [chunks, setChunks] = useState<Blob[]>([]);
   const [totalChunks, setTotalChunks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isUploadingArtwork, setIsUploadingArtwork] = useState<boolean>(false);
+  const [artworkFileToUpload, setArtworkFileToUpload] = useState<File | null>(
+    null
+  );
+  const artWorkInputRef = useRef<HTMLInputElement | null>(null);
+  const [progressArtwork, setProgressArtwork] = useState<number>(0);
+  const [releaseArtwork, setReleaseArtwork] = useState<File | null>(null);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -64,6 +73,44 @@ const AudioPost = () => {
     );
     setProgress(percentCompleted);
   };
+
+  const onUploadArtworkProgress = (progressEvent: AxiosProgressEvent) => {
+    const percentCompleted = Math.round(
+      (progressEvent.loaded * 100) / (progressEvent.total || 0)
+    );
+    setProgressArtwork(percentCompleted);
+  };
+
+  const handleUploadArtwork = async (file: File) => {
+    setIsUploadingArtwork(true);
+    try {
+      if (!file) return;
+      setArtworkFileToUpload(file);
+      const res = await uploadFile(file, postToken, onUploadArtworkProgress);
+      const { data } = res;
+      if (!data.result) {
+        toast({
+          description: data.message ?? "Error uploading file",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error uploading artwork:", error);
+    } finally {
+      setIsUploadingArtwork(false);
+      setProgressArtwork(0);
+    }
+  };
+
+  useEffect(() => {
+    if (releaseArtwork) {
+      handleUploadArtwork(releaseArtwork);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [releaseArtwork]);
 
   const handleInitPostToken = async () => {
     const token = await getPostToken(PostType.audio);
@@ -246,6 +293,7 @@ const AudioPost = () => {
       accesslevel_id: AccessLevelType;
       files?: string[];
       location?: string;
+      artwork?: string;
     } = {
       body: description,
       accesslevel_id: selectedPrivacy!,
@@ -256,6 +304,9 @@ const AudioPost = () => {
     } else {
       submittedData.embedded = 0;
       submittedData.files = [fileToUpload?.name ?? ""];
+    }
+    if (artworkFileToUpload) {
+      submittedData.artwork = artworkFileToUpload.name;
     }
     setIsLoading(true);
     try {
@@ -376,6 +427,43 @@ const AudioPost = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+
+            <FormControl mt="20px">
+              <FormLabel>Release Artwork</FormLabel>
+              <Input
+                type="file"
+                accept="image/*"
+                border="0px"
+                p="2px"
+                ref={(ref) => (artWorkInputRef.current = ref)}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    const file = e.target.files[0];
+                    setReleaseArtwork(file);
+                  } else {
+                    setReleaseArtwork(null);
+                    setArtworkFileToUpload(null);
+                  }
+                }}
+              />
+            </FormControl>
+            {isUploadingArtwork ? (
+              <Box>
+                <Text mb="10px">Uploading {artworkFileToUpload?.name}</Text>
+                <Progress hasStripe value={progressArtwork} />
+              </Box>
+            ) : artworkFileToUpload ? (
+              <Flex alignItems="center">
+                <FaTrash
+                  onClick={() => {
+                    setArtworkFileToUpload(null);
+                    if (artWorkInputRef.current)
+                      artWorkInputRef.current.value = "";
+                  }}
+                />
+                <Text ml="10px">{artworkFileToUpload?.name}</Text>
+              </Flex>
+            ) : null}
             <Box mt="20px">
               <Text>Who can view this post?</Text>
               <Select
