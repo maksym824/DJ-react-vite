@@ -147,7 +147,7 @@ const Posts = () => {
 
       postIDs?.forEach((postID) => {
         console.log("emit post_id in process", postID);
-        socket.emit("post:add", postID?.toString());
+        socket.emit("post:add", userData?.user_key + "|" + postID?.toString());
       });
     }
 
