@@ -211,7 +211,7 @@ const VideoPost = () => {
           onUploadProgress
         );
         const { data } = res;
-        console.log("data", data);
+        // console.log("data", data);
         if (!data.result) {
           toast({
             description: data.message ?? "Error uploading file",
@@ -258,7 +258,9 @@ const VideoPost = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate("/create");
+      setTimeout(() => {
+        navigate("/create");
+      }, 600);
     } catch (err) {
       console.log("err", err);
     } finally {

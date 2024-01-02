@@ -142,7 +142,7 @@ const Posts = () => {
     socket.connect();
 
     function onConnect() {
-      console.log("connected");
+      console.log("connected", nonPublishedPosts);
       const postIDs = nonPublishedPosts?.map((x) => x.post_id);
 
       postIDs?.forEach((postID) => {
