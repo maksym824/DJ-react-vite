@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { deleteProduct, useProduct } from "~/services/products";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { timeAgo } from "~/utils";
@@ -20,6 +20,7 @@ import {
   AlertDialogFooter,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { socket } from "~/services/socket";
 
 const ProductList = () => {
   const { data: userData } = useUserData();
@@ -32,6 +33,56 @@ const ProductList = () => {
     refetch,
   } = useProduct({ pageSize });
   const navigate = useNavigate();
+  const nonPublishedProducts = products?.pages
+    ?.flat()
+    ?.filter((x) => !x.publish);
+
+  useEffect(() => {
+    const shouldConnectSocket = (nonPublishedProducts?.length ?? 0) > 0;
+    if (!shouldConnectSocket) {
+      if (!socket.connected) return;
+      socket.disconnect();
+      return;
+    }
+
+    // we disabled autoConnect so we can connect only when some products are not published
+    socket.connect();
+
+    function onConnect() {
+      console.log("connected");
+      const productIDs = nonPublishedProducts?.map((x) => x.product_id);
+
+      productIDs?.forEach((productID) => {
+        console.log("emit product_id in process", productID);
+        console.log("key", userData?.user_key + "|" + productID?.toString());
+        socket.emit(
+          "product:add",
+          userData?.user_key + "|" + productID?.toString()
+        );
+      });
+    }
+
+    function onDisconnect() {
+      console.log("disconnected");
+    }
+
+    function onProductReady(value: string) {
+      console.log("onProductReady", value);
+      refetch();
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("product:ready", onProductReady);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("product:ready", onProductReady);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nonPublishedProducts]);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -169,7 +220,7 @@ const ProductList = () => {
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Delete Post: {selectedProduct.name}
+                Delete Product: {selectedProduct.name}
               </AlertDialogHeader>
 
               <AlertDialogFooter>

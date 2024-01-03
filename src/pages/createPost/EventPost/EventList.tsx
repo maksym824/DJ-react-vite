@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { timeAgo } from "~/utils";
 import { useUserData } from "~/services/settings/userData";
@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { deleteEvent, useEvent } from "~/services/events";
+import { socket } from "~/services/socket";
 
 const EventList = () => {
   const { data: userData } = useUserData();
@@ -38,6 +39,54 @@ const EventList = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const nonPublishedEvents = events?.pages?.flat()?.filter((x) => !x.publish);
+
+  useEffect(() => {
+    const shouldConnectSocket = (nonPublishedEvents?.length ?? 0) > 0;
+    if (!shouldConnectSocket) {
+      if (!socket.connected) return;
+      socket.disconnect();
+      return;
+    }
+
+    // we disabled autoConnect so we can connect only when some events are not published
+    socket.connect();
+
+    function onConnect() {
+      console.log("connected");
+      const eventIDs = nonPublishedEvents?.map((x) => x.id);
+
+      eventIDs?.forEach((eventID) => {
+        console.log("emit event id in process", eventID);
+        console.log("key", userData?.user_key + "|" + eventID?.toString());
+        socket.emit(
+          "event:add",
+          userData?.user_key + "|" + eventID?.toString()
+        );
+      });
+    }
+
+    function onDisconnect() {
+      console.log("disconnected");
+    }
+
+    function onEventReady(value: string) {
+      console.log("onEventReady", value);
+      refetch();
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("event:ready", onEventReady);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("event:ready", onEventReady);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nonPublishedEvents]);
 
   const handleLoadMore = () => {
     fetchNextPage();

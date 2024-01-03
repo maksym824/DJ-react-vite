@@ -169,7 +169,9 @@ const Posts = () => {
       socket.off("disconnect", onDisconnect);
       socket.off("post:ready", onPostReady);
     };
-  }, [nonPublishedPosts, refetch]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nonPublishedPosts]);
 
   const [currentPostToEdit, setCurrentPostToEdit] = useState<Post | null>(null);
 
