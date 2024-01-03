@@ -317,9 +317,7 @@ const AudioPost = () => {
         duration: 3000,
         isClosable: true,
       });
-      setTimeout(() => {
-        navigate("/create");
-      }, 600);
+      navigate("/create");
     } catch (err) {
       console.log("err", err);
     } finally {

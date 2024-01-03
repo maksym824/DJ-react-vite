@@ -258,9 +258,11 @@ const VideoPost = () => {
         duration: 3000,
         isClosable: true,
       });
+      navigate("/create");
+      /*
       setTimeout(() => {
-        navigate("/create");
       }, 600);
+      */
     } catch (err) {
       console.log("err", err);
     } finally {
