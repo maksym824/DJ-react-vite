@@ -54,6 +54,7 @@ const AudioPost = () => {
     AccessLevelType | undefined
   >(undefined);
   const [description, setDescription] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [locationToEmbed, setLocationToEmbed] = useState<string>("");
 
   const [chunks, setChunks] = useState<Blob[]>([]);
@@ -294,7 +295,9 @@ const AudioPost = () => {
       files?: string[];
       location?: string;
       artwork?: string;
+      title?: string;
     } = {
+      title: title,
       body: description,
       accesslevel_id: selectedPrivacy!,
     };
@@ -412,15 +415,32 @@ const AudioPost = () => {
                 ) : null}
               </Box>
             ) : (
-              <Box mt="10px">
-                <Input
-                  mt="10px"
-                  placeholder="Enter URL"
-                  value={locationToEmbed}
-                  onChange={(e) => setLocationToEmbed(e.target.value)}
-                />
-              </Box>
+              <Textarea
+                mt="20px"
+                placeholder="URL or embedded code when media is set private"
+                value={locationToEmbed}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             )}
+            {/* 
+            <Box mt="10px">
+              <Input
+                mt="10px"
+                placeholder="Enter URL"
+                value={locationToEmbed}
+                onChange={(e) => setLocationToEmbed(e.target.value)}
+              />
+            </Box>
+            */}
+
+            <Box mt="10px">
+              <Input
+                mt="10px"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </Box>
             <Textarea
               mt="20px"
               placeholder="Write something about this post"

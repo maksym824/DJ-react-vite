@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   Image,
+  Input,
   Link,
   Select,
   Spinner,
@@ -250,6 +251,33 @@ const Posts = () => {
                         )}
                       </Text>
                     </Box>
+
+                    {post?.posttype_id == 3 && (
+                      <Box mt="10px">
+                        <Input
+                          placeholder="Title"
+                          mt="10px"
+                          onFocus={() => {
+                            if (currentPostToEdit?.post_id !== post.post_id) {
+                              setCurrentPostToEdit(post);
+                            }
+                          }}
+                          value={
+                            currentPostToEdit?.post_id === post?.id
+                              ? currentPostToEdit?.title
+                              : post.title
+                          }
+                          onChange={(e) => {
+                            if (!currentPostToEdit) return;
+                            setCurrentPostToEdit({
+                              ...currentPostToEdit,
+                              title: e.target.value,
+                            });
+                          }}
+                        />{" "}
+                      </Box>
+                    )}
+
                     <Textarea
                       mt="10px"
                       onFocus={() => {
@@ -320,6 +348,7 @@ const Posts = () => {
                           onClick={async () => {
                             try {
                               await updatePost(post.post_id, {
+                                title: currentPostToEdit.title,
                                 body: currentPostToEdit.body,
                                 accesslevel_id:
                                   currentPostToEdit.accesslevel_id,
