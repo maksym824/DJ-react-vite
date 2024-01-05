@@ -419,7 +419,7 @@ const AudioPost = () => {
                 mt="20px"
                 placeholder="URL or embedded code when media is set private"
                 value={locationToEmbed}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setLocationToEmbed(e.target.value)}
               />
             )}
             {/* 
@@ -509,11 +509,28 @@ const AudioPost = () => {
               </Text>
             </Box>
 
+            {/*
             {selectedPrivacy &&
             (typeOfAttachedFile === TypeOfAttachedFile.UPLOAD
               ? fileToUpload
               : locationToEmbed) &&
             description &&
+            !isUploading ? (
+              <Button
+                mt="20px"
+                isLoading={isLoading}
+                colorScheme="purple"
+                onClick={handleSaveAudioPost}
+              >
+                Post
+              </Button>
+            ) : null}
+            */}
+
+            {selectedPrivacy &&
+            (typeOfAttachedFile === TypeOfAttachedFile.UPLOAD
+              ? fileToUpload
+              : locationToEmbed) &&
             !isUploading ? (
               <Button
                 mt="20px"
