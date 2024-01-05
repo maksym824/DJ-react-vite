@@ -42,6 +42,13 @@ const EventList = () => {
   const nonPublishedEvents = events?.pages?.flat()?.filter((x) => !x.publish);
 
   useEffect(() => {
+    setTimeout(() => {
+      console.log("refetching");
+      refetch();
+    }, 15 * 1000 * 60); // refetch the list after 15 minutes
+  }, [refetch]);
+
+  useEffect(() => {
     const shouldConnectSocket = (nonPublishedEvents?.length ?? 0) > 0;
     if (!shouldConnectSocket) {
       if (!socket.connected) return;
