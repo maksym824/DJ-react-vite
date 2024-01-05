@@ -92,7 +92,15 @@ export default function AccountSettings() {
 
   const handleChangeEmailAddress = async () => {
     try {
-      await changeEmailAddress();
+      const res = await changeEmailAddress();
+      if (res.data.result) {
+        toast({
+          description: "An email has been sent to you",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -100,7 +108,15 @@ export default function AccountSettings() {
 
   const handleResetPassword = async () => {
     try {
-      await resetPassword();
+      const res = await resetPassword();
+      if (res.data.result) {
+        toast({
+          description: "An email has been sent to you",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -108,12 +124,18 @@ export default function AccountSettings() {
 
   const deleteAccount = async function () {
     try {
-      await deleteUserAccount();
-      // if (res.data.result) {
-      //   window.open("https://fan.djfan.app", "_self");
-      // } else {
-      //   console.log("delete account failed! ");
-      // }
+      const res = await deleteUserAccount();
+      if (res.data.result) {
+        // window.open("https://fan.djfan.app", "_self");
+        toast({
+          description: "Your account has been deleted",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        console.log("delete account failed! ");
+      }
     } catch (e) {
       return null;
     }
