@@ -435,7 +435,7 @@ const CreateProductPage = () => {
                   />
                 </FormControl>
 
-                <FormControl isRequired mb={4}>
+                <FormControl mb={4}>
                   <FormLabel>Release Date</FormLabel>
                   <Input
                     type="date"
@@ -445,7 +445,7 @@ const CreateProductPage = () => {
                   />
                 </FormControl>
 
-                <FormControl isRequired mb={4}>
+                <FormControl mb={4}>
                   <FormLabel>Record Label</FormLabel>
                   <Input
                     type="text"
@@ -541,13 +541,12 @@ const CreateProductPage = () => {
                     !releaseArtwork ||
                     !price ||
                     !genre ||
-                    !releaseDate ||
-                    !recordLabel ||
                     !downloadableTrackFile ||
                     isUploadingArtwork ||
                     isUploadingAudio
                   }
                 >
+                  {/* !releaseDate || !recordLabel || */}
                   CREATE PRODUCT{" "}
                   <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
                 </Button>
