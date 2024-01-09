@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import Header from "../../components/Header";
 import { FaImages, FaRegEdit, FaReply, FaTrash } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import getPostToken from "../../services/getPostToken";
@@ -25,7 +25,7 @@ import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
 import setPostData from "~/services/setPostData";
 import Cropper from "react-easy-crop";
-import getCroppedImg from "~/utils/cropImage";
+import getCroppedImg, { getRotatedImage } from "~/utils/cropImage";
 import { blobToFile } from "~/utils/blobToFile";
 
 type Preview = {
@@ -72,6 +72,7 @@ const ImagePost = () => {
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const imageRef = useRef(null);
 
   // eslint-disable-next-line
   // @ts-ignore
@@ -80,13 +81,20 @@ const ImagePost = () => {
   };
 
   const showCroppedImage = async () => {
-    if (!selectedPreview || !croppedAreaPixels) {
+    // if (!selectedPreview || !croppedAreaPixels) {
+    //   return;
+    // }
+    if (!selectedPreview || !imageRef.current) {
       return;
     }
     try {
-      const croppedImage = await getCroppedImg(
+      // const croppedImage = await getCroppedImg(
+      //   selectedPreview.preview,
+      //   croppedAreaPixels,
+      //   rotation
+      // );
+      const croppedImage = await getRotatedImage(
         selectedPreview.preview,
-        croppedAreaPixels,
         rotation
       );
       setPreviews((prev) =>
@@ -463,12 +471,15 @@ const ImagePost = () => {
                 </Text>
                 <Box
                   height={{
-                    base: "200px",
-                    md: "400px",
+                    base: "300px",
+                    md: "500px",
                   }}
                   position="relative"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
                 >
-                  <Cropper
+                  {/* <Cropper
                     image={selectedPreview.preview}
                     crop={crop}
                     rotation={rotation}
@@ -479,6 +490,16 @@ const ImagePost = () => {
                     onZoomChange={setZoom}
                     showGrid={false}
                     objectFit="cover"
+                  /> */}
+                  <Image
+                    ref={imageRef}
+                    src={selectedPreview.preview}
+                    style={{
+                      rotate: `${rotation}deg`,
+                    }}
+                    w="auto"
+                    h="100%"
+                    objectFit="contain"
                   />
                 </Box>
                 <Flex
@@ -489,6 +510,7 @@ const ImagePost = () => {
                   <Button
                     onClick={() => {
                       if (rotation === 0) {
+                        setRotation(360 - 90);
                         return;
                       }
                       setRotation(rotation - 90);
@@ -499,6 +521,7 @@ const ImagePost = () => {
                   <Button
                     onClick={() => {
                       if (rotation === 360) {
+                        setRotation(0 + 90);
                         return;
                       }
                       setRotation(rotation + 90);
