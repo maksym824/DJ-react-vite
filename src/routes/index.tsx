@@ -25,6 +25,7 @@ import CreateEventPost from "~/pages/createPost/EventPost/CreateEventPost";
 import EditEventPost from "~/pages/createPost/EventPost/EditEventPost";
 import PartnerRegistration from "~/pages/PartnerRegistration";
 import PartnerTerms from "~/pages/PartnerTerms";
+import DemoConfirmation from "~/pages/Demo";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ChatPage = React.lazy(() => import("~/pages/Chat/ChatWrapper"));
@@ -133,6 +134,10 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "/demo-confirmation",
+        element: <DemoConfirmation />,
       },
       {
         path: "/create-account",
