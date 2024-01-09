@@ -1,5 +1,6 @@
 import { Box, Flex, Image, Heading, Text } from "@chakra-ui/react";
 
+// x
 export default function DemoConfirmation() {
   return (
     <Flex flexDirection="column" minH="100vh" bg="pink">
