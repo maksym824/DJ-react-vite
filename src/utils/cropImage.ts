@@ -99,3 +99,36 @@ export default async function getCroppedImg(
     }, "image/jpeg");
   });
 }
+export const getRotatedImage = async (imageSrc: string, rotation = 0) => {
+  const image = (await createImage(imageSrc)) as HTMLImageElement;
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    return null;
+  }
+
+  const originalWidth = image.width;
+  const originalHeight = image.height;
+
+  const radians = (rotation * Math.PI) / 180;
+  const cos = Math.abs(Math.cos(radians));
+  const sin = Math.abs(Math.sin(radians));
+
+  const rotatedWidth = originalWidth * cos + originalHeight * sin;
+  const rotatedHeight = originalWidth * sin + originalHeight * cos;
+
+  canvas.width = rotatedWidth;
+  canvas.height = rotatedHeight;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.translate(rotatedWidth / 2, rotatedHeight / 2);
+  ctx.rotate(radians);
+  ctx.drawImage(image, -originalWidth / 2, -originalHeight / 2);
+
+  return new Promise((resolve) => {
+    canvas.toBlob((file) => {
+      resolve(URL.createObjectURL(file as Blob));
+    }, "image/jpeg");
+  });
+};
