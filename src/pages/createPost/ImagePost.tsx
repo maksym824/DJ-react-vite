@@ -24,9 +24,9 @@ import { uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfImagePost } from "../../types";
 import setPostData from "~/services/setPostData";
-import Cropper from "react-easy-crop";
-import getCroppedImg, { getRotatedImage } from "~/utils/cropImage";
-import { blobToFile } from "~/utils/blobToFile";
+// import Cropper from "react-easy-crop";
+// import getCroppedImg, { getRotatedImage } from "~/utils/cropImage";
+// import { blobToFile } from "~/utils/blobToFile";
 
 type Preview = {
   id: string;
@@ -68,18 +68,21 @@ const ImagePost = () => {
   );
   const [preview, setPreviews] = useState<Preview[]>([]);
   const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  // const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [rotation, setRotation] = useState(0);
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  // const [zoom, setZoom] = useState(1);
+  // const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const imageRef = useRef(null);
 
   // eslint-disable-next-line
   // @ts-ignore
+  /*
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
+  */
 
+  /*
   const showCroppedImage = async () => {
     // if (!selectedPreview || !croppedAreaPixels) {
     //   return;
@@ -133,6 +136,7 @@ const ImagePost = () => {
       console.error(e);
     }
   };
+  */
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -531,6 +535,7 @@ const ImagePost = () => {
                   </Button>
                 </Flex>
                 <Flex>
+                  {/*
                   <Button
                     onClick={showCroppedImage}
                     mt="20px"
@@ -540,6 +545,7 @@ const ImagePost = () => {
                   >
                     Save Change
                   </Button>
+                  */}
                 </Flex>
               </ModalBody>
             </ModalContent>

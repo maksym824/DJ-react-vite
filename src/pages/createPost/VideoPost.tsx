@@ -21,7 +21,7 @@ import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfAttachedFile } from "../../types";
 import setPostData from "~/services/setPostData";
 
-const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1Gb
+const MAX_FILE_SIZE = 1024 * 1024 * 2024; // 2Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 const VideoPost = () => {
