@@ -545,12 +545,11 @@ const EditProductPage = () => {
                   !releaseName ||
                   !price ||
                   !genre ||
-                  !releaseDate ||
-                  !recordLabel ||
                   isUploadingArtwork ||
                   isUploadingAudio
                 }
               >
+                {/*!releaseDate || !recordLabel || */}
                 UPDATE PRODUCT
               </Button>
             </Stack>
