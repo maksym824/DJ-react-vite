@@ -136,6 +136,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/demo-confirmation",
+        element: <DemoConfirmation />,
+      },
+      {
         path: "/create-account",
         element: (
           <CreateAccountContextProvider>
