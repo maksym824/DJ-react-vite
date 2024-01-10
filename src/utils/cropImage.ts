@@ -28,7 +28,7 @@ export function rotateSize(width: number, height: number, rotation: number) {
 /**
  * This function was adapted from the one in the ReadMe of https://github.com/DominicTobias/react-image-crop
  */
-export default async function getCroppedImg(
+export async function getCroppedImg(
   imageSrc: string,
   pixelCrop: { width: number; height: number; x: number; y: number },
   rotation = 0,
