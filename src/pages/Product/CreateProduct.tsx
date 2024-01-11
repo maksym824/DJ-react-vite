@@ -299,7 +299,11 @@ const CreateProductPage = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate("/product");
+        navigate("/product", {
+          state: {
+            reload: true,
+          },
+        });
       }
     } catch (error) {
       console.error("Error creating product:", error);

@@ -19,12 +19,11 @@ import {
   AlertDialogHeader,
   AlertDialogFooter,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { socket } from "~/services/socket";
 
 const ProductList = () => {
   const { data: userData } = useUserData();
-
   const pageSize = 10;
   const {
     data: products,
@@ -33,6 +32,8 @@ const ProductList = () => {
     refetch,
   } = useProduct({ pageSize });
   const navigate = useNavigate();
+  const location = useLocation();
+
   const nonPublishedProducts = products?.pages
     ?.flat()
     ?.filter((x) => !x.publish);
@@ -42,7 +43,17 @@ const ProductList = () => {
       console.log("refetching");
       refetch();
     }, 15 * 1000 * 60); // refetch the list after 15 minutes
-  }, [refetch]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (location.state?.reload) {
+      refetch();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   useEffect(() => {
     const shouldConnectSocket = (nonPublishedProducts?.length ?? 0) > 0;
