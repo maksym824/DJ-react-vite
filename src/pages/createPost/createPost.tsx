@@ -135,7 +135,7 @@ const Posts = () => {
     setTimeout(() => {
       console.log("refetching");
       refetch();
-    }, 15 * 1000 * 60); // refetch the list after 15 minutes
+    }, 5 * 1000 * 60); // refetch the list after 15 minutes
   }, [refetch]);
 
   useEffect(() => {
