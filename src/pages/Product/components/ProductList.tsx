@@ -42,7 +42,7 @@ const ProductList = () => {
     setTimeout(() => {
       console.log("refetching");
       refetch();
-    }, 15 * 1000 * 60); // refetch the list after 15 minutes
+    }, 5 * 1000 * 60); // refetch the list after 15 minutes
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
