@@ -11,6 +11,7 @@ import {
   HStack,
   Text,
   Avatar,
+  useToast,
 } from "@chakra-ui/react";
 import { FaTimes } from "react-icons/fa";
 import {
@@ -37,11 +38,43 @@ export const Form5 = () => {
     coverPreview,
     setCoverPreview,
   } = useCreateAccountContext();
+  const toast = useToast();
+
+  const precheckImage = (selectedFile: File) => {
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/webp"];
+    const maxFileSizeInBytes = 10 * 1024 * 1024; // 10 MB
+
+    // Check file type
+    if (!allowedFileTypes.includes(selectedFile.type)) {
+      toast({
+        description:
+          "Invalid file type. Please choose a JPEG, PNG, or WEBP file.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return false;
+    }
+
+    // Check file size
+    if (selectedFile.size > maxFileSizeInBytes) {
+      toast({
+        description: "File size exceeds the maximum limit of 10MB.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return false;
+    }
+
+    return true;
+  };
 
   const handleProfileImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     if (file) {
+      if (!precheckImage(file)) return;
       setProfileImage(file);
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -55,6 +88,7 @@ export const Form5 = () => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     if (file) {
+      if (!precheckImage(file)) return;
       setCoverImage(file);
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -121,13 +155,16 @@ export const Form5 = () => {
           <label>
             <Input
               type="file"
-              accept="image/*"
+              accept=".jpeg, .png, .webp"
               onChange={handleProfileImageChange}
               style={{ display: "none" }}
             />
             <Button as="span">Select Image</Button>
           </label>
         </HStack>
+        <Text fontSize="14px" color="#000" mt="5px" lineHeight="1.5em">
+          Allow file type: jpeg, png, webp and max file size 10Mb
+        </Text>
       </FormControl>
 
       <FormControl>
@@ -136,13 +173,16 @@ export const Form5 = () => {
           <label>
             <Input
               type="file"
-              accept="image/*"
+              accept=".jpeg, .png, .webp"
               onChange={handleCoverImageChange}
               style={{ display: "none" }}
             />
             <Button as="span">Select Image</Button>
           </label>
         </HStack>
+        <Text fontSize="14px" color="#000" mt="5px" lineHeight="1.5em">
+          Allow file type: jpeg, png, webp and max file size 10Mb
+        </Text>
       </FormControl>
 
       <Box position="relative" mt="2">
