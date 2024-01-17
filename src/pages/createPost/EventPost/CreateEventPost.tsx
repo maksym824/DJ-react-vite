@@ -1,4 +1,9 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   Flex,
@@ -6,7 +11,10 @@ import {
   FormLabel,
   Heading,
   Input,
+  NumberInput,
+  NumberInputField,
   Progress,
+  Select,
   Stack,
   Text,
   Textarea,
@@ -18,11 +26,14 @@ import { useNavigate } from "react-router-dom";
 import FormFooter from "~/components/FormFooter";
 import { AxiosProgressEvent } from "axios";
 import { uploadFile } from "~/services/uploadFile";
-import createEvent, { EventPayload } from "~/services/createEvent";
+import createEvent, {
+  EventPayload,
+  Guest,
+  InviteProcess,
+} from "~/services/createEvent";
 import getPostToken from "~/services/getPostToken";
 import { PostType } from "~/types";
 import Header from "~/components/Header";
-
 const CreateEventPost = () => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -42,6 +53,14 @@ const CreateEventPost = () => {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [numberOfGuests, setNumberOfGuests] = useState<string>("");
+  const [startOfPeriod, setStartOfPeriod] = useState<string>("");
+  const [endOfPeriod, setEndOfPeriod] = useState<string>("");
+  const [selectedInviteProcess, setSelectedInviteProcess] =
+    useState<InviteProcess>(InviteProcess.FCFS);
+  const [guestListRecipient, setGuestListRecipient] = useState<string>("");
+  const [manualGuests, setManualGuests] = useState<Guest[]>([]);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -89,6 +108,11 @@ const CreateEventPost = () => {
       artwork: eventArtwork?.name ?? "",
       venue: eventVenue,
       city: eventCity,
+      guest_invite_start: startOfPeriod,
+      guest_invite_end: endOfPeriod,
+      guest_invite_type: selectedInviteProcess,
+      guest_invite_number: numberOfGuests,
+      guest_invite_receiver: guestListRecipient,
     };
     setIsLoading(true);
     try {
@@ -272,6 +296,147 @@ const CreateEventPost = () => {
                   />
                 </FormControl>
 
+                <Accordion allowToggle mb="10px" defaultIndex={0}>
+                  <AccordionItem>
+                    <h2>
+                      <AccordionButton>
+                        <Box
+                          as="span"
+                          flex="1"
+                          textAlign="left"
+                          fontWeight="bold"
+                        >
+                          Create guest list
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4}>
+                      <FormControl isRequired mb={4}>
+                        <FormLabel>Number of Guests</FormLabel>
+                        <NumberInput>
+                          <NumberInputField
+                            placeholder="Number of Guests"
+                            value={numberOfGuests}
+                            onChange={(e) => setNumberOfGuests(e.target.value)}
+                          />
+                        </NumberInput>
+                      </FormControl>
+                      <FormControl isRequired mb={4}>
+                        <FormLabel>Start of Period</FormLabel>
+                        <Input
+                          type="datetime-local"
+                          value={startOfPeriod}
+                          onChange={(e) => setStartOfPeriod(e.target.value)}
+                          placeholder="Select a date"
+                        />
+                      </FormControl>
+                      <FormControl isRequired mb={4}>
+                        <FormLabel>End of Period</FormLabel>
+                        <Input
+                          type="datetime-local"
+                          value={endOfPeriod}
+                          onChange={(e) => setEndOfPeriod(e.target.value)}
+                          placeholder="Select a date"
+                        />
+                      </FormControl>
+                      <FormControl isRequired mb={4}>
+                        <FormLabel>Invite process</FormLabel>
+                        <Select
+                          mt="10px"
+                          placeholder="Select invite process"
+                          onChange={(e) =>
+                            setSelectedInviteProcess(
+                              e.target.value as unknown as InviteProcess
+                            )
+                          }
+                          value={selectedInviteProcess}
+                        >
+                          <option value={InviteProcess.FCFS}>
+                            First come First Serve
+                          </option>
+                        </Select>
+                      </FormControl>
+
+                      <FormControl mb={4}>
+                        <FormLabel>Manually adding guests</FormLabel>
+                        <Button
+                          onClick={() => {
+                            setManualGuests([
+                              ...manualGuests,
+                              {
+                                id: new Date().getMilliseconds() + 1,
+                                name: "",
+                                email: "",
+                              },
+                            ]);
+                          }}
+                          mb="10px"
+                        >
+                          Add guest
+                        </Button>
+                        {manualGuests.map((guest) => (
+                          <Flex
+                            key={guest.id}
+                            alignItems="center"
+                            justifyContent="space-between"
+                            mb="5px"
+                          >
+                            <Input
+                              value={guest.name}
+                              onChange={(e) => {
+                                const updatedGuest = manualGuests.find(
+                                  (g) => g.id === guest.id
+                                );
+                                if (updatedGuest) {
+                                  updatedGuest.name = e.target.value;
+                                  setManualGuests([...manualGuests]);
+                                }
+                              }}
+                              placeholder="Name"
+                              mr="10px"
+                            />
+                            <Input
+                              value={guest.email}
+                              onChange={(e) => {
+                                const updatedGuest = manualGuests.find(
+                                  (g) => g.id === guest.id
+                                );
+                                if (updatedGuest) {
+                                  updatedGuest.email = e.target.value;
+                                  setManualGuests([...manualGuests]);
+                                }
+                              }}
+                              placeholder="Email"
+                            />
+                            <FaTrash
+                              cursor="pointer"
+                              style={{ marginLeft: "10px", fontSize: "30px" }}
+                              onClick={() =>
+                                setManualGuests(
+                                  manualGuests.filter((g) => g.id !== guest.id)
+                                )
+                              }
+                            />
+                          </Flex>
+                        ))}
+                      </FormControl>
+
+                      <FormControl mb={4}>
+                        <FormLabel>Guest list recipient</FormLabel>
+                        <Input
+                          type="text"
+                          value={guestListRecipient}
+                          onChange={(e) =>
+                            setGuestListRecipient(e.target.value)
+                          }
+                          placeholder="Email"
+                        />
+                      </FormControl>
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+
                 <Button
                   type="submit"
                   background="#300a6e"
@@ -286,7 +451,10 @@ const CreateEventPost = () => {
                     !eventDescription ||
                     !eventDate ||
                     !eventVenue ||
-                    !eventCity
+                    !eventCity ||
+                    !eventStartTime ||
+                    !eventEndTime ||
+                    !numberOfGuests
                   }
                 >
                   {/* !eventLink || !eventArtwork */}

@@ -10,6 +10,21 @@ export type EventPayload = {
   artwork: string;
   venue: string;
   city: string;
+  guest_invite_start: string;
+  guest_invite_end: string;
+  guest_invite_type: string;
+  guest_invite_number: string;
+  guest_invite_receiver: string;
+};
+
+export enum InviteProcess {
+  FCFS = "1",
+}
+
+export type Guest = {
+  id: number;
+  name: string;
+  email: string;
 };
 
 const createEvent = async (
