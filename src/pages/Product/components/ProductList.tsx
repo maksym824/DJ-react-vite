@@ -102,6 +102,10 @@ const ProductList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nonPublishedProducts]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
