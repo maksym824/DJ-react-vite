@@ -30,3 +30,22 @@ export const timeAgo = (date: string) => {
 
   return Math.floor(seconds) + " seconds ago";
 };
+
+export const isValidHttpUrl = (testString: string) => {
+  if (
+    testString.startsWith("http:") ||
+    testString.startsWith("https:") ||
+    testString.startsWith("www.")
+  )
+    return true;
+  let url;
+
+  try {
+    url = new URL(testString);
+    console.log(url);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+};

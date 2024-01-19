@@ -137,10 +137,13 @@ export default function CreateAccount() {
         setIsStepLoading(true);
         try {
           await updateUserData({
-            profile_url: profileURL,
+            instagram,
+            soundcloud,
+            website,
           });
           setStep(step + 1);
           setProgress(progress + 20);
+          setProfileURL(instagram ?? soundcloud ?? "");
         } catch (err) {
           console.log(err);
         } finally {
@@ -170,9 +173,7 @@ export default function CreateAccount() {
         setIsStepLoading(true);
         try {
           await updateUserData({
-            instagram,
-            soundcloud,
-            website,
+            profile_url: profileURL,
           });
           setStep(step + 1);
           setProgress(progress + 20);
@@ -259,9 +260,9 @@ export default function CreateAccount() {
             ) : step === 2 ? (
               <Form2 />
             ) : step === 3 ? (
-              <Form4 />
-            ) : step === 4 ? (
               <Form3 />
+            ) : step === 4 ? (
+              <Form4 />
             ) : (
               <Form5 />
             )}
