@@ -1660,7 +1660,7 @@
 
 "@xmldom/xmldom@^0.8.8":
   version "0.8.10"
-  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99"
+  resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.10.tgz"
   integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 
 "@zag-js/dom-query@0.10.5":
@@ -1786,7 +1786,7 @@ base64-js@^1.5.1:
 
 blueimp-load-image@5.16.0:
   version "5.16.0"
-  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-5.16.0.tgz#16b763f57e6725f8865517bca8eb7c3dc7d41e09"
+  resolved "https://registry.npmjs.org/blueimp-load-image/-/blueimp-load-image-5.16.0.tgz"
   integrity sha512-3DUSVdOtlfNRk7moRZuTwDmA3NnG8KIJuLcq3c0J7/BIr6X3Vb/EpX3kUH1joxUhmoVF4uCpDfz7wHkz8pQajA==
 
 brace-expansion@^1.1.7:
@@ -2278,7 +2278,7 @@ esutils@^2.0.2:
 
 exifreader@4.13.2:
   version "4.13.2"
-  resolved "https://registry.yarnpkg.com/exifreader/-/exifreader-4.13.2.tgz#54d7997f3758fdaf1d56fa7ffdc40b9607cf083a"
+  resolved "https://registry.npmjs.org/exifreader/-/exifreader-4.13.2.tgz"
   integrity sha512-M4UyGE37virgRa4V0XE79uOwKzuCCM/I5W1/moCzHJPsuXpHe6HC0pBQ6hkRKxm1xe3rI9j0J+U56csJrJttxg==
   optionalDependencies:
     "@xmldom/xmldom" "^0.8.8"
@@ -2376,9 +2376,9 @@ focus-lock@^0.11.6:
     tslib "^2.0.3"
 
 follow-redirects@^1.15.0:
-  version "1.15.2"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
-  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
+  version "1.15.5"
+  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.5.tgz"
+  integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
 
 form-data@^4.0.0:
   version "4.0.0"
@@ -2776,7 +2776,7 @@ kleur@^4.0.3:
 
 konva@9.2.2:
   version "9.2.2"
-  resolved "https://registry.yarnpkg.com/konva/-/konva-9.2.2.tgz#972105ec79a89c60296d5e36d1f7cef9b84a42d4"
+  resolved "https://registry.npmjs.org/konva/-/konva-9.2.2.tgz"
   integrity sha512-Gyn5hQa/5+8pJvTn/IVyZWgum2otWXszuVCG/cevkAyKUFcmFv4tGbQhHFGtJPLQkGO+W6xfgRzyYIkNgKnPxA==
 
 levn@^0.4.1:
@@ -3629,7 +3629,7 @@ raf@^3.4.1:
 
 react-avatar-clip@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-avatar-clip/-/react-avatar-clip-1.0.1.tgz#47efe5529cefad5b1f2e873b0f88b0099bf44b11"
+  resolved "https://registry.npmjs.org/react-avatar-clip/-/react-avatar-clip-1.0.1.tgz"
   integrity sha512-j+Kb9EVZ8anYKIhY4O/OclS/RT1KtTCXnLzjmPqUeYOKiGyJWZRKJdPGx7+Da0eMxjzQ1hyM758AQIzHZ+0e+Q==
   dependencies:
     blueimp-load-image "5.16.0"
@@ -4432,9 +4432,9 @@ vfile@^5.0.0:
     vfile-message "^3.0.0"
 
 vite@^4.4.5:
-  version "4.4.9"
-  resolved "https://registry.npmjs.org/vite/-/vite-4.4.9.tgz"
-  integrity sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==
+  version "4.5.2"
+  resolved "https://registry.npmjs.org/vite/-/vite-4.5.2.tgz"
+  integrity sha512-tBCZBNSBbHQkaGyhGCDUGqeo2ph8Fstyp6FMSvTtsXeZSPpSMGlviAOav2hxVTqFcx8Hj/twtWKsMJXNY0xI8w==
   dependencies:
     esbuild "^0.18.10"
     postcss "^8.4.27"

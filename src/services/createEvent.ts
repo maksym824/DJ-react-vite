@@ -14,7 +14,7 @@ export type EventPayload = {
   guest_invite_end: string;
   guest_invite_type: string;
   guest_invite_number: string;
-  guest_invite_receiver: string;
+  guest_list_receiver: string;
 };
 
 export enum InviteProcess {

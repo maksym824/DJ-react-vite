@@ -112,7 +112,7 @@ const CreateEventPost = () => {
       guest_invite_end: endOfPeriod,
       guest_invite_type: selectedInviteProcess,
       guest_invite_number: numberOfGuests,
-      guest_invite_receiver: guestListRecipient,
+      guest_list_receiver: guestListRecipient,
     };
     setIsLoading(true);
     try {
