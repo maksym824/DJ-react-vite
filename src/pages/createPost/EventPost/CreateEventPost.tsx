@@ -28,12 +28,14 @@ import { AxiosProgressEvent } from "axios";
 import { uploadFile } from "~/services/uploadFile";
 import createEvent, {
   EventPayload,
-  Guest,
+  // Guest,
   InviteProcess,
 } from "~/services/createEvent";
 import getPostToken from "~/services/getPostToken";
 import { PostType } from "~/types";
 import Header from "~/components/Header";
+import dayjs from "dayjs";
+
 const CreateEventPost = () => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -60,7 +62,7 @@ const CreateEventPost = () => {
   const [selectedInviteProcess, setSelectedInviteProcess] =
     useState<InviteProcess>(InviteProcess.FCFS);
   const [guestListRecipient, setGuestListRecipient] = useState<string>("");
-  const [manualGuests, setManualGuests] = useState<Guest[]>([]);
+  // const [manualGuests, setManualGuests] = useState<Guest[]>([]);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -96,6 +98,26 @@ const CreateEventPost = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventArtwork]);
+
+  useEffect(() => {
+    const today = dayjs();
+    const defaultStartTime = today
+      .add(1, "day")
+      .startOf("day")
+      .format("YYYY-MM-DDTHH:mm");
+    setStartOfPeriod(defaultStartTime);
+  }, []);
+
+  useEffect(() => {
+    console.log("eventDate", eventDate);
+    const eventDateDayjs = dayjs(eventDate);
+    const defaultEndTime = eventDateDayjs
+      .subtract(1, "day")
+      .startOf("day")
+      .format("YYYY-MM-DDTHH:mm");
+
+    setEndOfPeriod(defaultEndTime);
+  }, [eventDate]);
 
   const handleCreateEvent = async () => {
     const payload: EventPayload = {
@@ -296,7 +318,7 @@ const CreateEventPost = () => {
                   />
                 </FormControl>
 
-                <Accordion allowToggle mb="10px" defaultIndex={0}>
+                <Accordion allowToggle mb="10px">
                   <AccordionItem>
                     <h2>
                       <AccordionButton>
@@ -323,7 +345,7 @@ const CreateEventPost = () => {
                         </NumberInput>
                       </FormControl>
                       <FormControl isRequired mb={4}>
-                        <FormLabel>Start of Period</FormLabel>
+                        <FormLabel>Start of Period (in GMT)</FormLabel>
                         <Input
                           type="datetime-local"
                           value={startOfPeriod}
@@ -332,7 +354,7 @@ const CreateEventPost = () => {
                         />
                       </FormControl>
                       <FormControl isRequired mb={4}>
-                        <FormLabel>End of Period</FormLabel>
+                        <FormLabel>End of Period (in GMT)</FormLabel>
                         <Input
                           type="datetime-local"
                           value={endOfPeriod}
@@ -357,8 +379,10 @@ const CreateEventPost = () => {
                           </option>
                         </Select>
                       </FormControl>
-
-                      <FormControl mb={4}>
+                      {/* 
+                        This part is not ready yet
+                        We will enable this feature in the next release */}
+                      {/* <FormControl mb={4}>
                         <FormLabel>Manually adding guests</FormLabel>
                         <Button
                           onClick={() => {
@@ -420,7 +444,7 @@ const CreateEventPost = () => {
                             />
                           </Flex>
                         ))}
-                      </FormControl>
+                      </FormControl> */}
 
                       <FormControl mb={4}>
                         <FormLabel>Guest list recipient</FormLabel>
