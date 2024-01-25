@@ -108,7 +108,7 @@ const EditEventPost = () => {
       dayjs(currentEvent.guest_invite_end).format("YYYY-MM-DDTHH:mm:ss")
     );
     setNumberOfGuests(currentEvent.guest_invite_number.toString());
-    setGuestListRecipient(currentEvent.guest_invite_receiver);
+    setGuestListRecipient(currentEvent.guest_list_receiver);
   }, [currentEvent]);
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
@@ -161,7 +161,7 @@ const EditEventPost = () => {
       guest_invite_start: startOfPeriod,
       guest_invite_end: endOfPeriod,
       guest_invite_number: numberOfGuests,
-      guest_invite_receiver: guestListRecipient,
+      guest_list_receiver: guestListRecipient,
     };
     setIsLoading(true);
     try {
