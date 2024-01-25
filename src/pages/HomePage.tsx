@@ -1,16 +1,7 @@
-import {
-  Box,
-  Flex,
-  Link,
-  Text,
-  Center,
-  Stack,
-  VStack,
-  Avatar,
-} from "@chakra-ui/react";
+import { Box, Flex, Link, Text, Center } from "@chakra-ui/react";
 import Header from "../components/Header";
 import { useUserAccount } from "~/services/settings/userAccount";
-import { useUserData } from "~/services/settings/userData";
+import HeaderAvatar from "~/components/HeaderAvatar";
 
 type BoxItem = {
   id: number;
@@ -78,7 +69,6 @@ const boxes: BoxItem[] = [
 
 export default function Index() {
   const { data: user } = useUserAccount();
-  const { data: details } = useUserData();
   const isDj = user?.dj || false;
   const isAdmin = user?.admin || user?.me?.admin || false;
   const isPartner = user?.partner || user?.me?.partner || false;
@@ -101,46 +91,7 @@ export default function Index() {
       pb="50px"
     >
       <Header />
-      <Stack
-        w="100%"
-        py="30px"
-        alignItems="center"
-        position="relative"
-        bgImage={details?.cover_photo}
-        bgSize="cover"
-        bgColor="grey"
-        bgRepeat="no-repeat"
-        bgPos="center"
-        opacity="0.7"
-        px={{
-          base: "15px",
-          md: "0px",
-        }}
-      >
-        <VStack position="relative">
-          <Avatar
-            bg="black"
-            src={details?.profile_picture}
-            showBorder
-            borderColor="cyan"
-            size="lg"
-          />
-          <Text fontSize="24px" color="white" fontWeight="600">
-            {details?.display_name ?? ""}
-          </Text>
-          <Text
-            color="white"
-            textAlign="center"
-            w={{
-              base: "100%",
-              md: "40%",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: details?.about_me ?? "",
-            }}
-          ></Text>
-        </VStack>
-      </Stack>
+      <HeaderAvatar />
       <Flex w="100%" justifyContent="center">
         <Flex
           flexDirection="column"
