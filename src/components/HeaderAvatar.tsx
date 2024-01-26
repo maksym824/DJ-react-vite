@@ -176,12 +176,13 @@ const HeaderAvatar = () => {
           <Text
             color="white"
             textAlign="center"
+            white-space="nowrap"
+            display="inline"
             w={{
               base: "100%",
-              md: "40%",
             }}
             dangerouslySetInnerHTML={{
-              __html: details?.about_me ?? "",
+              __html: details?.title ?? "",
             }}
           ></Text>
         </VStack>
