@@ -9,7 +9,7 @@ import { useUserAccount } from "~/services/settings/userAccount";
 const ChannelListPreview = (props: ChannelPreviewUIComponentProps) => {
   const { channel, setActiveChannel } = props;
   const { channel: activeChannel } = useChatContext();
-  const { data: user, isLoading: isLoadingUser } = useUserAccount();
+  const { data: user } = useUserAccount();
 
   const selected = channel?.id === activeChannel?.id;
 
