@@ -4,10 +4,12 @@ import {
   ChannelPreviewUIComponentProps,
   useChatContext,
 } from "stream-chat-react";
+import { useUserAccount } from "~/services/settings/userAccount";
 
 const ChannelListPreview = (props: ChannelPreviewUIComponentProps) => {
   const { channel, setActiveChannel } = props;
   const { channel: activeChannel } = useChatContext();
+  const { data: user, isLoading: isLoadingUser } = useUserAccount();
 
   const selected = channel?.id === activeChannel?.id;
 
@@ -60,14 +62,19 @@ const ChannelListPreview = (props: ChannelPreviewUIComponentProps) => {
         }}
       >
         <Box>
-          <Text>
-            {
-              (channel.data?.name ??
-                channel?.data?.fan_name ??
-                "Channel") as string
-            }
-            {messageCount()}
-          </Text>
+          {user?.user_id?.toString() != channel.data?.id && (
+            <Text>
+              {
+                (channel.data?.name ??
+                  channel?.data?.fan_name ??
+                  "Channel") as string
+              }
+              {messageCount()}
+            </Text>
+          )}
+          {user?.user_id?.toString() == channel.data?.id && (
+            <Text>My community</Text>
+          )}
           <Text>{channel.data?.subtitle}</Text>
         </Box>
         <Text>{renderMessageText()}</Text>

@@ -19,7 +19,7 @@ const ChatWrapper = () => {
     );
     const userStreamChat: User = {
       id: user?.user_id?.toString() as string,
-      name: user?.username as string,
+      name: user?.display_name as string,
       image: user?.profile_url as string,
     };
     streamChatClient.connectUser(userStreamChat, userChatToken);
