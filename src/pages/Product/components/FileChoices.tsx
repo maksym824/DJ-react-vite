@@ -33,12 +33,16 @@ const FileChoices = () => {
     { type: "aiff", description: "Audio Interchange File Format" },
     { type: "aifc", description: "Compressed Audio Interchange File" },
     { type: "wav", description: "Waveform Audio File Format" },
+    { type: "zip", description: "Zip file" },
+    { type: "mp4", description: "MP4 video format" },
+    { type: "mov", description: "Quicktime video format" },
+    { type: "avi", description: "Audio Video Interleave" },
   ];
 
   return (
     <Stack>
       <HStack>
-        <Box fontSize="14px" lineHeight="1em">
+        <Box fontSize="14px" lineHeight="1em" flexShrink={0}>
           <b>Allowed file types</b>:
         </Box>
         {fileTypes.map((file) => (

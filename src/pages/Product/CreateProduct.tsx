@@ -483,7 +483,7 @@ const CreateProductPage = () => {
                   <FormLabel>Downloadable Track File</FormLabel>
                   <Input
                     type="file"
-                    accept=".mp3,.flac,.aiff,.aifc,.wav"
+                    accept=".mp3,.flac,.aiff,.aifc,.wav,.zip,.mp4,.mov,.avi"
                     border="0px"
                     p="2px"
                     ref={(ref) => (audioInputRef.current = ref)}
