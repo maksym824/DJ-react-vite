@@ -13,11 +13,16 @@ export type ProductPayload = {
   download?: string;
 };
 
-const setProductData = async (
+export const setProductTrackData = async (
   data: Record<string, unknown>,
   post_token: string
 ) => {
   return await apiClient.post(`/dj/product/audio/${post_token}`, data);
 };
 
-export default setProductData;
+export const setProductVideoData = async (
+  data: Record<string, unknown>,
+  post_token: string
+) => {
+  return await apiClient.post(`/dj/product/video/${post_token}`, data);
+};

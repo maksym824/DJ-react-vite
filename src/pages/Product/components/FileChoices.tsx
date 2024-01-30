@@ -1,43 +1,28 @@
-import { Box, HStack, Stack, Tooltip } from "@chakra-ui/react";
+import { Box, HStack, Stack } from "@chakra-ui/react";
+import FileTag from "./FileTag";
 
-// Define the props for the FileTag component
-interface FileTagProps {
-  fileType: string;
-  tooltipDescription: string;
-}
-
-// Create a reusable FileTag component
-const FileTag = ({ fileType, tooltipDescription }: FileTagProps) => {
-  return (
-    <Tooltip label={tooltipDescription}>
-      <Box
-        color="#fff"
-        bg="#9b5de5"
-        borderRadius="5px"
-        px="5px"
-        py="3px"
-        fontSize="12px"
-        lineHeight="1em"
-      >
-        {fileType}
-      </Box>
-    </Tooltip>
-  );
+type Props = {
+  allowedFileTypes?: string[];
 };
 
-const FileChoices = () => {
-  // Define the file types and their descriptions
-  const fileTypes = [
-    { type: "mp3", description: "MP3 audio format" },
-    { type: "flac", description: "Free Lossless Audio Codec" },
-    { type: "aiff", description: "Audio Interchange File Format" },
-    { type: "aifc", description: "Compressed Audio Interchange File" },
-    { type: "wav", description: "Waveform Audio File Format" },
-    { type: "zip", description: "Zip file" },
-    { type: "mp4", description: "MP4 video format" },
-    { type: "mov", description: "Quicktime video format" },
-    { type: "avi", description: "Audio Video Interleave" },
-  ];
+// Define the file types and their descriptions
+const FILE_TYPES = [
+  { type: "mp3", description: "MP3 audio format" },
+  { type: "flac", description: "Free Lossless Audio Codec" },
+  { type: "aiff", description: "Audio Interchange File Format" },
+  { type: "aifc", description: "Compressed Audio Interchange File" },
+  { type: "wav", description: "Waveform Audio File Format" },
+  { type: "zip", description: "Zip file" },
+  { type: "mp4", description: "MP4 video format" },
+  { type: "mov", description: "Quicktime video format" },
+  { type: "avi", description: "Audio Video Interleave" },
+];
+
+const FileChoices = ({ allowedFileTypes = [] }: Props) => {
+  const fileTypes = FILE_TYPES.filter((file) => {
+    if (allowedFileTypes.length === 0) return true;
+    return allowedFileTypes.includes(file.type);
+  });
 
   return (
     <Stack>
