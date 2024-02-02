@@ -273,7 +273,7 @@ const VideoPost = () => {
   return (
     <>
       <Header />
-      <Box height="calc(100vh - 64px - 52px)" bg="black">
+      <Box height="100vh" bg="black">
         <Flex mx={2} flexDirection={"column"} height="100%">
           <Flex
             bg="#30096e"
