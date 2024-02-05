@@ -77,10 +77,14 @@ export default function CreateAccount() {
   const [isStepLoading, setIsStepLoading] = useState(false);
   const isStep1Complete =
     step === 1 && !!displayName && !!firstName && !!lastName;
-  const isStep2Complete = step === 2 && !!profileURL && profileURL.length > 2;
+  // const isStep2Complete = step === 2 && !!profileURL && profileURL.length > 2;
+  const isStep2Complete =
+    (step === 2 && !!instagram) || !!soundcloud || !!website;
+
   const isStep3Complete = step === 3 && !!shortBio && !!location;
-  const isStep4Complete =
-    (step === 4 && !!instagram) || !!soundcloud || !!website;
+  // const isStep4Complete = (step === 4 && !!instagram) || !!soundcloud || !!website;
+  const isStep4Complete = step === 4 && !!profileURL && profileURL.length > 2;
+
   const isStep5Complete =
     step === 5 &&
     ((!!profileImage && !!coverImage) ||
