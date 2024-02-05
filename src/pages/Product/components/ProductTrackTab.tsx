@@ -22,7 +22,7 @@ import { uploadChunkFile, uploadFile } from "~/services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { useNavigate } from "react-router-dom";
 
-const MAX_AUDIO_FILE_SIZE = 1 * 1024 * 1024 * 1024; // 1Gb
+const MAX_AUDIO_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 type Props = {
@@ -308,7 +308,7 @@ const ProductTrackTab = ({ postToken }: Props) => {
         Create Track Product
       </Text>
       <FormControl isRequired mb={4}>
-        <FormLabel>Release Name</FormLabel>
+        <FormLabel>Release Name / Product name</FormLabel>
         <Input
           type="text"
           value={releaseName}
@@ -417,7 +417,7 @@ const ProductTrackTab = ({ postToken }: Props) => {
         <FormLabel>Downloadable File Name</FormLabel>
         <Input
           type="text"
-          placeholder="e.g. song-name.wav"
+          placeholder="e.g. my-track-name"
           value={fileName}
           onChange={(e) => setFileName(e.target.value)}
         />
@@ -471,7 +471,7 @@ const ProductTrackTab = ({ postToken }: Props) => {
         </Flex>
       ) : null}
 
-      <FileChoices />
+      <FileChoices allowedFileTypes={["mp3", "flac", "aiff", "wav"]} />
 
       <Button
         mt={4}

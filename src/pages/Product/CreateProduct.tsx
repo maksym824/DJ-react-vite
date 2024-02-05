@@ -13,9 +13,11 @@ import {
 import Header from "~/components/Header";
 import getPostToken from "~/services/getPostToken";
 import { PostType } from "~/types";
-import ProductTrackTab from "./components/ProductTrackTab";
 import { FaFile, FaHeadphones, FaMusic, FaVideo } from "react-icons/fa";
+import ProductTrackTab from "./components/ProductTrackTab";
 import ProductVideoTab from "./components/ProductVideoTab";
+import ProductFileTab from "./components/ProductFileTab";
+import ProductPodcastTab from "./components/ProductPodcastTab";
 
 enum ProductTab {
   TRACK = 0,
@@ -121,10 +123,10 @@ const CreateProductPage = () => {
                   <ProductVideoTab postToken={postToken} />
                 </TabPanel>
                 <TabPanel>
-                  <ProductTrackTab postToken={postToken} />
+                  <ProductFileTab postToken={postToken} />
                 </TabPanel>
                 <TabPanel>
-                  <ProductTrackTab postToken={postToken} />
+                  <ProductPodcastTab postToken={postToken} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
