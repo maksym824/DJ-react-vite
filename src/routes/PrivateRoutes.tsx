@@ -58,8 +58,7 @@ const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
     if (window.dataLayer) {
       window.dataLayer.push({
         event: "sign_up",
-        user_id: user?.user_id,
-        user_key: user?.user_key,
+        user_id: user?.user_key,
         user_type: userType,
       });
     }
