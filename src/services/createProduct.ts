@@ -26,3 +26,17 @@ export const setProductVideoData = async (
 ) => {
   return await apiClient.post(`/dj/product/video/${post_token}`, data);
 };
+
+export const setProductFileData = async (
+  data: Record<string, unknown>,
+  post_token: string
+) => {
+  return await apiClient.post(`/dj/product/file/${post_token}`, data);
+};
+
+export const setProductPodcastData = async (
+  data: Record<string, unknown>,
+  post_token: string
+) => {
+  return await apiClient.post(`/dj/product/podcast/${post_token}`, data);
+};

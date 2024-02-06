@@ -13,6 +13,8 @@ const FILE_TYPES = [
   { type: "aifc", description: "Compressed Audio Interchange File" },
   { type: "wav", description: "Waveform Audio File Format" },
   { type: "zip", description: "Zip file" },
+  { type: "gzip", description: "Gzip file" },
+  { type: "rar", description: "Rar file" },
   { type: "mp4", description: "MP4 video format" },
   { type: "mov", description: "Quicktime video format" },
   { type: "avi", description: "Audio Video Interleave" },

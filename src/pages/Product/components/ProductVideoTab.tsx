@@ -22,7 +22,7 @@ import { uploadChunkFile, uploadFile } from "~/services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { useNavigate } from "react-router-dom";
 
-const MAX_VIDEO_FILE_SIZE = 1 * 1024 * 1024 * 1024; // 1Gb
+const MAX_VIDEO_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 type Props = {
@@ -318,8 +318,9 @@ const ProductVideoTab = ({ postToken }: Props) => {
         />
       </FormControl>
 
-      <FormControl isRequired>
-        <FormLabel>Product Artwork</FormLabel>
+      <FormControl>
+        {/*isRequired*/}
+        <FormLabel>Product Artwork/Picture</FormLabel>
         <Input
           type="file"
           accept="image/*"
@@ -369,7 +370,7 @@ const ProductVideoTab = ({ postToken }: Props) => {
         <FormLabel>Downloadable File Name</FormLabel>
         <Input
           type="text"
-          placeholder="e.g. video-name.mp4"
+          placeholder="e.g. my-video-name"
           value={fileName}
           onChange={(e) => setFileName(e.target.value)}
         />
@@ -437,7 +438,7 @@ const ProductVideoTab = ({ postToken }: Props) => {
         onClick={handleSubmit}
         isDisabled={
           !releaseName ||
-          !releaseArtwork ||
+          /* !releaseArtwork || */
           !downloadableVideoFile ||
           isUploadingArtwork ||
           isUploadingVideo
@@ -452,4 +453,3 @@ const ProductVideoTab = ({ postToken }: Props) => {
 };
 
 export default ProductVideoTab;
-1;
