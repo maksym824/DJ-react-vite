@@ -44,7 +44,24 @@ const CreateAccountSection = () => {
           <HStack>
             <Button
               onClick={() => {
-                window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+                console.log("window.dataLayer", window.dataLayer);
+
+                if (window.dataLayer) {
+                  window.dataLayer.push({
+                    event: "signup_start",
+                    element: "create-account-btn",
+                    user_type: "dj",
+                    eventTimeout: 1000,
+                    eventCallback: function () {
+                      window.open(
+                        import.meta.env.VITE_DJFAN_SIGN_UP_URL,
+                        "_self"
+                      );
+                    },
+                  });
+                } else {
+                  window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+                }
               }}
             >
               CREATE ACCOUNT
@@ -61,7 +78,28 @@ const CreateAccountSection = () => {
               lineHeight={"1em"}
               gap={"5px"}
               cursor={"pointer"}
-              href="https://dj.djfan.app/partners-registration"
+              /* href="https://dj.djfan.app/partners-registration" */
+              onClick={() => {
+                if (window.dataLayer) {
+                  window.dataLayer.push({
+                    event: "signup_start",
+                    element: "partner-program-btn",
+                    user_type: "partner",
+                    eventTimeout: 1000,
+                    eventCallback: function () {
+                      window.open(
+                        "https://dj.djfan.app/partners-registration",
+                        "_self"
+                      );
+                    },
+                  });
+                } else {
+                  window.open(
+                    "https://dj.djfan.app/partners-registration",
+                    "_self"
+                  );
+                }
+              }}
               _hover={{
                 color: "cyan",
               }}
