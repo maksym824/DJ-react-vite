@@ -29,6 +29,7 @@ import {
   updateProfilePicture,
 } from "~/services/settings/userImage";
 import DJname from "./DJname";
+import DJTitle from "./DJTitle";
 
 async function dataUrlToFile(dataUrl: string, fileName: string): Promise<File> {
   const res: Response = await fetch(dataUrl);
@@ -173,18 +174,7 @@ const HeaderAvatar = () => {
             </Flex>
           </Box>
           <DJname name={details?.display_name ?? ""} />
-          <Text
-            color="white"
-            textAlign="center"
-            white-space="nowrap"
-            display="inline"
-            w={{
-              base: "100%",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: details?.title ?? "",
-            }}
-          ></Text>
+          <DJTitle title={details?.title ?? ""} />
         </VStack>
       </Stack>
       <Modal
