@@ -28,7 +28,7 @@ import { PostType, Product } from "~/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductById, updateProduct } from "~/services/products";
 
-const MAX_AUDIO_FILE_SIZE = 1 * 1024 * 1024 * 1024; // 1Gb
+const MAX_AUDIO_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 1Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 type ProductDetail = Product & {
@@ -343,12 +343,21 @@ const EditProductPage = () => {
                 gap="6px"
                 py="15px"
               >
-                Create Product
+                Update Product
+                {currentProduct?.type == 2 && <> Track</>}
+                {currentProduct?.type == 3 && <> Video</>}
+                {currentProduct?.type == 4 && <> Podcast</>}
+                {currentProduct?.type == 6 && <> File</>}
               </Heading>
             </Flex>
             <Stack px="20px" pt="10px" pb="20px">
               <FormControl isRequired mb={4}>
-                <FormLabel>Release Name</FormLabel>
+                {currentProduct?.type == 2 && (
+                  <FormLabel>Release Name</FormLabel>
+                )}
+                {currentProduct?.type != 2 && (
+                  <FormLabel>Product Name</FormLabel>
+                )}
                 <Input
                   type="text"
                   value={releaseName}
@@ -368,8 +377,14 @@ const EditProductPage = () => {
 
               {!releaseArtwork && (
                 <FormControl mb={4}>
-                  <FormLabel>Artwork Preview</FormLabel>
+                  {currentProduct?.type == 2 && (
+                    <FormLabel>Release Artwork Preview</FormLabel>
+                  )}
+                  {currentProduct?.type != 2 && (
+                    <FormLabel>Product Artwork/Picture Preview</FormLabel>
+                  )}
                   <Image
+                    style={{ maxHeight: "200px" }}
                     src={"https://files.djfan.app/" + artworkPreview}
                     width="100%"
                     height="auto"
@@ -380,7 +395,12 @@ const EditProductPage = () => {
               )}
 
               <FormControl>
-                <FormLabel>Release Artwork</FormLabel>
+                {currentProduct?.type == 2 && (
+                  <FormLabel>Release Artwork</FormLabel>
+                )}
+                {currentProduct?.type != 2 && (
+                  <FormLabel>Product Artwork/Picture Preview</FormLabel>
+                )}
                 <Input
                   type="file"
                   accept="image/*"
@@ -430,61 +450,91 @@ const EditProductPage = () => {
                 </NumberInput>
               </FormControl>
 
-              <FormControl isRequired mb={4}>
-                <FormLabel>Genre</FormLabel>
-                <Input
-                  type="text"
-                  value={genre}
-                  onChange={(e) => setGenre(e.target.value)}
-                  placeholder="e.g. Tech House"
-                />
-              </FormControl>
+              {currentProduct?.type == 2 && (
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Genre</FormLabel>
+                  <Input
+                    type="text"
+                    value={genre}
+                    onChange={(e) => setGenre(e.target.value)}
+                    placeholder="e.g. Tech House"
+                  />
+                </FormControl>
+              )}
 
-              <FormControl isRequired mb={4}>
-                <FormLabel>Release Date</FormLabel>
-                <Input
-                  type="date"
-                  value={releaseDate}
-                  placeholder="Select a date"
-                  onChange={(e) => setReleaseDate(e.target.value)}
-                />
-              </FormControl>
+              {currentProduct?.type == 2 && (
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Release Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={releaseDate}
+                    placeholder="Select a date"
+                    onChange={(e) => setReleaseDate(e.target.value)}
+                  />
+                </FormControl>
+              )}
 
-              <FormControl isRequired mb={4}>
-                <FormLabel>Record Label</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Name of Record Label"
-                  value={recordLabel}
-                  onChange={(e) => setRecordLabel(e.target.value)}
-                />
-              </FormControl>
+              {currentProduct?.type == 2 && (
+                <FormControl isRequired mb={4}>
+                  <FormLabel>Record Label</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Name of Record Label"
+                    value={recordLabel}
+                    onChange={(e) => setRecordLabel(e.target.value)}
+                  />
+                </FormControl>
+              )}
 
-              <FormControl mb={4}>
-                <FormLabel>Featured Artists</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="All Featured Artists"
-                  value={featuredArtists}
-                  onChange={(e) => setFeaturedArtists(e.target.value)}
-                />
-              </FormControl>
+              {currentProduct?.type == 2 && (
+                <FormControl mb={4}>
+                  <FormLabel>Featured Artists</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="All Featured Artists"
+                    value={featuredArtists}
+                    onChange={(e) => setFeaturedArtists(e.target.value)}
+                  />
+                </FormControl>
+              )}
 
               <FormControl mb={4}>
                 <FormLabel>Downloadable File Name</FormLabel>
                 <Input
                   type="text"
-                  placeholder="e.g. song-name.wav"
+                  placeholder="e.g. name-of-file"
                   value={fileName}
                   onChange={(e) => setFileName(e.target.value)}
                 />
               </FormControl>
 
               <FormControl>
-                <FormLabel>Downloadable Track File</FormLabel>
+                {currentProduct?.type == 2 && (
+                  <FormLabel>Downloadable Track File</FormLabel>
+                )}
+                {currentProduct?.type == 3 && (
+                  <FormLabel>Downloadable Video File</FormLabel>
+                )}
+                {currentProduct?.type == 4 && (
+                  <FormLabel>Downloadable Podcast File</FormLabel>
+                )}
+                {currentProduct?.type == 6 && (
+                  <FormLabel>Downloadable File</FormLabel>
+                )}
+
                 <Input
                   type="file"
-                  accept=".mp3,.flac,.aiff,.aifc,.wav"
+                  accept={
+                    currentProduct?.type == 2
+                      ? ".mp3,.flac,.aiff,.aifc,.wav"
+                      : "" && currentProduct?.type == 3
+                      ? ".mp4,.mov"
+                      : "" && currentProduct?.type == 6
+                      ? ".zip,.gzip,.rar"
+                      : "" && currentProduct?.type == 4
+                      ? ".mp3,.mp4,.mov,.zip,.gzip,.rar"
+                      : ""
+                  }
                   border="0px"
                   p="2px"
                   ref={(ref) => (audioInputRef.current = ref)}
@@ -529,7 +579,22 @@ const EditProductPage = () => {
                 </Flex>
               ) : null}
 
-              <FileChoices />
+              {currentProduct?.type == 2 && (
+                <FileChoices
+                  allowedFileTypes={["mp3", "flac", "aiff", "wav"]}
+                />
+              )}
+              {currentProduct?.type == 3 && (
+                <FileChoices allowedFileTypes={["mp4", "mov"]} />
+              )}
+              {currentProduct?.type == 6 && (
+                <FileChoices allowedFileTypes={["zip", "gzip", "rar"]} />
+              )}
+              {currentProduct?.type == 4 && (
+                <FileChoices
+                  allowedFileTypes={["mp3", "mp4", "mov", "zip", "gzip", "rar"]}
+                />
+              )}
 
               <Button
                 mt={4}
@@ -544,7 +609,6 @@ const EditProductPage = () => {
                 isDisabled={
                   !releaseName ||
                   !price ||
-                  !genre ||
                   isUploadingArtwork ||
                   isUploadingAudio
                 }

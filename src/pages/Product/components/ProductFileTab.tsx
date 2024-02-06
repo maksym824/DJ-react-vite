@@ -22,7 +22,7 @@ import { uploadChunkFile, uploadFile } from "~/services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { useNavigate } from "react-router-dom";
 
-const MAX_file_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 1Gb
+const MAX_file_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 type Props = {
@@ -381,7 +381,7 @@ const ProductFileTab = ({ postToken }: Props) => {
         <FormLabel>Downloadable File</FormLabel>
         <Input
           type="file"
-          accept=".mp4,.mov"
+          accept=".mp4,.mov,.zip,.gzip,.rar"
           border="0px"
           p="2px"
           ref={(ref) => (fileInputRef.current = ref)}
