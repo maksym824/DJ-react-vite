@@ -387,7 +387,7 @@ const ProductPodcastTab = ({ postToken }: Props) => {
         <FormLabel>Downloadable Podcast File</FormLabel>
         <Input
           type="file"
-          accept=".mp4,.mov"
+          accept=".mp3,.mp4,.mov,.zip,.gzip,.rar"
           border="0px"
           p="2px"
           ref={(ref) => (podcastInputRef.current = ref)}
