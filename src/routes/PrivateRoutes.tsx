@@ -18,22 +18,6 @@ const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
   ]);
   const isDj = user?.dj || false;
 
-  /*
-      if (window["google_tag_manager"]) {
-        window.dataLayer.push({
-          event: cookies.signup ? "sign_up" : "sign_in",
-          user_id: user?.user_id,
-          user_key: user?.user_key,
-          user_type: user?.dj ? "dj" : "fan",
-          referer_dj: cookies.dj_page,
-          eventTimeout: 1000,
-          eventCallback: function () {
-            window.location.replace(cookies.redirect_page);
-          },
-        });
-
-  */
-
   if (isLoading) {
     return <></>;
   }
@@ -41,8 +25,6 @@ const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
   if (!user) {
     return <ExternalNavigate to={import.meta.env.VITE_DJFAN_SIGN_IN_URL} />;
   }
-
-  console.log(cookies);
 
   if (cookies.signup) {
     let userType = (

@@ -120,6 +120,9 @@ export default function CreateAccount() {
       case 1:
         if (!isStep1Complete) break;
         setIsStepLoading(true);
+        if (window.dataLayer) {
+          window.dataLayer.push({ event: "profile_step_1" });
+        }
         try {
           await updateUserAccount({
             first_name: firstName,
@@ -139,6 +142,9 @@ export default function CreateAccount() {
       case 2:
         if (!isStep2Complete) break;
         setIsStepLoading(true);
+        if (window.dataLayer) {
+          window.dataLayer.push({ event: "profile_step_2" });
+        }
         try {
           await updateUserData({
             instagram,
@@ -157,6 +163,9 @@ export default function CreateAccount() {
       case 3:
         if (!isStep3Complete) break;
         setIsStepLoading(true);
+        if (window.dataLayer) {
+          window.dataLayer.push({ event: "profile_step_3" });
+        }
         try {
           await updateUserData({
             title: shortBio,
@@ -175,6 +184,9 @@ export default function CreateAccount() {
       case 4:
         if (!isStep4Complete) break;
         setIsStepLoading(true);
+        if (window.dataLayer) {
+          window.dataLayer.push({ event: "profile_step_4" });
+        }
         try {
           await updateUserData({
             profile_url: profileURL,
@@ -324,6 +336,9 @@ export default function CreateAccount() {
                       try {
                         const response = await finishSignUp();
                         if (response.data?.result) {
+                          if (window.dataLayer) {
+                            window.dataLayer.push({ event: "profile_step_5" });
+                          }
                           toast({
                             title: "Account created.",
                             description: "We've created your account for you.",
