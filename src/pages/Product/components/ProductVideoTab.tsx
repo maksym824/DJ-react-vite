@@ -22,7 +22,7 @@ import { uploadChunkFile, uploadFile } from "~/services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { useNavigate } from "react-router-dom";
 
-const MAX_VIDEO_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 1Gb
+const MAX_VIDEO_FILE_SIZE = 2 * 1024 * 1024 * 1024; // 2Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
 
 type Props = {
