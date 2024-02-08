@@ -121,7 +121,10 @@ export default function CreateAccount() {
         if (!isStep1Complete) break;
         setIsStepLoading(true);
         if (window.dataLayer) {
-          window.dataLayer.push({ event: "profile_step_1" });
+          window.dataLayer.push({
+            event: "profile_completed_step_1",
+            user_id: userData?.user_key,
+          });
         }
         try {
           await updateUserAccount({
@@ -143,8 +146,12 @@ export default function CreateAccount() {
         if (!isStep2Complete) break;
         setIsStepLoading(true);
         if (window.dataLayer) {
-          window.dataLayer.push({ event: "profile_step_2" });
+          window.dataLayer.push({
+            event: "profile_completed_step_2",
+            user_id: userData?.user_key,
+          });
         }
+
         try {
           await updateUserData({
             instagram,
@@ -164,8 +171,12 @@ export default function CreateAccount() {
         if (!isStep3Complete) break;
         setIsStepLoading(true);
         if (window.dataLayer) {
-          window.dataLayer.push({ event: "profile_step_3" });
+          window.dataLayer.push({
+            event: "profile_completed_step_3",
+            user_id: userData?.user_key,
+          });
         }
+
         try {
           await updateUserData({
             title: shortBio,
@@ -185,8 +196,12 @@ export default function CreateAccount() {
         if (!isStep4Complete) break;
         setIsStepLoading(true);
         if (window.dataLayer) {
-          window.dataLayer.push({ event: "profile_step_4" });
+          window.dataLayer.push({
+            event: "profile_completed_step_4",
+            user_id: userData?.user_key,
+          });
         }
+
         try {
           await updateUserData({
             profile_url: profileURL,
@@ -337,8 +352,12 @@ export default function CreateAccount() {
                         const response = await finishSignUp();
                         if (response.data?.result) {
                           if (window.dataLayer) {
-                            window.dataLayer.push({ event: "profile_step_5" });
+                            window.dataLayer.push({
+                              event: "profile_completed_fully",
+                              user_id: userData?.user_key,
+                            });
                           }
+
                           toast({
                             title: "Account created.",
                             description: "We've created your account for you.",
