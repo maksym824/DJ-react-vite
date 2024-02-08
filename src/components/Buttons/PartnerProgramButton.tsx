@@ -33,11 +33,13 @@ export default function PartnerProgramButton() {
               element: "partner_program_btn",
               user_type: "partner",
               eventTimeout: 1000,
-              eventCallback: function () {
-                window.open(
-                  "https://dj.djfan.app/partners-registration",
-                  "_self"
-                );
+              eventCallback: function (id: string) {
+                if (id == "GTM-MXLNMK2") {
+                  window.open(
+                    "https://dj.djfan.app/partners-registration",
+                    "_self"
+                  );
+                }
               },
             });
           } else {

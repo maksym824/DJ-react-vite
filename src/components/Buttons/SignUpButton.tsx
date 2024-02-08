@@ -21,8 +21,10 @@ export default function SignUpButton() {
               element: "sign-up-dj-btn",
               user_type: "dj",
               eventTimeout: 1000,
-              eventCallback: function () {
-                window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+              eventCallback: function (id: string) {
+                if (id == "GTM-MXLNMK2") {
+                  window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+                }
               },
             });
           } else {
