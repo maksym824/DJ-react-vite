@@ -1,5 +1,4 @@
 import { Button } from "@chakra-ui/react";
-import { useCookies } from "react-cookie";
 
 export default function SignUpButton() {
   return (
@@ -16,7 +15,7 @@ export default function SignUpButton() {
         _hover={{ bgGradient: "linear(to-r,#e536ab, #5c03bc)" }}
         transition="all 0.3s ease"
         onClick={() => {
-          if (window["google_tag_manager"]) {
+          if ((window as any)["google_tag_manager"]) {
             window.dataLayer.push({
               event: "signup_start",
               element: "sign-up-dj-btn",

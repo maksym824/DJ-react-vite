@@ -1,14 +1,6 @@
 import { Button } from "@chakra-ui/react";
-import { useCookies } from "react-cookie";
-import { BiSolidLockOpen } from "react-icons/bi";
 
-interface ButtonProps {
-  location?: string;
-}
-
-export default function CreateAccountButton(props: ButtonProps) {
-  const { location } = props;
-
+export default function CreateAccountButton() {
   return (
     <>
       <Button
@@ -19,7 +11,7 @@ export default function CreateAccountButton(props: ButtonProps) {
         fontWeight="700"
         color="#300a6e"
         onClick={() => {
-          if (window["google_tag_manager"]) {
+          if ((window as any)["google_tag_manager"]) {
             window.dataLayer.push({
               event: "signup_start",
               element: "create_account_btn",

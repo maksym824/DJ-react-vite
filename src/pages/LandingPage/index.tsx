@@ -1,4 +1,4 @@
-import { Flex, Box, Button, Image, Link } from "@chakra-ui/react";
+import { Flex, Box, Image, Link } from "@chakra-ui/react";
 import FooterCTA from "./components/FooterCTA";
 import PostTypeIcons from "./components/PostTypeIcons";
 import FeatureCards from "./components/FeatureCards";

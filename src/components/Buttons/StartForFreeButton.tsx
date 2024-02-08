@@ -1,12 +1,6 @@
 import { Button } from "@chakra-ui/react";
 
-interface ButtonProps {
-  location?: string;
-}
-
-export default function StartForFreeButton(props: ButtonProps) {
-  const { location } = props;
-
+export default function StartForFreeButton() {
   return (
     <>
       <Button
@@ -17,7 +11,7 @@ export default function StartForFreeButton(props: ButtonProps) {
         fontWeight="700"
         color="#300a6e"
         onClick={() => {
-          if (window["google_tag_manager"]) {
+          if ((window as any)["google_tag_manager"]) {
             window.dataLayer.push({
               event: "signup_start",
               element: "start_for_free_btn",

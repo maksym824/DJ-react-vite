@@ -1,4 +1,4 @@
-import { Flex, Text, Heading, Button } from "@chakra-ui/react";
+import { Flex, Text, Heading } from "@chakra-ui/react";
 import StartForFreeButton from "~/components/Buttons/StartForFreeButton";
 
 export default function FooterCTA() {
