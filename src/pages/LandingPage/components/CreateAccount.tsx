@@ -9,6 +9,8 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
+import CreateAccountButton from "~/components/Buttons/CreateAccountButton";
+import PartnerProgramButton from "~/components/Buttons/PartnerProgramButton";
 
 const CreateAccountSection = () => {
   return (
@@ -42,9 +44,10 @@ const CreateAccountSection = () => {
             with subscriptions, products, and more.
           </Text>
           <HStack>
+            <CreateAccountButton />
+            {/* 
             <Button
               onClick={() => {
-                console.log("window.dataLayer", window.dataLayer);
 
                 if (window.dataLayer) {
                   window.dataLayer.push({
@@ -66,46 +69,10 @@ const CreateAccountSection = () => {
             >
               CREATE ACCOUNT
             </Button>
+            */}
           </HStack>
           <HStack gap="15px">
-            <Text
-              as={Link}
-              display={"flex"}
-              alignItems={"center"}
-              fontSize={"12px"}
-              color={"white"}
-              fontWeight={"600"}
-              lineHeight={"1em"}
-              gap={"5px"}
-              cursor={"pointer"}
-              /* href="https://dj.djfan.app/partners-registration" */
-              onClick={() => {
-                if (window.dataLayer) {
-                  window.dataLayer.push({
-                    event: "signup_start",
-                    element: "partner-program-btn",
-                    user_type: "partner",
-                    eventTimeout: 1000,
-                    eventCallback: function () {
-                      window.open(
-                        "https://dj.djfan.app/partners-registration",
-                        "_self"
-                      );
-                    },
-                  });
-                } else {
-                  window.open(
-                    "https://dj.djfan.app/partners-registration",
-                    "_self"
-                  );
-                }
-              }}
-              _hover={{
-                color: "cyan",
-              }}
-            >
-              PARTNER PROGRAM <FaArrowRight />
-            </Text>
+            <PartnerProgramButton />
           </HStack>
         </VStack>
       </Flex>

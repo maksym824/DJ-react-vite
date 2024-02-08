@@ -1,4 +1,5 @@
 import { Flex, Text, Heading, Button } from "@chakra-ui/react";
+import StartForFreeButton from "~/components/Buttons/StartForFreeButton";
 
 export default function FooterCTA() {
   return (
@@ -53,9 +54,7 @@ export default function FooterCTA() {
         Use paid memberships to increase fan engagement while gaining the
         freedom and financial stability to focus on doing your best work.
       </Text>
-      <Button mt="10px" bg="#fff" size="lg" fontWeight="700" as="a" href="/">
-        START FOR FREE
-      </Button>
+      <StartForFreeButton />
     </Flex>
   );
 }

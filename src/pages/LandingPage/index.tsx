@@ -5,6 +5,8 @@ import FeatureCards from "./components/FeatureCards";
 import CreateAccountSection from "./components/CreateAccount";
 import Economy from "./components/Economy";
 import EarningsCalculator from "./components/calculator";
+import SignUpButton from "~/components/Buttons/SignUpButton";
+import SignInButton from "~/components/Buttons/SignInButton";
 
 export default function LandingPage() {
   return (
@@ -40,6 +42,10 @@ export default function LandingPage() {
               />
             </Link>
 
+            <SignUpButton />
+            <SignInButton />
+
+            {/*
             <Button
               onClick={() => {
                 window.open(import.meta.env.VITE_DJFAN_SIGN_IN_URL, "_self");
@@ -47,6 +53,7 @@ export default function LandingPage() {
             >
               SIGN IN
             </Button>
+            */}
           </Flex>
         </Flex>
       </Box>

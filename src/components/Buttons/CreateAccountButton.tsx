@@ -1,0 +1,41 @@
+import { Button } from "@chakra-ui/react";
+import { useCookies } from "react-cookie";
+import { BiSolidLockOpen } from "react-icons/bi";
+
+interface ButtonProps {
+  location?: string;
+}
+
+export default function CreateAccountButton(props: ButtonProps) {
+  const { location } = props;
+
+  return (
+    <>
+      <Button
+        borderRadius="5px"
+        mt="10px"
+        bg="#fff"
+        size="lg"
+        fontWeight="700"
+        color="#300a6e"
+        onClick={() => {
+          if (window["google_tag_manager"]) {
+            window.dataLayer.push({
+              event: "signup_start",
+              element: "create_account_btn",
+              user_type: "dj",
+              eventTimeout: 1000,
+              eventCallback: function () {
+                window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+              },
+            });
+          } else {
+            window.open(import.meta.env.VITE_DJFAN_SIGN_UP_URL, "_self");
+          }
+        }}
+      >
+        CREATE ACCOUNT
+      </Button>
+    </>
+  );
+}
