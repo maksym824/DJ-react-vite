@@ -23,7 +23,7 @@ import { Form4 } from "./components/Form4";
 import { Form5 } from "./components/Form5";
 import { theme } from "./theme";
 import { useCreateAccountContext } from "./useCreateAccountContext";
-import { updateUserAccount } from "~/services/settings/userAccount";
+import { updateUserAccount, useUsernameCheck as useProfileURLCheck } from "~/services/settings/userAccount";
 import {
   finishSignUp,
   updateUserData,
@@ -83,7 +83,8 @@ export default function CreateAccount() {
 
   const isStep3Complete = step === 3 && !!shortBio && !!location;
   // const isStep4Complete = (step === 4 && !!instagram) || !!soundcloud || !!website;
-  const isStep4Complete = step === 4 && !!profileURL && profileURL.length > 2;
+  const { data: userCheck = {} } = useProfileURLCheck(profileURL);
+  const isStep4Complete = step === 4 && !!profileURL && profileURL.length > 2 && userCheck;
 
   const isStep5Complete =
     step === 5 &&

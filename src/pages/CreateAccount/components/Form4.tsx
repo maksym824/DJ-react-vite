@@ -8,23 +8,13 @@ import {
   InputLeftAddon,
 } from "@chakra-ui/react";
 import { useCreateAccountContext } from "../useCreateAccountContext";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useUsernameCheck as useProfileURLCheck } from "~/services/settings/userAccount";
 
 export const Form4 = () => {
   const { profileURL, setProfileURL } = useCreateAccountContext();
   const [onTouched, setTouched] = useState<boolean>(false);
   const { data: userCheck = {}, refetch } = useProfileURLCheck(profileURL);
-
-  const isValidProfileURL = useMemo(() => {
-    const testRes = /^[a-zA-Z0-9\-_]{3,50}$/.test(profileURL);
-    if (!testRes) {
-      return false;
-    }
-    return !!userCheck;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileURL, userCheck]);
 
   const handleChangeProfileURL = (e: ChangeEvent<HTMLInputElement>) => {
     let profile_url = e.target.value;
@@ -61,11 +51,11 @@ export const Form4 = () => {
             placeholder="profileURL"
             value={profileURL}
             onChange={handleChangeProfileURL}
-            isInvalid={onTouched && !isValidProfileURL}
+            isInvalid={onTouched && !userCheck}
             focusBorderColor={
               !onTouched || profileURL.length === 0
                 ? "black.500"
-                : isValidProfileURL
+                : userCheck
                 ? "green.500"
                 : "red.500"
             }

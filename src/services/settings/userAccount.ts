@@ -46,8 +46,17 @@ const useUsernameCheck = (username?: string) => {
       });
 
   return useQuery({
-    queryKey: ["usernameCheck"],
-    queryFn: () => checkUsername(),
+    queryKey: ["usernameCheck", username],
+    queryFn: async () => {
+      if ((username?.length  ?? 0) < 2) {
+        return false;
+      }
+      const testRes = /^[a-zA-Z0-9\-_]{3,50}$/.test(username ?? "");
+      if (!testRes) {
+        return false;
+      }
+      return await checkUsername()
+    },
   });
 };
 
