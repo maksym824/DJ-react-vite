@@ -26,27 +26,29 @@ const PrivateRoutes: FunctionComponent<PrivateRoutesProps> = () => {
     return <ExternalNavigate to={import.meta.env.VITE_DJFAN_SIGN_IN_URL} />;
   }
 
-  if (cookies.signup) {
-    let userType = (
-      user?.partner ? "partner" : "" + " " + user?.dj ? "dj" : ""
-    ).trim();
-
-    setCookie("user_id", user?.user_key, { path: "/", domain: ".djfan.app" });
-    setCookie("user_type", userType, {
-      path: "/",
-      domain: ".djfan.app",
-    });
-    removeCookie("signup", { path: "/", domain: ".djfan.app" });
-    if (window.dataLayer) {
-      window.dataLayer.push({
-        event: "sign_up",
-        user_id: user?.user_key,
-        user_type: userType,
-      });
-    }
-  }
-
   if (isDj == true && !user?.profile_active) {
+    if (cookies.signup) {
+      let userType = "dj";
+      /*
+      (
+        user?.partner ? "partner" : "" + " " + user?.dj ? "dj" : ""
+      ).trim();
+      */
+      setCookie("user_id", user?.user_key, { path: "/", domain: ".djfan.app" });
+      setCookie("user_type", userType, {
+        path: "/",
+        domain: ".djfan.app",
+      });
+      removeCookie("signup", { path: "/", domain: ".djfan.app" });
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "sign_up",
+          user_id: user?.user_key,
+          user_type: userType,
+        });
+      }
+    }
+
     if (!user?.profile_done) {
       return (
         <CreateAccountContextProvider>

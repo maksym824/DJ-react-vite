@@ -118,6 +118,16 @@ export default function PartnerRegistration() {
     if (!isFormValid()) {
       return;
     }
+
+    if ((window as any)["google_tag_manager"]) {
+      window.dataLayer.push({
+        event: "signup",
+        element: "create-account-partner-btn",
+        user_type: "partner",
+        eventTimeout: 1000,
+      });
+    }
+
     const payload: PartnerRegistrationPayload = {
       partner_type: partnerType,
       dj_count: djCount,

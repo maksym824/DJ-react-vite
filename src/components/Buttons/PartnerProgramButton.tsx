@@ -35,15 +35,12 @@ export default function PartnerProgramButton() {
               eventTimeout: 1000,
               eventCallback: function (id: string) {
                 if (id == "GTM-MXLNMK2") {
-                  window.open(
-                    "https://dj.djfan.app/partners-registration",
-                    "_self"
-                  );
+                  window.open("/partners-registration", "_self");
                 }
               },
             });
           } else {
-            window.open("https://dj.djfan.app/partners-registration", "_self");
+            window.open("/partners-registration", "_self");
           }
         }}
       >
