@@ -48,6 +48,8 @@ export const Form1 = () => {
             placeholder="Artist Name"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
+            isInvalid={!/^[0-9a-zA-Z\s-]*$/.test(displayName)}
+            errorBorderColor='red.500'
           />
         </InputGroup>
       </FormControl>
@@ -61,6 +63,8 @@ export const Form1 = () => {
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            isInvalid={!/^[a-zA-Z\s]*$/.test(firstName)}
+            errorBorderColor='red.500'
           />
         </InputGroup>
       </FormControl>
@@ -74,6 +78,8 @@ export const Form1 = () => {
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            isInvalid={!/^[a-zA-Z\s]*$/.test(lastName)}
+            errorBorderColor='red.500'
           />
         </InputGroup>
         <Text {...helpStyle}>

@@ -75,8 +75,10 @@ export default function CreateAccount() {
     setCoverPreview,
   } = useCreateAccountContext();
   const [isStepLoading, setIsStepLoading] = useState(false);
-  const isStep1Complete =
-    step === 1 && !!displayName && !!firstName && !!lastName;
+  const isStep1Complete = step === 1
+    && !!displayName && /^[0-9a-zA-Z\s-]*$/.test(displayName)
+    && !!firstName && /^[a-zA-Z\s]*$/.test(firstName)
+    && !!lastName && /^[a-zA-Z\s]*$/.test(lastName);
   // const isStep2Complete = step === 2 && !!profileURL && profileURL.length > 2;
   const isStep2Complete =
     (step === 2 && !!instagram) || !!soundcloud || !!website;
