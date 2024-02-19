@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Box,
   Button,
   Flex,
@@ -22,6 +23,7 @@ import { uploadChunkFile, uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfAttachedFile } from "../../types";
 import setPostData from "~/services/setPostData";
+import ReactPlayer from "react-player";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 2024; // 2Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
@@ -67,6 +69,9 @@ const AudioPost = () => {
   const artWorkInputRef = useRef<HTMLInputElement | null>(null);
   const [progressArtwork, setProgressArtwork] = useState<number>(0);
   const [releaseArtwork, setReleaseArtwork] = useState<File | null>(null);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [elementEmbed, setElementEmbed] = useState<any>();
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -328,10 +333,36 @@ const AudioPost = () => {
     }
   };
 
+  const embedAudio = function (a: string) {
+    if (a.indexOf("<iframe") > -1) {
+      return <div dangerouslySetInnerHTML={{ __html: a }}></div>;
+    } else if (a.indexOf("spotify.com") > -1) {
+      return (
+        <AspectRatio height="152px">
+          <iframe height="152px" src={a} allowFullScreen />
+        </AspectRatio>
+      );
+    } else if (a.indexOf("something.else.here") > -1) {
+      return <ReactPlayer width="100%" height="185px" url={a} />;
+    } else {
+      return <ReactPlayer width="100%" height="185px" url={a} />;
+    }
+  };
+
+  useEffect(() => {
+    if (typeOfAttachedFile === TypeOfAttachedFile.EMBED) {
+      if (locationToEmbed) {
+        setElementEmbed(embedAudio(locationToEmbed));
+      } else {
+        setElementEmbed(null);
+      }
+    }
+  }, [locationToEmbed, typeOfAttachedFile]);
+
   return (
     <>
       <Header />
-      <Box height="100vh" bg="black">
+      <Box minH="100vh" h="120vh" bg="black">
         <Flex mx={2} flexDirection={"column"} height="100%">
           <Flex
             bg="#30096e"
@@ -432,15 +463,20 @@ const AudioPost = () => {
               />
             </Box>
             */}
+            {typeOfAttachedFile == TypeOfAttachedFile.EMBED && elementEmbed && (
+              <Box mt="10px">{elementEmbed}</Box>
+            )}
 
-            <Box mt="10px">
-              <Input
-                mt="10px"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </Box>
+            {typeOfAttachedFile === TypeOfAttachedFile.UPLOAD && (
+              <Box mt="10px">
+                <Input
+                  mt="10px"
+                  placeholder="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </Box>
+            )}
             <Textarea
               mt="20px"
               placeholder="Write something about this post"
@@ -448,42 +484,46 @@ const AudioPost = () => {
               onChange={(e) => setDescription(e.target.value)}
             />
 
-            <FormControl mt="20px">
-              <FormLabel>Release Artwork</FormLabel>
-              <Input
-                type="file"
-                accept="image/*"
-                border="0px"
-                p="2px"
-                ref={(ref) => (artWorkInputRef.current = ref)}
-                onChange={(e) => {
-                  if (e.target.files) {
-                    const file = e.target.files[0];
-                    setReleaseArtwork(file);
-                  } else {
-                    setReleaseArtwork(null);
-                    setArtworkFileToUpload(null);
-                  }
-                }}
-              />
-            </FormControl>
-            {isUploadingArtwork ? (
-              <Box>
-                <Text mb="10px">Uploading {artworkFileToUpload?.name}</Text>
-                <Progress hasStripe value={progressArtwork} />
-              </Box>
-            ) : artworkFileToUpload ? (
-              <Flex alignItems="center">
-                <FaTrash
-                  onClick={() => {
-                    setArtworkFileToUpload(null);
-                    if (artWorkInputRef.current)
-                      artWorkInputRef.current.value = "";
-                  }}
-                />
-                <Text ml="10px">{artworkFileToUpload?.name}</Text>
-              </Flex>
-            ) : null}
+            {typeOfAttachedFile === TypeOfAttachedFile.UPLOAD && (
+              <>
+                <FormControl mt="20px">
+                  <FormLabel>Release Artwork</FormLabel>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    border="0px"
+                    p="2px"
+                    ref={(ref) => (artWorkInputRef.current = ref)}
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        const file = e.target.files[0];
+                        setReleaseArtwork(file);
+                      } else {
+                        setReleaseArtwork(null);
+                        setArtworkFileToUpload(null);
+                      }
+                    }}
+                  />
+                </FormControl>
+                {isUploadingArtwork ? (
+                  <Box>
+                    <Text mb="10px">Uploading {artworkFileToUpload?.name}</Text>
+                    <Progress hasStripe value={progressArtwork} />
+                  </Box>
+                ) : artworkFileToUpload ? (
+                  <Flex alignItems="center">
+                    <FaTrash
+                      onClick={() => {
+                        setArtworkFileToUpload(null);
+                        if (artWorkInputRef.current)
+                          artWorkInputRef.current.value = "";
+                      }}
+                    />
+                    <Text ml="10px">{artworkFileToUpload?.name}</Text>
+                  </Flex>
+                ) : null}
+              </>
+            )}
             <Box mt="20px">
               <Text>Who can view this post?</Text>
               <Select
