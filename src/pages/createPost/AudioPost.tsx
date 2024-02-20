@@ -543,7 +543,7 @@ const AudioPost = () => {
 
             <Box mt="20px">
               <Text>
-                Keep in mind that it my take up to several of minutes to get
+                Keep in mind that it may take up to several of minutes to get
                 your post ready for publication, it depends on size, encoding &
                 workload.
               </Text>

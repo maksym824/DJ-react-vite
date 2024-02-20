@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Input,
   Progress,
   Select,
   Spinner,
@@ -20,6 +19,7 @@ import { uploadChunkFile, uploadFile } from "../../services/uploadFile";
 import { AxiosProgressEvent } from "axios";
 import { AccessLevelType, PostType, TypeOfAttachedFile } from "../../types";
 import setPostData from "~/services/setPostData";
+import ReactPlayer from "react-player";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 2024; // 2Gb
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10Mb
@@ -48,6 +48,9 @@ const VideoPost = () => {
   const [chunks, setChunks] = useState<Blob[]>([]);
   const [totalChunks, setTotalChunks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [elementEmbed, setElementEmbed] = useState<any>();
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
     const percentCompleted = Math.round(
@@ -270,6 +273,26 @@ const VideoPost = () => {
     }
   };
 
+  const embedAudio = function (a: string) {
+    if (a.indexOf("<iframe") > -1) {
+      return <div dangerouslySetInnerHTML={{ __html: a }}></div>;
+    } else {
+      return (
+        <ReactPlayer width="100%" height="285px" url={a} controls={true} />
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (typeOfAttachedFile === TypeOfAttachedFile.EMBED) {
+      if (locationToEmbed) {
+        setElementEmbed(embedAudio(locationToEmbed));
+      } else {
+        setElementEmbed(null);
+      }
+    }
+  }, [locationToEmbed, typeOfAttachedFile]);
+
   return (
     <>
       <Header />
@@ -356,14 +379,18 @@ const VideoPost = () => {
                 ) : null}
               </Box>
             ) : (
-              <Box mt="10px">
-                <Input
-                  mt="10px"
-                  placeholder="Enter URL"
-                  value={locationToEmbed}
-                  onChange={(e) => setLocationToEmbed(e.target.value)}
-                />
-              </Box>
+              <>
+                <Box mt="10px">
+                  <Textarea
+                    rows={5}
+                    mt="10px"
+                    placeholder="Enter URL"
+                    value={locationToEmbed}
+                    onChange={(e) => setLocationToEmbed(e.target.value)}
+                  />
+                </Box>{" "}
+                {elementEmbed && <Box mt="10px">{elementEmbed}</Box>}
+              </>
             )}
             <Textarea
               mt="20px"
@@ -390,7 +417,7 @@ const VideoPost = () => {
 
             <Box mt="20px">
               <Text>
-                Keep in mind that it my take up to several of minutes to get
+                Keep in mind that it may take up to several of minutes to get
                 your post ready for publication, it depends on size, encoding &
                 workload.
               </Text>
