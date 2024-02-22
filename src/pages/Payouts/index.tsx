@@ -232,10 +232,11 @@ export default function Payouts() {
                           px="10px"
                           borderRadius="5px"
                           display="flex"
+                          target="_new"
                           gap="5px"
-                          href="/"
+                          href="https://djfan.app/support"
                         >
-                          Contact Support
+                          Support
                           <FaArrowRight fontSize="12px" />
                         </Link>
                       </HStack>

@@ -2,39 +2,43 @@ import { Flex, Text, Heading, Image, VStack } from "@chakra-ui/react";
 
 const postTypeIcons = [
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/9370782.png",
+    src: "https://files.djfan.app/images/9370782.png",
     name: "Text Posts",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/imagetext.png",
+    src: "https://files.djfan.app/images/imagetext.png",
     name: "Image Posts",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/9975051.png",
+    src: "https://files.djfan.app/images/9975051.png",
     name: "Private Content",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/9094095.png",
+    src: "https://files.djfan.app/images/9094095.png",
     name: "Gallery Posts",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/soundcloud.png",
+    src: "https://files.djfan.app/images/soundcloud.png",
     name: "Embed Audio",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/youtube-play.png",
+    src: "https://files.djfan.app/images/2753339.png",
+    name: "Events",
+  },
+  {
+    src: "https://files.djfan.app/images/youtube-play.png",
     name: "Embed Video",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/2753339.png",
+    src: "https://files.djfan.app/images/2753339.png",
     name: "Tour Dates",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/music-file.png",
+    src: "https://files.djfan.app/images/music-file.png",
     name: "Upload Audio",
   },
   {
-    src: "https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/2631012.png",
+    src: "https://files.djfan.app/images/2631012.png",
     name: "Sell Audio Files",
   },
 ];
@@ -73,7 +77,7 @@ export default function PostTypeIcons() {
           justifyContent={{ base: "space-around", md: "space-between" }}
         >
           {postTypeIcons.map((item) => (
-            <VStack key={item.name} w={{ base: "45%", md: "unset" }} gap="20px">
+            <VStack key={item.name} w={{ base: "45%", md: "16%" }} gap="20px">
               <Image src={item.src} w={{ base: "60px", md: "60px" }} />
               <Text fontSize={"20px"} fontWeight="600">
                 {item.name}

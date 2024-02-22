@@ -200,7 +200,7 @@ const SideMenuBody = () => {
         </Box>
 
         <Box fontSize="18px" fontWeight="600" color="#6b46c1">
-          <Link href="https://help.djfan.app/?dj" target="_new">
+          <Link href="https://djfan.app/support" target="_new">
             Support
           </Link>
         </Box>

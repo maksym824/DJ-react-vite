@@ -21,7 +21,7 @@ const EarningsCalculator = () => {
   return (
     <VStack py="30px" bgGradient="linear(to-r, #0e0725, #5c03bc, #e536ab)">
       <Image
-        src="https://djfan.ams3.cdn.digitaloceanspaces.com/2023/06/exchange-rate-1.png"
+        src="https://files.djfan.app/images/exchange-rate-1.png"
         width={{ base: "55px", md: "75px" }}
       />
       <Heading

@@ -26,7 +26,7 @@ export default function FooterCTA() {
 
       {/* Background Image */}
       <Flex
-        bgImage="url('https://djfan.ams3.cdn.digitaloceanspaces.com/2023/10/dj-home-cta.jpg')"
+        bgImage="url('https://files.djfan.app/images/dj-home-cta.webp')"
         bgSize="cover"
         bgRepeat="no-repeat"
         bgPos="center center"

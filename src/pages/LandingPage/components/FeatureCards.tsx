@@ -8,39 +8,37 @@ type FeatureCardData = {
 
 const featureCardsData: FeatureCardData[] = [
   {
-    src: "https://images.unsplash.com/flagged/photo-1569521739482-5443615d3725?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    src: "https://files.djfan.app/images/first-release.webp",
     title: "Monetise Your Audience",
     description:
       "Offer monthly memberships with exclusive content, updates, guest-list chances, playlists + more.",
   },
   {
-    src: "https://plus.unsplash.com/premium_photo-1661776849166-3d27b91449bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80",
+    src: "https://files.djfan.app/images/engage-your-fanbase.webp",
     title: "Engage Your Fanbase",
     description:
       "Nurture, reward, and grow your audience. Communicate directly and get to know your most dedicated fans.",
   },
-
   {
-    src: "https://images.unsplash.com/photo-1586156938613-769b0353c8fc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    src: "https://files.djfan.app/images/backstage.webp",
     title: "Create Consistency",
     description:
       "Establish a recurring revenue stream and say goodbye to inconsistent, seasonal income and stress.",
   },
-
   {
-    src: "https://images.unsplash.com/photo-1661966522340-a51f578e4017?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    src: "https://files.djfan.app/images/done-for-you.webp",
     title: "Done-For-You Setup",
     description:
       "Sit-back while we launch your fully-featured membership solution + provide ongoing support.",
   },
   {
-    src: "https://plus.unsplash.com/premium_photo-1683133991632-41cb80c0eab6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    src: "https://files.djfan.app/images/one-stop-destination.webp",
     title: "Your Fans, Your Data",
     description:
       "Maintain 100% ownership and control over customer info, audience analytics, and payment gateways.",
   },
   {
-    src: "https://images.unsplash.com/photo-1550614806-51d8db524675?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    src: "https://files.djfan.app/images/direct-communication.webp",
     title: "Flexible Payouts",
     description:
       "Unlike slow-paying venues you can pay yourself whenever you want, or receive scheduled auto payments.",

@@ -6,7 +6,7 @@ const CreateAccountSection = () => {
   return (
     <Box
       w="100%"
-      backgroundImage="url(https://djfan.ams3.cdn.digitaloceanspaces.com/2023/07/bg-dj.jpg)"
+      backgroundImage="url('https://files.djfan.app/images/bg-dj.webp')"
       display="flex"
       justifyContent="center"
       px={{ base: "15px", md: "10px" }}
