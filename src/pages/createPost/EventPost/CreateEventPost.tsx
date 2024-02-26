@@ -35,6 +35,8 @@ import getPostToken from "~/services/getPostToken";
 import { PostType } from "~/types";
 import Header from "~/components/Header";
 import dayjs from "dayjs";
+import VenueAutocomplete from "./VenueAutocomplete";
+import { VenueSearchItem } from "~/services/events";
 
 const CreateEventPost = () => {
   const navigate = useNavigate();
@@ -48,10 +50,14 @@ const CreateEventPost = () => {
   const [eventDate, setEventDate] = useState<string>("");
   const [eventStartTime, setEventStartTime] = useState<string>("");
   const [eventEndTime, setEventEndTime] = useState<string>("");
-  const [eventVenue, setEventVenue] = useState<string>("");
   const [eventCity, setEventCity] = useState<string>("");
   const [eventArtwork, setEventArtwork] = useState<File | null>(null);
   const [eventLink, setEventLink] = useState<string>("");
+  const [venueAddress, setVenueAddress] = useState<string>("");
+  const [showVenueAddress, setShowVenueAddress] = useState<boolean>(true);
+  const [selectedVenue, setSelectedVenue] = useState<
+    VenueSearchItem | undefined
+  >(undefined);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -79,6 +85,14 @@ const CreateEventPost = () => {
   useEffect(() => {
     handleInitPostToken();
   }, []);
+
+  useEffect(() => {
+    if (selectedVenue?.id) {
+      setShowVenueAddress(false);
+    } else {
+      setShowVenueAddress(true);
+    }
+  }, [selectedVenue]);
 
   const handleUploadFile = async (eventArtwork: File) => {
     setIsUploading(true);
@@ -109,7 +123,6 @@ const CreateEventPost = () => {
   }, []);
 
   useEffect(() => {
-    console.log("eventDate", eventDate);
     const eventDateDayjs = dayjs(eventDate);
     const defaultEndTime = eventDateDayjs
       .subtract(1, "day")
@@ -120,7 +133,7 @@ const CreateEventPost = () => {
   }, [eventDate]);
 
   const handleCreateEvent = async () => {
-    const payload: EventPayload = {
+    const payload: Partial<EventPayload> = {
       event_name: eventName,
       event_date: eventDate,
       start_time: eventStartTime,
@@ -128,7 +141,6 @@ const CreateEventPost = () => {
       description: eventDescription,
       link_buy_tickets: eventLink,
       artwork: eventArtwork?.name ?? "",
-      venue: eventVenue,
       city: eventCity,
       guest_invite_start: startOfPeriod,
       guest_invite_end: endOfPeriod,
@@ -136,6 +148,12 @@ const CreateEventPost = () => {
       guest_invite_number: numberOfGuests,
       guest_list_receiver: guestListRecipient,
     };
+    if (selectedVenue) {
+      payload.venue_id = selectedVenue.id;
+      payload.venue = "";
+    } else {
+      payload.venue = venueAddress;
+    }
     setIsLoading(true);
     try {
       const response = await createEvent(payload, postToken);
@@ -234,7 +252,7 @@ const CreateEventPost = () => {
                   />
                 </FormControl>
 
-                <FormControl mb={4}>
+                <FormControl mb={4} isRequired>
                   <FormLabel>Start Time</FormLabel>
                   <Input
                     type="time"
@@ -243,7 +261,7 @@ const CreateEventPost = () => {
                   />
                 </FormControl>
 
-                <FormControl mb={4}>
+                <FormControl mb={4} isRequired>
                   <FormLabel>End Time</FormLabel>
                   <Input
                     type="time"
@@ -252,15 +270,22 @@ const CreateEventPost = () => {
                   />
                 </FormControl>
 
-                <FormControl isRequired mb={4}>
+                <FormControl mb={4}>
                   <FormLabel>Venue</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder="e.g. Pacha"
-                    value={eventVenue}
-                    onChange={(e) => setEventVenue(e.target.value)}
-                  />
+                  <VenueAutocomplete onSelect={setSelectedVenue} />
                 </FormControl>
+
+                {showVenueAddress && (
+                  <FormControl mb={4} isRequired>
+                    <FormLabel>Venue Address</FormLabel>
+                    <Input
+                      type="text"
+                      placeholder="Street, city"
+                      value={venueAddress}
+                      onChange={(e) => setVenueAddress(e.target.value)}
+                    />
+                  </FormControl>
+                )}
 
                 <FormControl mb={4} isRequired>
                   <FormLabel>City / Location</FormLabel>
@@ -474,7 +499,7 @@ const CreateEventPost = () => {
                     !eventName ||
                     !eventDescription ||
                     !eventDate ||
-                    !eventVenue ||
+                    (!selectedVenue?.id && !venueAddress) ||
                     !eventCity ||
                     !eventStartTime ||
                     !eventEndTime ||

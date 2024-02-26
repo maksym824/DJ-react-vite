@@ -9,6 +9,7 @@ export type EventPayload = {
   link_buy_tickets: string;
   artwork: string;
   venue: string;
+  venue_id?: number;
   city: string;
   guest_invite_start: string;
   guest_invite_end: string;

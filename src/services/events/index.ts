@@ -53,4 +53,16 @@ const updateEvent = (
   );
 };
 
-export { useEvent, getEventById, updateEvent, deleteEvent };
+export type VenueSearchItem = {
+  address: string;
+  id: number;
+  logo: string;
+  name: string;
+  photo: string;
+};
+
+const searchVenue = (query: string) => {
+  return apiClient.get(`/dj/events/venues/search/${query}`);
+};
+
+export { useEvent, getEventById, updateEvent, deleteEvent, searchVenue };
