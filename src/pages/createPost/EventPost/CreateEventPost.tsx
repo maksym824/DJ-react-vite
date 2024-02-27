@@ -60,7 +60,7 @@ const CreateEventPost = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [numberOfGuests, setNumberOfGuests] = useState<string>(0);
+  const [numberOfGuests, setNumberOfGuests] = useState<string>("");
   const [startOfPeriod, setStartOfPeriod] = useState<string>("");
   const [endOfPeriod, setEndOfPeriod] = useState<string>("");
   const [selectedInviteProcess, setSelectedInviteProcess] = useState<InviteProcess>(InviteProcess.FCFS);
