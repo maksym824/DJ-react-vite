@@ -9,6 +9,7 @@ const CreateAccountSection = () => {
       backgroundImage="url('https://files.djfan.app/images/bg-dj.webp')"
       display="flex"
       justifyContent="center"
+      backgroundSize="cover"
       px={{ base: "15px", md: "10px" }}
       py={{ base: "30px", md: "50px" }}
     >
@@ -30,8 +31,7 @@ const CreateAccountSection = () => {
             maxW={{ base: "100%", md: "90%" }}
             textAlign={"center"}
           >
-            We give you all the tools to engage & grow your audience. Get paid
-            with subscriptions, products, and more.
+            We give you all the tools to engage & grow your audience. Get paid with subscriptions, products, and more.
           </Text>
           <HStack>
             <CreateAccountButton />
