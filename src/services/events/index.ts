@@ -65,4 +65,25 @@ const searchVenue = (query: string) => {
   return apiClient.get(`/dj/events/venues/search/${query}`);
 };
 
-export { useEvent, getEventById, updateEvent, deleteEvent, searchVenue };
+export type EventSearchItem = {
+  event_name: string;
+  event_date: string;
+  start_time: string;
+  end_time: string;
+  description: string;
+  venue_id: number;
+  venue_name: string;
+};
+
+const searchEvent = (query: string) => {
+  return apiClient.get(`/dj/events/names/search/${query}`);
+};
+
+export {
+  useEvent,
+  getEventById,
+  updateEvent,
+  deleteEvent,
+  searchVenue,
+  searchEvent,
+};

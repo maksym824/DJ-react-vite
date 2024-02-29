@@ -36,7 +36,8 @@ import { PostType } from "~/types";
 import Header from "~/components/Header";
 import dayjs from "dayjs";
 import VenueAutocomplete from "./VenueAutocomplete";
-import { VenueSearchItem } from "~/services/events";
+import EventNameAutoComplete from "./EventNameAutocomplete";
+import { EventSearchItem, VenueSearchItem } from "~/services/events";
 
 const CreateEventPost = () => {
   const navigate = useNavigate();
@@ -55,7 +56,9 @@ const CreateEventPost = () => {
   const [eventLink, setEventLink] = useState<string>("");
   const [venueAddress, setVenueAddress] = useState<string>("");
   const [showVenueAddress, setShowVenueAddress] = useState<boolean>(true);
-  const [selectedVenue, setSelectedVenue] = useState<VenueSearchItem | undefined>(undefined);
+  const [selectedVenue, setSelectedVenue] = useState<
+    VenueSearchItem | undefined
+  >(undefined);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,12 +66,19 @@ const CreateEventPost = () => {
   const [numberOfGuests, setNumberOfGuests] = useState<string>("");
   const [startOfPeriod, setStartOfPeriod] = useState<string>("");
   const [endOfPeriod, setEndOfPeriod] = useState<string>("");
-  const [selectedInviteProcess, setSelectedInviteProcess] = useState<InviteProcess>(InviteProcess.FCFS);
+  const [selectedInviteProcess, setSelectedInviteProcess] =
+    useState<InviteProcess>(InviteProcess.FCFS);
   const [guestListRecipient, setGuestListRecipient] = useState<string>("");
   // const [manualGuests, setManualGuests] = useState<Guest[]>([]);
+  const [eventNameSelection, setEventNameSelection] = useState<
+    EventSearchItem | undefined
+  >(undefined);
+  const [url, setURL] = useState<string>("");
 
   const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
-    const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 0));
+    const percentCompleted = Math.round(
+      (progressEvent.loaded * 100) / (progressEvent.total || 0)
+    );
     setProgress(percentCompleted);
   };
 
@@ -80,6 +90,17 @@ const CreateEventPost = () => {
   useEffect(() => {
     handleInitPostToken();
   }, []);
+
+  useEffect(() => {
+    if (eventNameSelection) {
+      setEventName(eventNameSelection.event_name);
+      setEventDate(eventNameSelection.event_date);
+      setEventStartTime(eventNameSelection.start_time);
+      setEventEndTime(eventNameSelection.end_time);
+      setEventDescription(eventNameSelection.description);
+      setVenueAddress(eventNameSelection.venue_name);
+    }
+  }, [eventNameSelection]);
 
   useEffect(() => {
     if (selectedVenue?.id) {
@@ -110,13 +131,19 @@ const CreateEventPost = () => {
 
   useEffect(() => {
     const today = dayjs();
-    const defaultStartTime = today.add(1, "day").startOf("day").format("YYYY-MM-DDTHH:mm");
+    const defaultStartTime = today
+      .add(1, "day")
+      .startOf("day")
+      .format("YYYY-MM-DDTHH:mm");
     setStartOfPeriod(defaultStartTime);
   }, []);
 
   useEffect(() => {
     const eventDateDayjs = dayjs(eventDate);
-    const defaultEndTime = eventDateDayjs.subtract(1, "day").startOf("day").format("YYYY-MM-DDTHH:mm");
+    const defaultEndTime = eventDateDayjs
+      .subtract(1, "day")
+      .startOf("day")
+      .format("YYYY-MM-DDTHH:mm");
 
     setEndOfPeriod(defaultEndTime);
   }, [eventDate]);
@@ -136,12 +163,13 @@ const CreateEventPost = () => {
       guest_invite_type: selectedInviteProcess,
       guest_invite_number: numberOfGuests,
       guest_list_receiver: guestListRecipient,
+      url: url ?? "",
     };
     if (selectedVenue) {
       payload.venue_id = selectedVenue.id;
       payload.venue = "";
     } else {
-      payload.venue = venueAddress;
+      payload.venue = eventNameSelection?.venue_name ?? venueAddress;
     }
     setIsLoading(true);
     try {
@@ -172,7 +200,15 @@ const CreateEventPost = () => {
   };
 
   const disableProceed = () => {
-    if (!eventName || !eventDescription || !eventDate || !eventStartTime || !eventEndTime) return true;
+    if (
+      !eventName ||
+      !eventDescription ||
+      !eventDate ||
+      !eventStartTime ||
+      !eventEndTime ||
+      !numberOfGuests
+    )
+      return true;
 
     if (!selectedVenue?.id && (!venueAddress || !venueAddress)) return true;
 
@@ -181,20 +217,48 @@ const CreateEventPost = () => {
 
   return (
     <>
-      <Flex w="100%" h="100%" minH="100vh" flexDirection="column" bg="#ececec" pb="50px">
+      <Flex
+        w="100%"
+        h="100%"
+        minH="100vh"
+        flexDirection="column"
+        bg="#ececec"
+        pb="50px"
+      >
         <Header />
         <Flex w="100%" justifyContent="center">
-          <Flex flexDirection="column" w="100%" maxW="1000px" pt="25px" px="15px" alignItems="center">
-            <Flex gap="10px" bg="#fff" flexDirection="column" w={{ base: "100%", sm: "500px" }} borderRadius="10px" overflow="hidden">
+          <Flex
+            flexDirection="column"
+            w="100%"
+            maxW="1000px"
+            pt="25px"
+            px="15px"
+            alignItems="center"
+          >
+            <Flex
+              gap="10px"
+              bg="#fff"
+              flexDirection="column"
+              w={{ base: "100%", sm: "500px" }}
+              borderRadius="10px"
+              overflow="hidden"
+            >
               <Flex background="#300a6e" justifyContent="center">
-                <Heading color="#fff" fontSize="20px" display="flex" alignItems="center" gap="6px" py="15px">
+                <Heading
+                  color="#fff"
+                  fontSize="20px"
+                  display="flex"
+                  alignItems="center"
+                  gap="6px"
+                  py="15px"
+                >
                   Create Tour Date
                 </Heading>
               </Flex>
               <Stack px="20px" pt="10px" pb="20px">
-                <FormControl isRequired mb={4}>
+                <FormControl mb={4}>
                   <FormLabel>Event Name</FormLabel>
-                  <Input type="text" value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Enter name of event" />
+                  <EventNameAutoComplete onSelect={setEventNameSelection} />
                 </FormControl>
 
                 <FormControl mb={4} isRequired>
@@ -208,17 +272,30 @@ const CreateEventPost = () => {
 
                 <FormControl isRequired mb={4}>
                   <FormLabel>Event Date</FormLabel>
-                  <Input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} placeholder="Select a date" />
+                  <Input
+                    type="date"
+                    value={eventDate}
+                    onChange={(e) => setEventDate(e.target.value)}
+                    placeholder="Select a date"
+                  />
                 </FormControl>
 
                 <FormControl mb={4} isRequired>
                   <FormLabel>Start Time</FormLabel>
-                  <Input type="time" value={eventStartTime} onChange={(e) => setEventStartTime(e.target.value)} />
+                  <Input
+                    type="time"
+                    value={eventStartTime}
+                    onChange={(e) => setEventStartTime(e.target.value)}
+                  />
                 </FormControl>
 
                 <FormControl mb={4} isRequired>
                   <FormLabel>End Time</FormLabel>
-                  <Input type="time" value={eventEndTime} onChange={(e) => setEventEndTime(e.target.value)} />
+                  <Input
+                    type="time"
+                    value={eventEndTime}
+                    onChange={(e) => setEventEndTime(e.target.value)}
+                  />
                 </FormControl>
 
                 <FormControl mb={4}>
@@ -229,7 +306,12 @@ const CreateEventPost = () => {
                 {showVenueAddress && (
                   <FormControl mb={4} isRequired>
                     <FormLabel>Venue Address</FormLabel>
-                    <Input type="text" placeholder="Street, city" value={venueAddress} onChange={(e) => setVenueAddress(e.target.value)} />
+                    <Input
+                      type="text"
+                      placeholder="Street, city"
+                      value={venueAddress}
+                      onChange={(e) => setVenueAddress(e.target.value)}
+                    />
                   </FormControl>
                 )}
 
@@ -244,6 +326,15 @@ const CreateEventPost = () => {
                     />
                   </FormControl>
                 )}
+
+                <FormControl mb={4}>
+                  <FormLabel>URL</FormLabel>
+                  <Input
+                    value={url}
+                    onChange={(e) => setURL(e.target.value)}
+                    placeholder="URL"
+                  />
+                </FormControl>
 
                 <FormControl>
                   <FormLabel>Event Artwork</FormLabel>
@@ -272,7 +363,8 @@ const CreateEventPost = () => {
                         cursor="pointer"
                         onClick={() => {
                           setEventArtwork(null);
-                          if (fileInputRef.current) fileInputRef.current.value = "";
+                          if (fileInputRef.current)
+                            fileInputRef.current.value = "";
                         }}
                       />
                       <Text ml="10px">{eventArtwork?.name}</Text>
@@ -282,14 +374,24 @@ const CreateEventPost = () => {
 
                 <FormControl mb={4}>
                   <FormLabel>Link to book or buy tickets</FormLabel>
-                  <Input type="url" placeholder="https://" value={eventLink} onChange={(e) => setEventLink(e.target.value)} />
+                  <Input
+                    type="url"
+                    placeholder="https://"
+                    value={eventLink}
+                    onChange={(e) => setEventLink(e.target.value)}
+                  />
                 </FormControl>
 
                 <Accordion allowToggle mb="10px">
                   <AccordionItem>
                     <h2>
                       <AccordionButton>
-                        <Box as="span" flex="1" textAlign="left" fontWeight="bold">
+                        <Box
+                          as="span"
+                          flex="1"
+                          textAlign="left"
+                          fontWeight="bold"
+                        >
                           Create guest list
                         </Box>
                         <AccordionIcon />
@@ -329,10 +431,16 @@ const CreateEventPost = () => {
                         <Select
                           mt="10px"
                           placeholder="Select invite process"
-                          onChange={(e) => setSelectedInviteProcess(e.target.value as unknown as InviteProcess)}
+                          onChange={(e) =>
+                            setSelectedInviteProcess(
+                              e.target.value as unknown as InviteProcess
+                            )
+                          }
                           value={selectedInviteProcess}
                         >
-                          <option value={InviteProcess.FCFS}>First come First Serve</option>
+                          <option value={InviteProcess.FCFS}>
+                            First come First Serve
+                          </option>
                         </Select>
                       </FormControl>
                       {/* 
@@ -407,7 +515,9 @@ const CreateEventPost = () => {
                         <Input
                           type="text"
                           value={guestListRecipient}
-                          onChange={(e) => setGuestListRecipient(e.target.value)}
+                          onChange={(e) =>
+                            setGuestListRecipient(e.target.value)
+                          }
                           placeholder="Email"
                         />
                       </FormControl>
@@ -426,7 +536,8 @@ const CreateEventPost = () => {
                   onClick={handleCreateEvent}
                   isDisabled={disableProceed()}
                 >
-                  CREATE EVENT <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
+                  CREATE EVENT{" "}
+                  <FaArrowRight fontSize="14px" style={{ marginLeft: "5px" }} />
                 </Button>
               </Stack>
             </Flex>
